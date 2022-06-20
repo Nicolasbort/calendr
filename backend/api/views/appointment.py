@@ -1,14 +1,17 @@
 from datetime import datetime
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions
 
-from api.models.patient import Patient
-from api.serializers.patient import PatientSerializer
+from api.models.appointment import Appointment
+from api.serializers.appointment import AppointmentSerializer
 
 
-class PatientViewSet(viewsets.ModelViewSet):
-    queryset = Patient.objects.all()
-    serializer_class = PatientSerializer
+class AppointmentViewSet(viewsets.ModelViewSet):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ("patient__id",)
 
     def get_queryset(self):
         queryset = super().get_queryset()

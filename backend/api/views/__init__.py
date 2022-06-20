@@ -4,3 +4,4 @@ from .profession import ProfessionViewSet
 from .plan import PlanViewSet
 from .profile import ProfileViewSet
 from .patient import PatientViewSet
+from .appointment import AppointmentViewSet

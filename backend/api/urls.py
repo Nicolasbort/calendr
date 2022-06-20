@@ -8,6 +8,7 @@ from api.views import (
     PlanViewSet,
     ProfileViewSet,
     PatientViewSet,
+    AppointmentViewSet,
     SignUpViewSet,
     LoggedUserView,
 )
@@ -18,6 +19,7 @@ router.register("profession", ProfessionViewSet, basename="profession")
 router.register("plan", PlanViewSet, basename="plan")
 router.register("profile", ProfileViewSet, basename="profile")
 router.register("patient", PatientViewSet, basename="patient")
+router.register("appointment", AppointmentViewSet, basename="appointment")
 router.register("sign-up", SignUpViewSet, basename="sign_up")
 
 app_name = "api"
