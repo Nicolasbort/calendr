@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-610*p=)#m+3=uw7-3$-5c$gqm7^-x6l$y!h3si*8s(&hs%6)0u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["psico.serpens.local"]
 
 
 # Application definition
