@@ -15,6 +15,7 @@ class Profile(AbstractBaseUser, Uuid, Timestamp):
     email = models.CharField(max_length=128, unique=True, db_index=True)
     first_name = models.CharField(max_length=32)
     last_name = models.CharField(max_length=32)
+    picture = models.CharField(max_length=128, null=True)
     password = models.CharField(max_length=255)
     bio = models.TextField(null=True, blank=True)
     genre = models.CharField(max_length=1, choices=GenreChoices.choices)
