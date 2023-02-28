@@ -7,7 +7,7 @@ from django.db import models
 
 class CalendarEntry(Uuid, Timestamp):
     calendar = models.ForeignKey(
-        Calendar, on_delete=models.CASCADE, related_name="entries"
+        Calendar, on_delete=models.CASCADE, related_name="entries", null=True
     )
     date_start = models.DateTimeField()
     date_finish = models.DateTimeField()

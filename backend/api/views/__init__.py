@@ -6,3 +6,4 @@ from .plan import PlanViewSet
 from .profession import ProfessionViewSet
 from .profile import ProfileViewSet
 from .signup import SignUpViewSet
+from .calendar import CalendarViewSet

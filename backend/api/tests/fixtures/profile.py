@@ -22,6 +22,25 @@ def profile(plan, profession):
 
 
 @pytest.fixture()
+def other_profile(plan, profession):
+    profile = Profile(
+        username="other",
+        email="other@example.com",
+        first_name="Other",
+        last_name="Last",
+        genre="F",
+        is_staff=False,
+        is_superuser=False,
+        plan=plan,
+        profession=profession,
+    )
+    profile.set_password("password")
+    profile.save()
+
+    return profile
+
+
+@pytest.fixture()
 def admin_profile(plan, profession):
     profile = Profile(
         username="admin",

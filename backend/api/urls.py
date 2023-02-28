@@ -6,6 +6,7 @@ from api.views import (
     PlanViewSet,
     ProfessionViewSet,
     ProfileViewSet,
+    CalendarViewSet,
     SignUpViewSet,
 )
 from django.urls import path
@@ -16,6 +17,7 @@ router = DefaultRouter()
 
 router.register("profession", ProfessionViewSet, basename="profession")
 router.register("plan", PlanViewSet, basename="plan")
+router.register("calendar", CalendarViewSet, basename="calendar")
 router.register("city", CityViewSet, basename="city")
 router.register("profile", ProfileViewSet, basename="profile")
 router.register("patient", PatientViewSet, basename="patient")
