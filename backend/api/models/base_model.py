@@ -1,10 +1,10 @@
 from uuid import uuid4
+
 from django.db import models
+from django_softdelete.models import SoftDeleteModel
 
 
-class SoftDeletable(models.Model):
-    deleted_at = models.DateTimeField(null=True)
-
+class SoftDeletable(SoftDeleteModel):
     class Meta:
         abstract = True
 

@@ -1,10 +1,9 @@
-# <project>/<app>/management/commands/seed.py
-from django.core.management.base import BaseCommand
-
 from api.constants.city import StateChoices
 from api.models.city import City
 from api.models.plan import Plan
 from api.models.profession import Profession
+from api.models.profile import Profile
+from django.core.management.base import BaseCommand
 
 # python manage.py seed --mode=refresh
 
@@ -29,9 +28,27 @@ class Command(BaseCommand):
 
 def clear_data():
     """Deletes all the table data"""
+    Profile.objects.all().delete()
     City.objects.all().delete()
     Plan.objects.all().delete()
     Profession.objects.all().delete()
+
+
+def create_admin(data):
+    """Creates an admin profile"""
+    profile = Profile(
+        username="admin",
+        email="admin@example.com",
+        first_name="Admin",
+        last_name="Auto",
+        genre="M",
+        is_staff=True,
+        is_superuser=True,
+        **data,
+    )
+    profile.set_password("password")
+    profile.save()
+    return profile
 
 
 def create_city(city: dict):
@@ -77,5 +94,6 @@ def run_seed(self, mode):
     for city in cities:
         create_city(city)
 
-    create_plan()
-    create_profession()
+    plan = create_plan()
+    profession = create_profession()
+    create_admin({"plan": plan, "profession": profession})

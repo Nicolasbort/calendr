@@ -1,9 +1,8 @@
 import builtins
 
-from django.db import models
-
 from api.models.base_model import SoftDeletable, Timestamp, Uuid
 from api.models.profile import Profile
+from django.db import models
 
 
 class Patient(Uuid, Timestamp, SoftDeletable):
@@ -13,7 +12,7 @@ class Patient(Uuid, Timestamp, SoftDeletable):
     phone = models.CharField(max_length=32, null=True, unique=True)
     notify_pending_payment = models.BooleanField(default=True)
     profile = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="patients"
+        Profile, on_delete=models.CASCADE, related_name="patients", null=True
     )
 
     @builtins.property

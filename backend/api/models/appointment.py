@@ -1,10 +1,9 @@
-import builtins
-from django.db import models
-
 from api.constants.appointment import TypeChoices
 from api.models.base_model import SoftDeletable, Timestamp, Uuid
-from api.models.profile import Profile
+from api.models.calendar_entry import CalendarEntry
 from api.models.patient import Patient
+from api.models.profile import Profile
+from django.db import models
 
 
 class Appointment(Uuid, Timestamp, SoftDeletable):
@@ -14,9 +13,13 @@ class Appointment(Uuid, Timestamp, SoftDeletable):
     patient = models.ForeignKey(
         Patient, on_delete=models.CASCADE, related_name="appointments"
     )
-    date = models.DateTimeField()
+    calendar_entry = models.ForeignKey(
+        CalendarEntry, on_delete=models.CASCADE, related_name="appointment"
+    )
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    duration = models.PositiveIntegerField()
     type = models.CharField(max_length=16, choices=TypeChoices.choices)
     note = models.TextField(max_length=128, null=True, blank=True)
     notify_appointment = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return f"Appointment - {self.price}"

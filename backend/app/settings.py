@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-610*p=)#m+3=uw7-3$-5c$gqm7^-x6l$y!h3si*8s(&hs%6)0u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["psico.serpens.local", "localhost"]
+ALLOWED_HOSTS = ["psico.local", "localhost"]
 
 
 # Application definition
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework_jwt",
+    "rest_framework_simplejwt",
     "django_filters",
     "api",
 ]
@@ -75,7 +75,7 @@ TEMPLATES = [
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
@@ -88,8 +88,8 @@ REST_FRAMEWORK = {
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
-        "NAME": os.environ.get("SQL_DATABASE", "serpens"),
-        "USER": os.environ.get("SQL_USER", "serpens"),
+        "NAME": os.environ.get("SQL_DATABASE", "psico"),
+        "USER": os.environ.get("SQL_USER", "psico"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
         "HOST": os.environ.get("SQL_HOST", "db_app"),
         "PORT": os.environ.get("SQL_PORT", "5432"),

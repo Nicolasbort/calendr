@@ -1,7 +1,7 @@
-from rest_framework import serializers
-
 from api.models.address import Address
 from api.serializers.city import CitySerializer
+from api.utils.serializers import get_serialized_data
+from rest_framework import serializers
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -12,6 +12,6 @@ class AddressSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
 
-        data["city"] = CitySerializer(instance.city).data
+        data["city"] = get_serialized_data(CitySerializer, instance.city)
 
         return data

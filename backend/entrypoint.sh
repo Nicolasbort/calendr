@@ -16,7 +16,4 @@ python manage.py migrate
 
 echo "Migrations complete"
 
-# Run de default seeds
-python manage.py seed
-
 exec "$@"

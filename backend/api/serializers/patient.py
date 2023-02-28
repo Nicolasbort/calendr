@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from api.models.patient import Patient
+from rest_framework import serializers
 
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -13,7 +12,6 @@ class PatientSerializer(serializers.ModelSerializer):
             "uuid",
             "created_at",
             "modified_at",
-            "deleted_at",
             "profile",
         )
 

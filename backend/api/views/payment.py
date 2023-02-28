@@ -1,8 +1,7 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, permissions
-
 from api.models.payment import Payment
 from api.serializers.payment import PaymentSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, viewsets
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
@@ -13,7 +12,6 @@ class PaymentViewSet(viewsets.ModelViewSet):
     filterset_fields = ("appointment__patient__id",)
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(
-            deleted_at__isnull=True, appointment__profile=self.request.user
-        ).all()
+        return (
+            super().get_queryset().filter(appointment__profile=self.request.user).all()
+        )

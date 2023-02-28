@@ -1,9 +1,7 @@
-from datetime import datetime
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, permissions
-
 from api.models.appointment import Appointment
 from api.serializers.appointment import AppointmentSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, viewsets
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
@@ -14,8 +12,4 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     filterset_fields = ("patient__id",)
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(deleted_at__isnull=True, profile=self.request.user).all()
-
-    def perform_destroy(self, instance):
-        return instance.save(deleted_at=datetime.now())
+        return super().get_queryset().filter(profile=self.request.user).all()

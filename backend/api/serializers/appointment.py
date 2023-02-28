@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from api.models.appointment import Appointment
+from rest_framework import serializers
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
@@ -11,7 +10,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
             "uuid",
             "created_at",
             "modified_at",
-            "deleted_at",
             "profile",
         )
 
