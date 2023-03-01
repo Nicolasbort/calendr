@@ -11,7 +11,7 @@ def calendar(profile):
 def calendar_create_data(profile):
     return {
         "profile": str(profile.id),
-        "entries": [
+        "periods": [
             {
                 "date_start": "2023-01-01 07:00:00",
                 "date_finish": "2023-01-01 07:30:00",
@@ -36,7 +36,7 @@ def calendar_create_data(profile):
 def calendar_update_data(other_profile):
     return {
         "profile": str(other_profile.id),
-        "entries": [
+        "periods": [
             {
                 "date_start": "2023-01-03 07:00:00",
                 "date_finish": "2023-01-03 07:30:00",

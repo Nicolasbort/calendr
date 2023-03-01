@@ -2,6 +2,8 @@ Django==4.1.7
 django-filter==22.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
+django_extensions==3.2.1
+drf_nested_routers==0.93.4
 psycopg2==2.9.3
 pytest-django==4.5.2
 pytest-cov==4.0.0

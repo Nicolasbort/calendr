@@ -1,19 +1,20 @@
 from api.views import (
     AppointmentViewSet,
+    CalendarViewSet,
     CityViewSet,
     LoggedUserView,
     PatientViewSet,
+    PeriodViewSet,
     PlanViewSet,
     ProfessionViewSet,
     ProfileViewSet,
-    CalendarViewSet,
     SignUpViewSet,
 )
-from django.urls import path
-from rest_framework.routers import DefaultRouter
+from django.urls import include, path
+from rest_framework_nested import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-router = DefaultRouter()
+router = routers.SimpleRouter()
 
 router.register("profession", ProfessionViewSet, basename="profession")
 router.register("plan", PlanViewSet, basename="plan")
@@ -24,9 +25,14 @@ router.register("patient", PatientViewSet, basename="patient")
 router.register("appointment", AppointmentViewSet, basename="appointment")
 router.register("sign-up", SignUpViewSet, basename="sign_up")
 
+calendar_router = routers.NestedSimpleRouter(router, "calendar", lookup="calendar")
+calendar_router.register(r"period", PeriodViewSet, basename="calendar-period")
+
 app_name = "api"
 urlpatterns = [
+    path("", include(router.urls)),
+    path("", include(calendar_router.urls)),
     path("token/", TokenObtainPairView.as_view()),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("me/", LoggedUserView.as_view(), name="logged_user"),
-] + router.urls
+]

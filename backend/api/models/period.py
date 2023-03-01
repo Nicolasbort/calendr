@@ -5,9 +5,9 @@ from api.models.calendar import Calendar
 from django.db import models
 
 
-class CalendarEntry(Uuid, Timestamp):
+class Period(Uuid, Timestamp):
     calendar = models.ForeignKey(
-        Calendar, on_delete=models.CASCADE, related_name="entries", null=True
+        Calendar, on_delete=models.CASCADE, related_name="periods", null=True
     )
     date_start = models.DateTimeField()
     date_finish = models.DateTimeField()
@@ -15,7 +15,7 @@ class CalendarEntry(Uuid, Timestamp):
     @cached_property
     def duration(self) -> int:
         """
-        Time in minutes of the calendar entry
+        Time in minutes of the calendar period
         """
         diff = self.date_finish - self.date_start
 
