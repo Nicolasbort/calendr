@@ -1,6 +1,7 @@
 from .appointment import AppointmentViewSet
 from .calendar import CalendarViewSet
 from .city import CityViewSet
+from .log import LogViewSet
 from .logged_user import LoggedUserView
 from .patient import PatientViewSet
 from .period import PeriodViewSet

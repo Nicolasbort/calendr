@@ -21,13 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-610*p=)#m+3=uw7-3$-5c$gqm7^-x6l$y!h3si*8s(&hs%6)0u"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = ["psico.local", "localhost"]
 
+ADMINS = [("Nicolas", "bortoluzzinicolas@gmail.com")]
 
 # Application definition
 
@@ -92,7 +93,7 @@ DATABASES = {
         "NAME": os.environ.get("SQL_DATABASE", "psico"),
         "USER": os.environ.get("SQL_USER", "psico"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "db_app"),
+        "HOST": os.environ.get("SQL_HOST", "psico_db"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
         "ATOMIC_REQUESTS": True,
     }
@@ -142,3 +143,71 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "api.Profile"
+
+
+# Celery variables
+
+CELERY_BROKER_URL = "redis://psico_redis:6379"
+CELERY_RESULT_BACKEND = "redis://psico_redis:6379"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
+
+# Logging
+LOGGING_FORMATTERS = {
+    "verbose": {
+        "format": '[{levelname}]: {asctime} - {module} - Logger: {name} - File "{pathname}", line {lineno}: {message}',
+        "style": "{",
+    },
+    "simple": {
+        "format": "[{levelname}]: {message}",
+        "style": "{",
+    },
+}
+
+LOGGING_HANDLERS = {
+    "console_handler": {
+        "class": "logging.StreamHandler",
+        "level": "INFO",
+        "formatter": "simple",
+    },
+    "warning_handler": {
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": f"{BASE_DIR}/logs/application.logs",
+        "mode": "a",
+        "formatter": "verbose",
+        "level": "WARNING",
+        "backupCount": 5,
+        "maxBytes": 1024 * 1024 * 10,  # 10 MB
+    },
+    "error_handler": {
+        "level": "ERROR",
+        "class": "django.utils.log.AdminEmailHandler",
+        "include_html": True,
+    },
+}
+
+LOGGING_LOGGERS = {
+    "django": {
+        "handlers": ["console_handler", "warning_handler", "error_handler"],
+        "level": "DEBUG",
+        "propagate": True,
+    },
+    "django.request": {
+        "handlers": ["warning_handler"],
+        "level": "WARNING",
+    },
+    "django.server": {
+        "handlers": ["warning_handler"],
+        "level": "INFO",
+    },
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": LOGGING_FORMATTERS,
+    "handlers": LOGGING_HANDLERS,
+    "loggers": LOGGING_LOGGERS,
+}

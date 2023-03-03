@@ -3,6 +3,7 @@ from api.views import (
     CalendarViewSet,
     CityViewSet,
     LoggedUserView,
+    LogViewSet,
     PatientViewSet,
     PeriodViewSet,
     PlanViewSet,
@@ -15,6 +16,8 @@ from rest_framework_nested import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.SimpleRouter()
+
+router.register("log", LogViewSet, basename="log")
 
 router.register("profession", ProfessionViewSet, basename="profession")
 router.register("plan", PlanViewSet, basename="plan")
