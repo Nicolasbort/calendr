@@ -3,17 +3,13 @@ from api.models.profile import Profile
 
 
 @pytest.fixture()
-def profile(plan, profession):
+def profile():
     profile = Profile(
-        username="username",
         email="username@example.com",
         first_name="First",
         last_name="Last",
-        genre="M",
         is_staff=False,
         is_superuser=False,
-        plan=plan,
-        profession=profession,
     )
     profile.set_password("password")
     profile.save()
@@ -22,17 +18,13 @@ def profile(plan, profession):
 
 
 @pytest.fixture()
-def other_profile(plan, profession):
+def other_profile():
     profile = Profile(
-        username="other",
         email="other@example.com",
         first_name="Other",
         last_name="Last",
-        genre="F",
         is_staff=False,
         is_superuser=False,
-        plan=plan,
-        profession=profession,
     )
     profile.set_password("password")
     profile.save()
@@ -41,17 +33,28 @@ def other_profile(plan, profession):
 
 
 @pytest.fixture()
-def admin_profile(plan, profession):
+def patient_profile():
     profile = Profile(
-        username="admin",
+        email="patient@example.com",
+        first_name="Patient",
+        last_name="Lastname",
+        is_staff=False,
+        is_superuser=False,
+    )
+    profile.set_password("password")
+    profile.save()
+
+    return profile
+
+
+@pytest.fixture()
+def admin_profile():
+    profile = Profile(
         email="admin@example.com",
         first_name="Admin",
         last_name="Auto",
-        genre="M",
         is_staff=True,
         is_superuser=True,
-        plan=plan,
-        profession=profession,
     )
     profile.set_password("password")
     profile.save()

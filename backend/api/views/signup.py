@@ -1,26 +1,48 @@
-from django.contrib.auth import get_user_model
-
-from rest_framework import viewsets, status, permissions
+from api.models.plan import Plan
+from api.models.profession import Profession
+from api.serializers.address import AddressSerializer
+from api.serializers.patient import PatientSerializer
+from api.serializers.professional import ProfessionalSerializer
+from django.db.transaction import atomic
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from api.serializers.profile import ProfileSerializer
-from api.serializers.address import AddressSerializer
 
-User = get_user_model()
-
-
-class SignUpViewSet(viewsets.ViewSet):
+class SignUpViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.AllowAny]
 
-    def create(self, request, **_):
+    @atomic
+    @action(methods=["POST"], detail=False, url_path="professional")
+    def professional(self, request, **kwargs):
         address = request.data.pop("address", None)
-        if address:
+
+        if address is not None:
             address_serializer = AddressSerializer(data=address)
             address_serializer.is_valid(raise_exception=True)
             address = address_serializer.save()
 
-        serializer = ProfileSerializer(data=request.data)
+        plan = Plan.get_free_plan()
+        profession = Profession.get_default_profession()
+
+        data = {
+            **request.data,
+            "profession": profession.id,
+            "plan": plan.id,
+            "address": address.id if address else None,
+        }
+
+        serializer = ProfessionalSerializer(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(address=address)
+        serializer.save()
+
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    @atomic
+    @action(methods=["POST"], detail=False, url_path="patient")
+    def patient(self, request, **kwargs):
+        serializer = PatientSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
         return Response(status=status.HTTP_200_OK, data=serializer.data)

@@ -1,9 +1,8 @@
-from rest_framework import serializers
-
 from api.models.profession import Profession
+from rest_framework import serializers
 
 
 class ProfessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profession
-        fields = "__all__"
+        exclude = ("deleted_at", "is_deleted")

@@ -8,54 +8,30 @@ def calendar(profile):
 
 
 @pytest.fixture()
-def calendar_create_data(profile):
+def calendar_create_data():
     return {
-        "profile": str(profile.id),
-        "periods": [
-            {
-                "date_start": "2023-01-01 07:00:00",
-                "date_finish": "2023-01-01 07:30:00",
-            },
-            {
-                "date_start": "2023-01-01 07:30:00",
-                "date_finish": "2023-01-01 08:00:00",
-            },
-            {
-                "date_start": "2023-01-02 07:00:00",
-                "date_finish": "2023-01-02 07:45:00",
-            },
-            {
-                "date_start": "2023-01-02 14:00:00",
-                "date_finish": "2023-01-02 14:35:00",
-            },
+        "duration": 60,
+        "is_default": True,
+        "slots": [
+            {"date": "2023-01-01", "time_start": "08:00:00", "time_finish": "11:00:00"},
+            {"date": "2023-01-01", "time_start": "13:00:00", "time_finish": "17:00:00"},
+            {"date": "2023-01-02", "time_start": "07:00:00", "time_finish": "12:00:00"},
+            {"date": "2023-01-02", "time_start": "13:30:00", "time_finish": "18:00:00"},
+            {"date": "2023-01-03", "time_start": "12:00:00", "time_finish": "19:00:00"},
         ],
     }
 
 
 @pytest.fixture()
-def calendar_update_data(other_profile):
+def calendar_update_data():
     return {
-        "profile": str(other_profile.id),
-        "periods": [
-            {
-                "date_start": "2023-01-03 07:00:00",
-                "date_finish": "2023-01-03 07:30:00",
-            },
-            {
-                "date_start": "2023-01-03 10:30:00",
-                "date_finish": "2023-01-03 11:00:00",
-            },
-            {
-                "date_start": "2023-02-03 09:00:00",
-                "date_finish": "2023-02-03 09:45:00",
-            },
-            {
-                "date_start": "2023-03-01 17:00:00",
-                "date_finish": "2023-03-01 17:45:00",
-            },
-            {
-                "date_start": "2023-07-01 20:00:00",
-                "date_finish": "2023-07-01 20:45:00",
-            },
+        "duration": 30,
+        "is_default": False,
+        "slots": [
+            {"date": "2023-01-03", "time_start": "07:00:00", "time_finish": "12:00:00"},
+            {"date": "2023-01-03", "time_start": "13:30:00", "time_finish": "18:00:00"},
+            {"date": "2023-01-04", "time_start": "07:00:00", "time_finish": "12:00:00"},
+            {"date": "2023-01-04", "time_start": "13:30:00", "time_finish": "18:00:00"},
+            {"date": "2023-01-05", "time_start": "12:00:00", "time_finish": "19:00:00"},
         ],
     }

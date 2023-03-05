@@ -1,37 +1,54 @@
 from api.models.calendar import Calendar
-from api.models.period import Period
-from api.serializers.period import PeriodSerializer
+from api.models.slot import Slot
+from api.serializers.slot import SlotSerializer
 from rest_framework import serializers
 
 
 class CalendarSerializer(serializers.ModelSerializer):
-    periods = PeriodSerializer(many=True, allow_empty=True, required=False)
+    slots = SlotSerializer(many=True, allow_empty=True, required=False)
 
     class Meta:
         model = Calendar
-        fields = "__all__"
+        read_only_fields = ["profile"]
+        exclude = ("deleted_at", "is_deleted")
 
     def create(self, validated_data):
-        periods = validated_data.pop("periods", [])
+        request = self.context.get("request")
+        slots = validated_data.pop("slots", [])
+        is_default = validated_data.get("is_default", False)
 
-        calendar = Calendar.objects.create(**validated_data)
+        if is_default:
+            # Remove the default calendar
+            Calendar.objects.filter(profile=request.user, is_default=True).update(
+                is_default=False
+            )
 
-        for period in periods:
-            calendar.periods.add(Period(**period), bulk=False)
+        calendar = Calendar.objects.create(profile=request.user, **validated_data)
+
+        for slot in slots:
+            calendar.slots.add(Slot(**slot), bulk=False)
 
         return calendar
 
     def update(self, instance, validated_data):
         """
-        Update will always override the periods related to the calendar IF, and only if,
-        periods are sent in the request. Otherwise the periods will be ignored.
+        Update will always override the slots related to the calendar IF, and only if,
+        slots are sent in the request. Otherwise the slots will be ignored.
         """
-        periods = validated_data.pop("periods", None)
+        request = self.context.get("request")
+        slots = validated_data.pop("slots", None)
+        is_default = validated_data.get("is_default", False)
 
-        if periods is not None:
-            instance.periods.all().delete()
+        if slots is not None:
+            instance.slots.all().delete()
 
-            for period in periods:
-                instance.periods.add(Period(**period), bulk=False)
+            for slot in slots:
+                instance.slots.add(Slot(**slot), bulk=False)
+
+        if is_default:
+            # Remove the default calendar
+            Calendar.objects.filter(profile=request.user, is_default=True).update(
+                is_default=False
+            )
 
         return super().update(instance, validated_data)

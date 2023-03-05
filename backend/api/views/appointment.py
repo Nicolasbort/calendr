@@ -1,15 +1,18 @@
 from api.models.appointment import Appointment
+from api.permissions.is_admin_or_professional import IsAdminOrProfessional
 from api.serializers.appointment import AppointmentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminOrProfessional]
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ("patient__id",)
 
     def get_queryset(self):
-        return super().get_queryset().filter(profile=self.request.user).all()
+        if self.request.user.is_staff:
+            return Appointment.objects.all()
+
+        return Appointment.objects.filter(professional__profile=self.request.user).all()

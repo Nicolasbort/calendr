@@ -1,17 +1,18 @@
-from api.models import Patient, Profile
+from api.models.professional import Professional
+from api.models.profile import Profile
 from rest_framework import serializers
 from rest_framework.fields import SkipField
 from rest_framework.relations import PKOnlyObject
 
 
-class PatientSerializer(serializers.ModelSerializer):
+class ProfessionalSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     email = serializers.EmailField()
     phone = serializers.CharField(required=False)
 
     class Meta:
-        model = Patient
+        model = Professional
         read_only_fields = (
             "uuid",
             "created_at",
@@ -25,20 +26,20 @@ class PatientSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         profile = Profile(is_staff=False)
-        patient = Patient()
+        professional = Professional()
 
         for attr, value in validated_data.items():
             if attr in Profile.WRITABLE_KEYS:
                 setattr(profile, attr, value)
             else:
-                setattr(patient, attr, value)
+                setattr(professional, attr, value)
 
-        patient.profile = profile
+        professional.profile = profile
 
         profile.save()
-        patient.save()
+        professional.save()
 
-        return patient
+        return professional
 
     def update(self, instance, validated_data: dict):
         profile = instance.profile

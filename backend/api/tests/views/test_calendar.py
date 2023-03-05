@@ -1,15 +1,19 @@
+import datetime
 import json
-from datetime import datetime
 
 import pytest
 from api.models.calendar import Calendar
 from django.urls import reverse
 
+DEFAULT_TIME_FORMAT = "%H:%M:%S"
+
 
 @pytest.mark.django_db
 class TestCalendarViewSet:
     @staticmethod
-    def test_calendar_with_periods_creation(admin_api, calendar_create_data):
+    def test_calendar_with_slots_creation(
+        admin_api, admin_profile, calendar_create_data
+    ):
         url = reverse("api:calendar-list")
 
         response = admin_api.post(
@@ -22,25 +26,25 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        assert str(calendar.profile.id) == calendar_create_data["profile"]
-        assert calendar.periods.count() == len(calendar_create_data["periods"])
+        assert str(calendar.profile.id) == str(admin_profile.id)
+        assert calendar.duration == calendar_create_data["duration"]
+        assert calendar.is_default == calendar_create_data["is_default"]
+        assert calendar.slots.count() == len(calendar_create_data["slots"])
 
-        date_format = "%Y-%m-%d %H:%M:%S"
+        for dict_slot, slot in zip(calendar_create_data["slots"], calendar.slots.all()):
+            time_start_string = slot.time_start.strftime(DEFAULT_TIME_FORMAT)
+            time_finish_string = slot.time_finish.strftime(DEFAULT_TIME_FORMAT)
 
-        for dict_period, period in zip(
-            calendar_create_data["periods"], calendar.periods.all()
-        ):
-            date_start_string = period.date_start.strftime(date_format)
-            date_finish_string = period.date_finish.strftime(date_format)
-
-            assert dict_period["date_start"] == date_start_string
-            assert dict_period["date_finish"] == date_finish_string
+            assert dict_slot["time_start"] == time_start_string
+            assert dict_slot["time_finish"] == time_finish_string
 
     @staticmethod
-    def test_calendar_with_empty_periods_creation(admin_api, calendar_create_data):
+    def test_calendar_with_empty_slots_creation(
+        admin_api, admin_profile, calendar_create_data
+    ):
         url = reverse("api:calendar-list")
 
-        calendar_create_data["periods"] = []
+        calendar_create_data["slots"] = []
 
         response = admin_api.post(
             url, json.dumps(calendar_create_data), content_type="application/json"
@@ -52,14 +56,18 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        assert str(calendar.profile.id) == calendar_create_data["profile"]
-        assert calendar.periods.count() == 0
+        assert str(calendar.profile.id) == str(admin_profile.id)
+        assert calendar.duration == calendar_create_data["duration"]
+        assert calendar.is_default == calendar_create_data["is_default"]
+        assert calendar.slots.count() == 0
 
     @staticmethod
-    def test_calendar_without_periods_creation(admin_api, calendar_create_data):
+    def test_calendar_without_slots_creation(
+        admin_api, admin_profile, calendar_create_data
+    ):
         url = reverse("api:calendar-list")
 
-        calendar_create_data.pop("periods")
+        calendar_create_data.pop("slots")
 
         response = admin_api.post(
             url, json.dumps(calendar_create_data), content_type="application/json"
@@ -71,29 +79,32 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        assert str(calendar.profile.id) == calendar_create_data["profile"]
-        assert calendar.periods.count() == 0
+        assert str(calendar.profile.id) == str(admin_profile.id)
+        assert calendar.duration == calendar_create_data["duration"]
+        assert calendar.is_default == calendar_create_data["is_default"]
+        assert calendar.slots.count() == 0
 
     @staticmethod
-    def test_calendar_with_periods_update(
-        admin_api, calendar_create_data, calendar_update_data, period
+    def test_calendar_with_slots_update(
+        admin_api, admin_profile, calendar_create_data, calendar_update_data, slot
     ):
         url_post = reverse("api:calendar-list")
 
+        print(calendar_create_data)
         response = admin_api.post(
             url_post, json.dumps(calendar_create_data), content_type="application/json"
         )
 
         calendar = Calendar.objects.first()
-        date_format = "%Y-%m-%d %H:%M:%S"
 
         url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
 
-        calendar_update_data["periods"].append(
+        calendar_update_data["slots"].append(
             {
-                "id": str(period.id),
-                "date_start": period.date_start,
-                "date_finish": period.date_finish,
+                "id": str(slot.id),
+                "date": slot.date,
+                "time_start": slot.time_start,
+                "time_finish": slot.time_finish,
             }
         )
 
@@ -105,21 +116,21 @@ class TestCalendarViewSet:
 
         calendar.refresh_from_db()
 
-        assert str(calendar.profile.id) == calendar_update_data["profile"]
-        assert calendar.periods.count() == len(calendar_update_data["periods"])
+        assert str(calendar.profile.id) == str(admin_profile.id)
+        assert calendar.duration == calendar_update_data["duration"]
+        assert calendar.is_default == calendar_update_data["is_default"]
+        assert calendar.slots.count() == len(calendar_update_data["slots"])
 
-        for dict_period, period in zip(
-            calendar_update_data["periods"], calendar.periods.all()
-        ):
-            date_start_string = period.date_start.strftime(date_format)
-            date_finish_string = period.date_finish.strftime(date_format)
+        for dict_slot, slot in zip(calendar_update_data["slots"], calendar.slots.all()):
+            time_start_string = slot.time_start.strftime(DEFAULT_TIME_FORMAT)
+            time_finish_string = slot.time_finish.strftime(DEFAULT_TIME_FORMAT)
 
-            assert dict_period["date_start"] == date_start_string
-            assert dict_period["date_finish"] == date_finish_string
+            assert dict_slot["time_start"] == time_start_string
+            assert dict_slot["time_finish"] == time_finish_string
 
     @staticmethod
-    def test_calendar_with_periods_on_creation_empty_on_update(
-        admin_api, calendar_create_data, calendar_update_data
+    def test_calendar_with_slots_on_creation_empty_on_update(
+        admin_api, admin_profile, calendar_create_data, calendar_update_data
     ):
         url_post = reverse("api:calendar-list")
 
@@ -131,7 +142,7 @@ class TestCalendarViewSet:
 
         url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
 
-        del calendar_update_data["periods"]
+        del calendar_update_data["slots"]
 
         response = admin_api.patch(
             url_patch, json.dumps(calendar_update_data), content_type="application/json"
@@ -141,16 +152,14 @@ class TestCalendarViewSet:
 
         calendar.refresh_from_db()
 
-        assert str(calendar.profile.id) == calendar_update_data["profile"]
-        assert calendar.periods.count() == len(calendar_create_data["periods"])
+        assert str(calendar.profile.id) == str(admin_profile.id)
+        assert calendar.duration == calendar_create_data["duration"]
+        assert calendar.is_default == calendar_create_data["is_default"]
+        assert calendar.slots.count() == len(calendar_create_data["slots"])
 
-        date_format = "%Y-%m-%d %H:%M:%S"
+        for dict_slot, slot in zip(calendar_create_data["slots"], calendar.slots.all()):
+            time_start_string = slot.time_start.strftime(DEFAULT_TIME_FORMAT)
+            time_finish_string = slot.time_finish.strftime(DEFAULT_TIME_FORMAT)
 
-        for dict_period, period in zip(
-            calendar_create_data["periods"], calendar.periods.all()
-        ):
-            date_start_string = period.date_start.strftime(date_format)
-            date_finish_string = period.date_finish.strftime(date_format)
-
-            assert dict_period["date_start"] == date_start_string
-            assert dict_period["date_finish"] == date_finish_string
+            assert dict_slot["time_start"] == time_start_string
+            assert dict_slot["time_finish"] == time_finish_string

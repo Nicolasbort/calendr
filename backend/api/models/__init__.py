@@ -4,7 +4,8 @@ from .calendar import Calendar
 from .city import City
 from .patient import Patient
 from .payment import Payment
-from .period import Period
 from .plan import Plan
 from .profession import Profession
+from .professional import Professional
 from .profile import Profile
+from .slot import Slot

@@ -1,9 +1,11 @@
+import logging
+
 from api.constants.city import StateChoices
-from api.models.city import City
-from api.models.plan import Plan
-from api.models.profession import Profession
-from api.models.profile import Profile
+from api.models import Address, City, Plan, Profession, Professional, Profile
+from app.settings import ENV
 from django.core.management.base import BaseCommand
+
+logger = logging.getLogger("django")
 
 # python manage.py seed --mode=refresh
 
@@ -21,55 +23,83 @@ class Command(BaseCommand):
         parser.add_argument("--mode", type=str, help="Mode")
 
     def handle(self, *args, **options):
-        self.stdout.write("Seeding data...")
+        logger.info("Seeding data...")
         run_seed(self, options["mode"])
-        self.stdout.write("Done.")
+        logger.info("Done.")
 
 
 def clear_data():
-    """Deletes all the table data"""
-    Profile.objects.all().delete()
+    logger.info("Deleting all database data")
+
+    Profile.global_objects.all().delete()
+    Address.objects.all().delete()
     City.objects.all().delete()
-    Plan.objects.all().delete()
-    Profession.objects.all().delete()
+    Plan.global_objects.all().delete()
+    Profession.global_objects.all().delete()
+    Professional.global_objects.all().delete()
 
 
-def create_admin(data):
-    """Creates an admin profile"""
+def create_profie() -> Profile:
     profile = Profile(
-        username="admin",
-        email="admin@example.com",
-        first_name="Admin",
+        email="user@example.com",
+        first_name="User",
         last_name="Auto",
-        genre="M",
-        is_staff=True,
-        is_superuser=True,
-        **data,
+        is_staff=False,
+        is_superuser=False,
     )
     profile.set_password("password")
     profile.save()
+
     return profile
 
 
-def create_city(city: dict):
-    """Creates a city object"""
-    city = City(**city)
-    city.save()
-    return city
+def create_admin() -> Profile:
+    profile = Profile(
+        email="admin@example.com",
+        first_name="Admin",
+        last_name="Auto",
+        is_staff=True,
+        is_superuser=True,
+    )
+    profile.set_password("password")
+    profile.save()
+
+    return profile
 
 
-def create_plan():
-    """Creates a basic plan object"""
-    plan = Plan(name="Básico")
-    plan.save()
-    return plan
+def create_address(city: City) -> Address:
+    return Address.objects.create(
+        street="Rua Street",
+        number="99",
+        district="Bairro",
+        complement="Complemento",
+        city=city,
+    )
 
 
-def create_profession():
-    """Creates a base profession"""
-    profession = Profession(name="Psicólogo")
-    profession.save()
-    return profession
+def create_city(city: dict) -> City:
+    return City.objects.create(**city)
+
+
+def create_plan() -> Plan:
+    return Plan.objects.create(name="Básico")
+
+
+def create_profession() -> Profession:
+    return Profession.objects.create(name="Psicólogo")
+
+
+def create_professional(address, profession, plan, profile) -> Professional:
+    return Professional.objects.create(
+        picture="picture.png",
+        bio="lorem ipsu^m",
+        genre="M",
+        birthday="1995-01-01",
+        address=address,
+        profession=profession,
+        plan=plan,
+        profile=profile,
+    )
 
 
 def run_seed(self, mode):
@@ -78,8 +108,12 @@ def run_seed(self, mode):
     :param mode: refresh / clear
     :return:
     """
-    # Clear data from tables
+    if ENV != "dev":
+        logger.info("Can't run seed in non 'dev' environemt")
+        return
+
     clear_data()
+
     if mode == MODE_CLEAR:
         return
 
@@ -92,8 +126,11 @@ def run_seed(self, mode):
 
     # Creating cities
     for city in cities:
-        create_city(city)
+        last_city = create_city(city)
 
+    address = create_address(last_city)
     plan = create_plan()
     profession = create_profession()
-    create_admin({"plan": plan, "profession": profession})
+    profile = create_profie()
+    create_professional(address, profession, plan, profile)
+    create_admin()

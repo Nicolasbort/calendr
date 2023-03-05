@@ -24,6 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
+ENV = os.environ.get("ENV", default="dev").lower()
 DEBUG = bool(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = ["psico.local", "localhost"]
@@ -143,7 +144,7 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "api.Profile"
-
+# AUTHENTICATION_BACKENDS = ["api.backends.authentication.EmailBackend"]
 
 # Celery variables
 
@@ -191,7 +192,7 @@ LOGGING_HANDLERS = {
 LOGGING_LOGGERS = {
     "django": {
         "handlers": ["console_handler", "warning_handler", "error_handler"],
-        "level": "DEBUG",
+        "level": "INFO",
         "propagate": True,
     },
     "django.request": {

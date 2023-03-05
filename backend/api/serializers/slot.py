@@ -1,21 +1,21 @@
-from api.models.period import Period
+from api.models.slot import Slot
 from rest_framework import serializers
 
 
-class PeriodSerializer(serializers.ModelSerializer):
+class SlotSerializer(serializers.ModelSerializer):
     duration = serializers.ReadOnlyField()
 
     class Meta:
-        model = Period
+        model = Slot
         fields = "__all__"
 
     def create(self, validated_data):
         is_many = isinstance(validated_data, list)
 
         if is_many:
-            return Period.objects.bulk_create(
+            return Slot.objects.bulk_create(
                 **validated_data,
                 update_conflicts=True,
             )
 
-        return Period.objects.update_or_create(**validated_data)
+        return Slot.objects.update_or_create(**validated_data)

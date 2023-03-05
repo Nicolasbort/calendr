@@ -11,8 +11,12 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = "__all__"
-        read_only_fields = ("uuid, created_at, modified_at",)
+        read_only_fields = (
+            "uuid",
+            "created_at",
+            "modified_at",
+        )
+        exclude = ("deleted_at", "is_deleted", "is_staff")
         extra_kwargs = {"password": {"write_only": True, "min_length": 4}}
 
     def create(self, validated_data: dict):
