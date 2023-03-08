@@ -12,6 +12,11 @@ class LoggedUserView(APIView):
         try:
             serializer = ProfileSerializer(Profile.objects.get(pk=request.user.id))
         except Profile.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                data={
+                    "error": "User not found. This error may happen if the user was deleted"
+                },
+            )
 
         return Response(status=status.HTTP_200_OK, data=serializer.data)

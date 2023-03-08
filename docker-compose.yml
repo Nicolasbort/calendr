@@ -1,12 +1,12 @@
 version: "3.3"
 
 services:
-  psico_api:
+  calendr_api:
     build:
       context: ./backend
-    container_name: psico_api
+    container_name: calendr_api
     depends_on:
-      - psico_db
+      - calendr_db
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend:/usr/src/app/
@@ -15,42 +15,42 @@ services:
     env_file:
       - ./backend/.env.dev
 
-  psico_worker:
+  calendr_worker:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: psico_worker
+    container_name: calendr_worker
     entrypoint: ./entrypoint.worker.sh
     depends_on:
-      - psico_api
-      - psico_db
-      - psico_redis
-    command: celery -A app worker -l info
+      - calendr_api
+      - calendr_db
+      - calendr_redis
+    command: celery -A calendr worker -l info
     volumes:
       - ./backend:/usr/src/app/
     env_file:
       - ./backend/.env.dev
 
-  psico_db:
-    container_name: psico_db
+  calendr_db:
+    container_name: calendr_db
     image: postgres:15.2-alpine
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - calendr_postgres:/var/lib/postgresql/data/
     ports:
       - 2345:5432
     environment:
-      - POSTGRES_USER=psico
+      - POSTGRES_USER=calendr
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=psico
+      - POSTGRES_DB=calendr
 
-  psico_redis:
-    container_name: psico_redis
+  calendr_redis:
+    container_name: calendr_redis
     image: redis:7.0.9-alpine
     volumes:
-      - psico_redis:/var/lib/redis/data/
+      - calendr_redis:/var/lib/redis/data/
     ports:
       - 6379:6379
 
 volumes:
-  postgres_data:
-  psico_redis:
+  calendr_postgres:
+  calendr_redis:

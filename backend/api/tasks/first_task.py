@@ -1,6 +1,6 @@
 import time
 
-from app.celery import celery_app
+from calendr.celery import celery_app
 
 
 @celery_app.task(name="first_task")

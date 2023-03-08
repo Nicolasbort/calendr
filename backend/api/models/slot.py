@@ -1,27 +1,32 @@
-from datetime import date, datetime
 from functools import cached_property
 
+from api.constants.slot import WeekDayChoices
 from api.models.base_model import Timestamp, Uuid
 from api.models.calendar import Calendar
+from api.utils.datetime import diff
 from django.db import models
 
 
 class Slot(Uuid, Timestamp):
     calendar = models.ForeignKey(
-        Calendar, on_delete=models.CASCADE, related_name="slots", null=True
+        Calendar, on_delete=models.CASCADE, related_name="slots", db_index=True
     )
-    date = models.DateField()
+    week_day = models.PositiveSmallIntegerField(choices=WeekDayChoices.choices)
     time_start = models.TimeField()
-    time_finish = models.TimeField()
+    time_end = models.TimeField()
 
     @cached_property
     def duration(self) -> int:
-        """
-        Time in minutes of the calendar slot
-        """
-        datetime_finish = datetime.combine(date.today(), self.time_finish)
-        datetime_start = datetime.combine(date.today(), self.time_start)
+        return diff(self.time_start, self.time_end)
 
-        diff = datetime_finish - datetime_start
+    @cached_property
+    def is_full(self) -> bool:
+        """
+        If the slot if full of appointments
+        """
+        appointment_durations = 0
 
-        return round(diff.total_seconds() / 60)
+        for appointment in self.appointments.all():
+            appointment_durations += appointment.duration
+
+        return appointment_durations >= self.duration

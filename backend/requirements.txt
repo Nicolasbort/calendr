@@ -7,6 +7,6 @@ drf_nested_routers==0.93.4
 psycopg2==2.9.3
 pytest-django==4.5.2
 pytest-cov==4.0.0
-django-soft-delete==0.9.21
 celery==5.2.7
 redis==4.5.1
+django_hosts===5.2

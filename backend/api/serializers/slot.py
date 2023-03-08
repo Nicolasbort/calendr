@@ -2,6 +2,14 @@ from api.models.slot import Slot
 from rest_framework import serializers
 
 
+class ListSlotSerializer(serializers.ModelSerializer):
+    duration = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Slot
+        fields = "__all__"
+
+
 class SlotSerializer(serializers.ModelSerializer):
     duration = serializers.ReadOnlyField()
 

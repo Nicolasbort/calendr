@@ -1,6 +1,6 @@
 # App back-end
 
-API to provide and receive data from a psychology app
+API and management UI to provide and receive data from a psychology app
 
 This code is formatted using Black and tested with pytest
 
@@ -8,8 +8,10 @@ This code is formatted using Black and tested with pytest
 
 To have a friendly url to access the API in the local environment, it's possible to create it using the following steps:
 
-- **For Linux OS:** Add `127.0.0.1 psico.local` to `/etc/hosts` file to access the API using `psico.local:8000/api`
-- **For Windows OS:** Add `127.0.0.1 psico.local` to `C:\Windows\System32\Drivers\etc\hosts` file to access the API using `psico.local:8000/api`
+- **For Linux OS:** Open `/etc/hosts` file
+- **For Windows OS:** Open `C:\Windows\System32\Drivers\etc\hosts` file
+
+Add `127.0.0.1 api.calendr management.calendr` to the file file to access the API using `api.calendr:8000` and the management UI using `management.calendr:8000`
 
 ## How to build
 
@@ -21,9 +23,15 @@ To have a friendly url to access the API in the local environment, it's possible
 
 ## Seed database
 
-Seeding the database will populate the models `City`, `Profession`, `Plan` and will create an admin `Profile` with username `admin` and password `password`
+The seeding process happens everytime the container is initiated.
 
-Run inside the API container:
+Seeding the database will populate the models `City`, `Profession`, `Plan` and will create an admin `Profile` with the following data:
+
+- username: `admin`
+- email: `admin@example.com`
+- password: `password`
+
+In order to run the seed manually open the API container and run:
 
 `python manage.py seed`
 

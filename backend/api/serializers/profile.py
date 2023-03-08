@@ -16,7 +16,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             "created_at",
             "modified_at",
         )
-        exclude = ("deleted_at", "is_deleted", "is_staff")
+        exclude = (
+            "deleted_at",
+            "is_staff",
+        )
         extra_kwargs = {"password": {"write_only": True, "min_length": 4}}
 
     def create(self, validated_data: dict):

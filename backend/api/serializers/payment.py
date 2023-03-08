@@ -10,4 +10,4 @@ class PaymentSerializer(serializers.ModelSerializer):
             "created_at",
             "modified_at",
         )
-        exclude = ("deleted_at", "is_deleted")
+        exclude = ("deleted_at",)

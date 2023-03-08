@@ -1,1 +1,1 @@
-from .authentication import EmailBackend
+from .authentication import CustomAuthBackend

@@ -10,11 +10,6 @@ from django.db import models
 
 
 class Professional(Uuid, Timestamp, SoftDeletable):
-    picture = models.CharField(max_length=128, null=True)
-    bio = models.TextField(null=True, blank=True)
-    genre = models.CharField(max_length=1, choices=GenreChoices.choices)
-    birthday = models.DateTimeField(null=True)
-    address = models.OneToOneField(Address, on_delete=models.RESTRICT, null=True)
     profession = models.OneToOneField(
         Profession,
         on_delete=models.RESTRICT,
@@ -27,6 +22,11 @@ class Professional(Uuid, Timestamp, SoftDeletable):
     profile = models.OneToOneField(
         Profile, on_delete=models.CASCADE, related_name="professional", db_index=True
     )
+    address = models.OneToOneField(Address, on_delete=models.RESTRICT, null=True)
+    picture = models.CharField(max_length=128, null=True)
+    genre = models.CharField(max_length=1, choices=GenreChoices.choices)
+    birthday = models.DateField(null=True)
+    bio = models.TextField(null=True, blank=True)
 
     def __str__(self) -> str:
         return self.profile.full_name

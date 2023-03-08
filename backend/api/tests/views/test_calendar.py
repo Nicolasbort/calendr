@@ -33,10 +33,10 @@ class TestCalendarViewSet:
 
         for dict_slot, slot in zip(calendar_create_data["slots"], calendar.slots.all()):
             time_start_string = slot.time_start.strftime(DEFAULT_TIME_FORMAT)
-            time_finish_string = slot.time_finish.strftime(DEFAULT_TIME_FORMAT)
+            time_end_string = slot.time_end.strftime(DEFAULT_TIME_FORMAT)
 
             assert dict_slot["time_start"] == time_start_string
-            assert dict_slot["time_finish"] == time_finish_string
+            assert dict_slot["time_end"] == time_end_string
 
     @staticmethod
     def test_calendar_with_empty_slots_creation(
@@ -104,7 +104,7 @@ class TestCalendarViewSet:
                 "id": str(slot.id),
                 "date": slot.date,
                 "time_start": slot.time_start,
-                "time_finish": slot.time_finish,
+                "time_end": slot.time_end,
             }
         )
 
@@ -123,10 +123,10 @@ class TestCalendarViewSet:
 
         for dict_slot, slot in zip(calendar_update_data["slots"], calendar.slots.all()):
             time_start_string = slot.time_start.strftime(DEFAULT_TIME_FORMAT)
-            time_finish_string = slot.time_finish.strftime(DEFAULT_TIME_FORMAT)
+            time_end_string = slot.time_end.strftime(DEFAULT_TIME_FORMAT)
 
             assert dict_slot["time_start"] == time_start_string
-            assert dict_slot["time_finish"] == time_finish_string
+            assert dict_slot["time_end"] == time_end_string
 
     @staticmethod
     def test_calendar_with_slots_on_creation_empty_on_update(
@@ -159,7 +159,7 @@ class TestCalendarViewSet:
 
         for dict_slot, slot in zip(calendar_create_data["slots"], calendar.slots.all()):
             time_start_string = slot.time_start.strftime(DEFAULT_TIME_FORMAT)
-            time_finish_string = slot.time_finish.strftime(DEFAULT_TIME_FORMAT)
+            time_end_string = slot.time_end.strftime(DEFAULT_TIME_FORMAT)
 
             assert dict_slot["time_start"] == time_start_string
-            assert dict_slot["time_finish"] == time_finish_string
+            assert dict_slot["time_end"] == time_end_string

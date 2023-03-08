@@ -18,10 +18,7 @@ class PatientSerializer(serializers.ModelSerializer):
             "modified_at",
             "profile",
         )
-        exclude = (
-            "deleted_at",
-            "is_deleted",
-        )
+        exclude = ("deleted_at",)
 
     def create(self, validated_data):
         profile = Profile(is_staff=False)

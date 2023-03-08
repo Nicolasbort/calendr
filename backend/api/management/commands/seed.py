@@ -1,8 +1,8 @@
 import logging
+import os
 
 from api.constants.city import StateChoices
 from api.models import Address, City, Plan, Profession, Professional, Profile
-from app.settings import ENV
 from django.core.management.base import BaseCommand
 
 logger = logging.getLogger("django")
@@ -31,17 +31,18 @@ class Command(BaseCommand):
 def clear_data():
     logger.info("Deleting all database data")
 
-    Profile.global_objects.all().delete()
+    Profile.all_objects.all().delete()
     Address.objects.all().delete()
     City.objects.all().delete()
-    Plan.global_objects.all().delete()
-    Profession.global_objects.all().delete()
-    Professional.global_objects.all().delete()
+    Plan.all_objects.all().delete()
+    Profession.all_objects.all().delete()
+    Professional.all_objects.all().delete()
 
 
 def create_profie() -> Profile:
     profile = Profile(
         email="user@example.com",
+        username="user",
         first_name="User",
         last_name="Auto",
         is_staff=False,
@@ -56,6 +57,7 @@ def create_profie() -> Profile:
 def create_admin() -> Profile:
     profile = Profile(
         email="admin@example.com",
+        username="admin",
         first_name="Admin",
         last_name="Auto",
         is_staff=True,
@@ -82,17 +84,19 @@ def create_city(city: dict) -> City:
 
 
 def create_plan() -> Plan:
-    return Plan.objects.create(name="Básico")
+    plan, _ = Plan.objects.get_or_create(name="Gratuito")
+    return plan
 
 
 def create_profession() -> Profession:
-    return Profession.objects.create(name="Psicólogo")
+    profession, _ = Profession.objects.get_or_create(name="Psicólogo")
+    return profession
 
 
 def create_professional(address, profession, plan, profile) -> Professional:
     return Professional.objects.create(
         picture="picture.png",
-        bio="lorem ipsu^m",
+        bio="lorem ipsum",
         genre="M",
         birthday="1995-01-01",
         address=address,
@@ -108,14 +112,19 @@ def run_seed(self, mode):
     :param mode: refresh / clear
     :return:
     """
-    if ENV != "dev":
-        logger.info("Can't run seed in non 'dev' environemt")
+    if os.environ.get("ENV", "prod") != "dev":
+        create_plan()
+        create_profession()
+
+        logger.info("Default Plan and Profession created.")
         return
 
     clear_data()
 
     if mode == MODE_CLEAR:
         return
+
+    logger.info("Creating models.")
 
     cities = [
         {"name": "São Paulo", "state": StateChoices.SP},

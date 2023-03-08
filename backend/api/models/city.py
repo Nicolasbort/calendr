@@ -9,3 +9,6 @@ class City(Uuid, Timestamp):
 
     def __str__(self) -> str:
         return f"{self.name}, {self.state}"
+
+    class Meta:
+        verbose_name_plural = "Cities"

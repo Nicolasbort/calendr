@@ -11,9 +11,24 @@ then
     echo "PostgreSQL started"
 fi
 
+if ["$ENV" = "prod"]
+  echo "Collecting static files"
+
+  python manage.py collectstatic
+fi
+
+echo "Migrating database"
+
 # Run migrations
 python manage.py migrate
 
 echo "Migrations complete"
+
+echo "Seeding database"
+
+# Seed database
+python manage.py seed
+
+echo "Seed complete"
 
 exec "$@"
