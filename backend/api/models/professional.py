@@ -10,14 +10,14 @@ from django.db import models
 
 
 class Professional(Uuid, Timestamp, SoftDeletable):
-    profession = models.OneToOneField(
+    profession = models.ForeignKey(
         Profession,
         on_delete=models.RESTRICT,
-        related_name="professional",
+        related_name="professionals",
         db_index=True,
     )
-    plan = models.OneToOneField(
-        Plan, on_delete=models.RESTRICT, related_name="professioal", db_index=True
+    plan = models.ForeignKey(
+        Plan, on_delete=models.RESTRICT, related_name="professioals", db_index=True
     )
     profile = models.OneToOneField(
         Profile, on_delete=models.CASCADE, related_name="professional", db_index=True

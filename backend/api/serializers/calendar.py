@@ -3,7 +3,7 @@ import logging
 from api.models.calendar import Calendar
 from api.models.slot import Slot
 from api.serializers.professional import ProfessionalSerializer
-from api.serializers.slot import ListSlotSerializer, SlotSerializer
+from api.serializers.slot import CalendarSlotSerializer, SlotSerializer
 from api.services.slot import group_by_weekday
 from api.utils.serializers import get_serialized_data
 from rest_framework import serializers
@@ -19,7 +19,7 @@ class ListCalendarSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
 
-        serializer = ListSlotSerializer(many=True, data=instance.slots)
+        serializer = SlotSerializer(many=True, data=instance.slots)
         serializer.is_valid()
 
         data["slots"] = group_by_weekday(serializer.data)
@@ -31,11 +31,11 @@ class ListCalendarSerializer(serializers.ModelSerializer):
 
 
 class CalendarSerializer(serializers.ModelSerializer):
-    slots = SlotSerializer(many=True, allow_empty=True, required=False)
+    slots = CalendarSlotSerializer(many=True, allow_empty=True, required=False)
 
     class Meta:
         model = Calendar
-        read_only_fields = ["profile"]
+        read_only_fields = ["professional"]
         exclude = ("deleted_at",)
 
     def create(self, validated_data):
@@ -45,11 +45,13 @@ class CalendarSerializer(serializers.ModelSerializer):
 
         if is_default:
             # Remove the default calendar
-            Calendar.objects.filter(profile=request.user, is_default=True).update(
-                is_default=False
-            )
+            Calendar.objects.filter(
+                professional=request.user.professional, is_default=True
+            ).update(is_default=False)
 
-        calendar = Calendar.objects.create(profile=request.user, **validated_data)
+        calendar = Calendar.objects.create(
+            professional=request.user.professional, **validated_data
+        )
 
         for slot in slots:
             calendar.slots.add(Slot(**slot), bulk=False)
@@ -73,8 +75,10 @@ class CalendarSerializer(serializers.ModelSerializer):
 
         if is_default:
             # Remove the default calendar
-            Calendar.objects.filter(profile=request.user, is_default=True).update(
-                is_default=False
-            )
+            Calendar.objects.filter(
+                professional=request.user.professional, is_default=True
+            ).update(is_default=False)
+
+        print(validated_data)
 
         return super().update(instance, validated_data)

@@ -16,6 +16,7 @@ class TestPatientViewSet:
             "first_name",
             "last_name",
             "email",
+            "username",
             "phone",
             "profile",
             "professional",
@@ -37,6 +38,7 @@ class TestPatientViewSet:
             "first_name": "First",
             "last_name": "Last",
             "email": "patient@example.com",
+            "username": "patient",
             "phone": "99999999",
             "notify_pending_payment": True,
             "professional": str(professional.id),
@@ -52,13 +54,14 @@ class TestPatientViewSet:
 
         assert patient is not None
 
-        profile = Profile.objects.filter(patients=patient).first()
+        profile = Profile.objects.filter(patient=patient).first()
 
         assert profile is not None
 
         assert profile.first_name == "First"
         assert profile.last_name == "Last"
         assert profile.email == "patient@example.com"
+        assert profile.username == "patient"
         assert profile.phone == "99999999"
 
         assert patient.professional.id == professional.id
@@ -72,6 +75,7 @@ class TestPatientViewSet:
             "first_name": "First",
             "last_name": "Last",
             "email": "patient@example.com",
+            "username": "patient",
             "notify_pending_payment": True,
             "professional": str(professional.id),
         }
@@ -86,13 +90,14 @@ class TestPatientViewSet:
 
         assert patient is not None
 
-        profile = Profile.objects.filter(patients=patient).first()
+        profile = Profile.objects.filter(patient=patient).first()
 
         assert profile is not None
 
         assert profile.first_name == "First"
         assert profile.last_name == "Last"
         assert profile.email == "patient@example.com"
+        assert profile.username == "patient"
         assert profile.phone == None
 
         assert patient.professional.id == professional.id
@@ -106,6 +111,7 @@ class TestPatientViewSet:
             "first_name": "Update First",
             "last_name": "Update Last",
             "email": "update-patient@example.com",
+            "username": "update-patient",
             "phone": "8888888",
             "notify_pending_payment": False,
             "professional": str(other_professional.id),
@@ -118,12 +124,13 @@ class TestPatientViewSet:
         assert response.status_code == 200
 
         patient.refresh_from_db()
-        profile = Profile.objects.filter(patients=patient).first()
+        profile = Profile.objects.filter(patient=patient).first()
 
         assert profile is not None
         assert profile.first_name == "Update First"
         assert profile.last_name == "Update Last"
         assert profile.email == "update-patient@example.com"
+        assert profile.username == "update-patient"
         assert profile.phone == "8888888"
 
         assert patient.professional.id == other_professional.id
@@ -144,7 +151,7 @@ class TestPatientViewSet:
         assert response.status_code == 400
 
         patient.refresh_from_db()
-        profile = Profile.objects.filter(patients=patient).first()
+        profile = Profile.objects.filter(patient=patient).first()
 
         assert profile is not None
         assert profile.email != "invalid_email"

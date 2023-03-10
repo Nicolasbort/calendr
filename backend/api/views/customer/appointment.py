@@ -3,7 +3,7 @@ from api.serializers.appointment import AppointmentSerializer
 from rest_framework import permissions, viewsets
 
 
-class PatientAppointmentViewSet(viewsets.ModelViewSet):
+class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     permission_classes = [permissions.IsAuthenticated]
 

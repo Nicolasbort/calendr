@@ -23,6 +23,7 @@ class TestSignupViewSet:
             "last_name": "Last",
             "password": "password",
             "email": "professional@example.com",
+            "username": "professional",
             "phone": "99999999",
             "address": {
                 "street": "Rua",
@@ -55,6 +56,7 @@ class TestSignupViewSet:
         assert profile.first_name == "First"
         assert profile.last_name == "Last"
         assert profile.email == "professional@example.com"
+        assert profile.username == "professional"
         assert profile.phone == "99999999"
         assert profile.password is not None
 
@@ -77,6 +79,7 @@ class TestSignupViewSet:
             "last_name": "Last",
             "password": "password",
             "email": "professional@example.com",
+            "username": "professional",
             "phone": "99999999",
             "address": {
                 "street": "Rua",
@@ -108,6 +111,7 @@ class TestSignupViewSet:
             "last_name": "Last",
             "password": "password",
             "email": "patient@example.com",
+            "username": "patient",
             "phone": "99999999",
         }
 
@@ -127,6 +131,7 @@ class TestSignupViewSet:
         assert profile.first_name == "First"
         assert profile.last_name == "Last"
         assert profile.email == "patient@example.com"
+        assert profile.username == "patient"
         assert profile.phone == "99999999"
         assert profile.password is not None
 
@@ -141,6 +146,7 @@ class TestSignupViewSet:
             "last_name": "Last",
             "password": "password",
             "email": "email to throw error",
+            "username": "patient",
             "phone": "99999999",
         }
 

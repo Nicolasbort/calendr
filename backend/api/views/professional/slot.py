@@ -3,7 +3,7 @@ from api.serializers.slot import SlotSerializer
 from api.views.professional.base_viewset import BaseViewSet
 
 
-class ProfessionalSlotViewSet(BaseViewSet):
+class SlotViewSet(BaseViewSet):
     queryset = Slot.objects.all()
     serializer_class = SlotSerializer
 

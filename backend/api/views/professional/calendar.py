@@ -1,19 +1,35 @@
+from uuid import UUID
+
 from api.models.calendar import Calendar
 from api.serializers.calendar import CalendarSerializer, ListCalendarSerializer
 from api.views.professional.base_viewset import BaseViewSet
-from rest_framework import status
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from rest_framework import permissions, status
 
 
-class ProfessionalCalendarViewSet(BaseViewSet):
+class CalendarViewSet(BaseViewSet):
+    lookup_field = "pk"
     queryset = Calendar.objects.all()
     serializer_class = CalendarSerializer
 
-    @action(methods=["GET"], detail=True, url_path="full-calendar")
-    def full_calendar(self, request, **kwargs):
-        calendar = self.get_object()
+    def get_object(self):
+        if self.action != "retrieve":
+            return super().get_object()
 
-        serializer = ListCalendarSerializer(calendar)
+        value = self.kwargs[self.lookup_field]
+        filter_kwargs = {self.lookup_field: value}
 
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        try:
+            UUID(value)
+        except ValueError:
+            filter_kwargs = {
+                "professional__profile__username": value,
+                "is_default": True,
+                "is_active": True,
+            }
+
+        obj = get_object_or_404(self.queryset, **filter_kwargs)
+
+        self.check_object_permissions(self.request, obj)
+
+        return obj

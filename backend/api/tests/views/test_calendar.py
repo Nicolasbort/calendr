@@ -12,7 +12,7 @@ DEFAULT_TIME_FORMAT = "%H:%M:%S"
 class TestCalendarViewSet:
     @staticmethod
     def test_calendar_with_slots_creation(
-        admin_api, admin_profile, calendar_create_data
+        admin_api, admin_professional, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
@@ -26,9 +26,10 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        assert str(calendar.profile.id) == str(admin_profile.id)
+        assert calendar.professional.id == admin_professional.id
         assert calendar.duration == calendar_create_data["duration"]
         assert calendar.is_default == calendar_create_data["is_default"]
+        assert calendar.is_active == calendar_create_data["is_active"]
         assert calendar.slots.count() == len(calendar_create_data["slots"])
 
         for dict_slot, slot in zip(calendar_create_data["slots"], calendar.slots.all()):
@@ -40,7 +41,7 @@ class TestCalendarViewSet:
 
     @staticmethod
     def test_calendar_with_empty_slots_creation(
-        admin_api, admin_profile, calendar_create_data
+        admin_api, admin_professional, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
@@ -56,14 +57,15 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        assert str(calendar.profile.id) == str(admin_profile.id)
+        assert calendar.professional.id == admin_professional.id
         assert calendar.duration == calendar_create_data["duration"]
         assert calendar.is_default == calendar_create_data["is_default"]
+        assert calendar.is_active == calendar_create_data["is_active"]
         assert calendar.slots.count() == 0
 
     @staticmethod
     def test_calendar_without_slots_creation(
-        admin_api, admin_profile, calendar_create_data
+        admin_api, admin_professional, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
@@ -79,14 +81,19 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        assert str(calendar.profile.id) == str(admin_profile.id)
+        assert calendar.professional.id == admin_professional.id
         assert calendar.duration == calendar_create_data["duration"]
         assert calendar.is_default == calendar_create_data["is_default"]
+        assert calendar.is_active == calendar_create_data["is_active"]
         assert calendar.slots.count() == 0
 
     @staticmethod
     def test_calendar_with_slots_update(
-        admin_api, admin_profile, calendar_create_data, calendar_update_data, slot
+        admin_api,
+        admin_professional,
+        admin_slot,
+        calendar_create_data,
+        calendar_update_data,
     ):
         url_post = reverse("api:calendar-list")
 
@@ -101,10 +108,10 @@ class TestCalendarViewSet:
 
         calendar_update_data["slots"].append(
             {
-                "id": str(slot.id),
-                "date": slot.date,
-                "time_start": slot.time_start,
-                "time_end": slot.time_end,
+                "id": str(admin_slot.id),
+                "week_day": admin_slot.week_day,
+                "time_start": admin_slot.time_start,
+                "time_end": admin_slot.time_end,
             }
         )
 
@@ -116,9 +123,10 @@ class TestCalendarViewSet:
 
         calendar.refresh_from_db()
 
-        assert str(calendar.profile.id) == str(admin_profile.id)
+        assert calendar.professional.id == admin_professional.id
         assert calendar.duration == calendar_update_data["duration"]
         assert calendar.is_default == calendar_update_data["is_default"]
+        assert calendar.is_active == calendar_update_data["is_active"]
         assert calendar.slots.count() == len(calendar_update_data["slots"])
 
         for dict_slot, slot in zip(calendar_update_data["slots"], calendar.slots.all()):
@@ -130,7 +138,10 @@ class TestCalendarViewSet:
 
     @staticmethod
     def test_calendar_with_slots_on_creation_empty_on_update(
-        admin_api, admin_profile, calendar_create_data, calendar_update_data
+        admin_api,
+        admin_professional,
+        calendar_create_data,
+        calendar_update_data,
     ):
         url_post = reverse("api:calendar-list")
 
@@ -139,6 +150,8 @@ class TestCalendarViewSet:
         )
 
         calendar = Calendar.objects.first()
+
+        count_calendar_slots_before = calendar.slots.count()
 
         url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
 
@@ -152,14 +165,124 @@ class TestCalendarViewSet:
 
         calendar.refresh_from_db()
 
-        assert str(calendar.profile.id) == str(admin_profile.id)
-        assert calendar.duration == calendar_create_data["duration"]
-        assert calendar.is_default == calendar_create_data["is_default"]
-        assert calendar.slots.count() == len(calendar_create_data["slots"])
+        assert calendar.professional.id == admin_professional.id
+        assert calendar.duration == calendar_update_data["duration"]
+        assert calendar.is_default == calendar_update_data["is_default"]
+        assert calendar.is_active == calendar_update_data["is_active"]
+        assert calendar.slots.count() == count_calendar_slots_before
 
-        for dict_slot, slot in zip(calendar_create_data["slots"], calendar.slots.all()):
-            time_start_string = slot.time_start.strftime(DEFAULT_TIME_FORMAT)
-            time_end_string = slot.time_end.strftime(DEFAULT_TIME_FORMAT)
+    @staticmethod
+    def test_calendar_update_professional_error(
+        admin_api,
+        admin_professional,
+        professional,
+        calendar_create_data,
+        calendar_update_data,
+    ):
+        url_post = reverse("api:calendar-list")
 
-            assert dict_slot["time_start"] == time_start_string
-            assert dict_slot["time_end"] == time_end_string
+        response = admin_api.post(
+            url_post, json.dumps(calendar_create_data), content_type="application/json"
+        )
+
+        calendar = Calendar.objects.first()
+
+        url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
+
+        calendar_update_data["professional"] = str(professional.id)
+
+        print(calendar_update_data)
+
+        response = admin_api.patch(
+            url_patch, json.dumps(calendar_update_data), content_type="application/json"
+        )
+
+        assert response.status_code == 200
+
+        calendar.refresh_from_db()
+
+        assert calendar.professional.id == admin_professional.id
+
+    @staticmethod
+    def test_get_calendar_by_pk(admin_api, calendar):
+        url = reverse(
+            "api:calendar-detail",
+            kwargs={"pk": calendar.id},
+        )
+
+        response = admin_api.get(url)
+
+        assert response.status_code == 200
+
+        returned_calendar = response.json()
+
+        assert str(calendar.id) == returned_calendar["id"]
+        assert str(calendar.professional.id) == returned_calendar["professional"]
+        assert calendar.name == returned_calendar["name"]
+
+    @staticmethod
+    def test_get_calendar_by_username(admin_api, calendar):
+        url = reverse(
+            "api:calendar-detail",
+            kwargs={"pk": calendar.professional.profile.username},
+        )
+
+        response = admin_api.get(url)
+
+        assert response.status_code == 200
+
+        returned_calendar = response.json()
+
+        assert str(calendar.id) == returned_calendar["id"]
+        assert str(calendar.professional.id) == returned_calendar["professional"]
+        assert calendar.name == returned_calendar["name"]
+
+    @staticmethod
+    def test_get_calendar_not_active(admin_api, calendar_not_active):
+        url = reverse(
+            "api:calendar-detail",
+            kwargs={"pk": calendar_not_active.professional.profile.username},
+        )
+
+        response = admin_api.get(url)
+
+        assert response.status_code == 404
+
+    @staticmethod
+    def test_get_calendar_not_default(admin_api, calendar_not_default):
+        url = reverse(
+            "api:calendar-detail",
+            kwargs={"pk": calendar_not_default.professional.profile.username},
+        )
+
+        response = admin_api.get(url)
+
+        assert response.status_code == 404
+
+    @staticmethod
+    def test_get_calendar_not_active_and_default(
+        admin_api, calendar_not_active_and_default
+    ):
+        url = reverse(
+            "api:calendar-detail",
+            kwargs={
+                "pk": calendar_not_active_and_default.professional.profile.username
+            },
+        )
+
+        response = admin_api.get(url)
+
+        assert response.status_code == 404
+
+    @staticmethod
+    def test_get_calendar_by_id_not_active_and_default(
+        admin_api, calendar_not_active_and_default
+    ):
+        url = reverse(
+            "api:calendar-detail",
+            kwargs={"pk": calendar_not_active_and_default.id},
+        )
+
+        response = admin_api.get(url)
+
+        assert response.status_code == 200

@@ -3,6 +3,6 @@ from api.serializers.patient import PatientSerializer
 from api.views.professional.base_viewset import BaseViewSet
 
 
-class ProfessionalPatientViewSet(BaseViewSet):
+class PatientViewSet(BaseViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
