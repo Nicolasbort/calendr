@@ -1,9 +1,9 @@
 from api.models.slot import Slot
 from api.serializers.slot import SlotSerializer
-from api.views.professional.base_viewset import BaseViewSet
+from api.views.generic import ProfessionalAPIView
 
 
-class SlotViewSet(BaseViewSet):
+class SlotViewSet(ProfessionalAPIView):
     queryset = Slot.objects.all()
     serializer_class = SlotSerializer
 

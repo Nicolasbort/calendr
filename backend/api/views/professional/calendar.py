@@ -2,12 +2,11 @@ from uuid import UUID
 
 from api.models.calendar import Calendar
 from api.serializers.calendar import CalendarSerializer
-from api.views.professional.base_viewset import BaseViewSet
+from api.views.generic import ProfessionalAPIView
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions, status
 
 
-class CalendarViewSet(BaseViewSet):
+class CalendarViewSet(ProfessionalAPIView):
     lookup_field = "multiple_lookup_field"
     queryset = Calendar.objects.all()
     serializer_class = CalendarSerializer
