@@ -12,11 +12,11 @@ DEFAULT_TIME_FORMAT = "%H:%M:%S"
 class TestCalendarViewSet:
     @staticmethod
     def test_calendar_with_slots_creation(
-        admin_api, admin_professional, calendar_create_data
+        professional_api, professional, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
-        response = admin_api.post(
+        response = professional_api.post(
             url, json.dumps(calendar_create_data), content_type="application/json"
         )
 
@@ -26,7 +26,7 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        assert calendar.professional.id == admin_professional.id
+        assert calendar.professional.id == professional.id
         assert calendar.duration == calendar_create_data["duration"]
         assert calendar.is_default == calendar_create_data["is_default"]
         assert calendar.is_active == calendar_create_data["is_active"]
@@ -41,13 +41,13 @@ class TestCalendarViewSet:
 
     @staticmethod
     def test_calendar_with_empty_slots_creation(
-        admin_api, admin_professional, calendar_create_data
+        professional_api, professional, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
         calendar_create_data["slots"] = []
 
-        response = admin_api.post(
+        response = professional_api.post(
             url, json.dumps(calendar_create_data), content_type="application/json"
         )
 
@@ -57,7 +57,7 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        assert calendar.professional.id == admin_professional.id
+        assert calendar.professional.id == professional.id
         assert calendar.duration == calendar_create_data["duration"]
         assert calendar.is_default == calendar_create_data["is_default"]
         assert calendar.is_active == calendar_create_data["is_active"]
@@ -65,13 +65,13 @@ class TestCalendarViewSet:
 
     @staticmethod
     def test_calendar_without_slots_creation(
-        admin_api, admin_professional, calendar_create_data
+        professional_api, professional, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
         calendar_create_data.pop("slots")
 
-        response = admin_api.post(
+        response = professional_api.post(
             url, json.dumps(calendar_create_data), content_type="application/json"
         )
 
@@ -81,7 +81,7 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        assert calendar.professional.id == admin_professional.id
+        assert calendar.professional.id == professional.id
         assert calendar.duration == calendar_create_data["duration"]
         assert calendar.is_default == calendar_create_data["is_default"]
         assert calendar.is_active == calendar_create_data["is_active"]
@@ -89,35 +89,26 @@ class TestCalendarViewSet:
 
     @staticmethod
     def test_calendar_with_slots_update(
-        admin_api,
-        admin_professional,
-        admin_slot,
-        calendar_create_data,
+        professional_api,
+        professional,
+        slot,
+        calendar,
         calendar_update_data,
     ):
-        url_post = reverse("api:calendar-list")
-
-        print(calendar_create_data)
-        response = admin_api.post(
-            url_post, json.dumps(calendar_create_data), content_type="application/json"
-        )
-
-        calendar = Calendar.objects.first()
-
         url_patch = reverse(
             "api:calendar-detail", kwargs={"multiple_lookup_field": calendar.id}
         )
 
         calendar_update_data["slots"].append(
             {
-                "id": str(admin_slot.id),
-                "week_day": admin_slot.week_day,
-                "time_start": admin_slot.time_start,
-                "time_end": admin_slot.time_end,
+                "id": str(slot.id),
+                "week_day": slot.week_day,
+                "time_start": slot.time_start,
+                "time_end": slot.time_end,
             }
         )
 
-        response = admin_api.patch(
+        response = professional_api.patch(
             url_patch, json.dumps(calendar_update_data), content_type="application/json"
         )
 
@@ -125,7 +116,7 @@ class TestCalendarViewSet:
 
         calendar.refresh_from_db()
 
-        assert calendar.professional.id == admin_professional.id
+        assert calendar.professional.id == professional.id
         assert calendar.duration == calendar_update_data["duration"]
         assert calendar.is_default == calendar_update_data["is_default"]
         assert calendar.is_active == calendar_update_data["is_active"]
@@ -140,14 +131,14 @@ class TestCalendarViewSet:
 
     @staticmethod
     def test_calendar_with_slots_on_creation_empty_on_update(
-        admin_api,
-        admin_professional,
+        professional_api,
+        professional,
         calendar_create_data,
         calendar_update_data,
     ):
         url_post = reverse("api:calendar-list")
 
-        response = admin_api.post(
+        response = professional_api.post(
             url_post, json.dumps(calendar_create_data), content_type="application/json"
         )
 
@@ -161,7 +152,7 @@ class TestCalendarViewSet:
 
         del calendar_update_data["slots"]
 
-        response = admin_api.patch(
+        response = professional_api.patch(
             url_patch, json.dumps(calendar_update_data), content_type="application/json"
         )
 
@@ -169,7 +160,7 @@ class TestCalendarViewSet:
 
         calendar.refresh_from_db()
 
-        assert calendar.professional.id == admin_professional.id
+        assert calendar.professional.id == professional.id
         assert calendar.duration == calendar_update_data["duration"]
         assert calendar.is_default == calendar_update_data["is_default"]
         assert calendar.is_active == calendar_update_data["is_active"]
@@ -177,15 +168,15 @@ class TestCalendarViewSet:
 
     @staticmethod
     def test_calendar_update_professional_error(
-        admin_api,
-        admin_professional,
+        professional_api,
         professional,
+        other_professional,
         calendar_create_data,
         calendar_update_data,
     ):
         url_post = reverse("api:calendar-list")
 
-        response = admin_api.post(
+        response = professional_api.post(
             url_post, json.dumps(calendar_create_data), content_type="application/json"
         )
 
@@ -195,9 +186,9 @@ class TestCalendarViewSet:
             "api:calendar-detail", kwargs={"multiple_lookup_field": calendar.id}
         )
 
-        calendar_update_data["professional"] = str(professional.id)
+        calendar_update_data["professional"] = str(other_professional.id)
 
-        response = admin_api.patch(
+        response = professional_api.patch(
             url_patch, json.dumps(calendar_update_data), content_type="application/json"
         )
 
@@ -205,16 +196,16 @@ class TestCalendarViewSet:
 
         calendar.refresh_from_db()
 
-        assert calendar.professional.id == admin_professional.id
+        assert calendar.professional.id == professional.id
 
     @staticmethod
-    def test_get_calendar_by_id(admin_api, calendar):
+    def test_get_calendar_by_id(professional_api, calendar):
         url = reverse(
             "api:calendar-detail",
             kwargs={"multiple_lookup_field": calendar.id},
         )
 
-        response = admin_api.get(url)
+        response = professional_api.get(url)
 
         assert response.status_code == 200
 
@@ -225,13 +216,13 @@ class TestCalendarViewSet:
         assert calendar.name == returned_calendar["name"]
 
     @staticmethod
-    def test_get_calendar_by_username(admin_api, calendar):
+    def test_get_calendar_by_username(professional_api, calendar):
         url = reverse(
             "api:calendar-detail",
             kwargs={"multiple_lookup_field": calendar.professional.profile.username},
         )
 
-        response = admin_api.get(url)
+        response = professional_api.get(url)
 
         assert response.status_code == 200
 
@@ -242,7 +233,7 @@ class TestCalendarViewSet:
         assert calendar.name == returned_calendar["name"]
 
     @staticmethod
-    def test_get_calendar_not_active(admin_api, calendar_not_active):
+    def test_get_calendar_not_active(professional_api, calendar_not_active):
         url = reverse(
             "api:calendar-detail",
             kwargs={
@@ -250,12 +241,12 @@ class TestCalendarViewSet:
             },
         )
 
-        response = admin_api.get(url)
+        response = professional_api.get(url)
 
         assert response.status_code == 404
 
     @staticmethod
-    def test_get_calendar_not_default(admin_api, calendar_not_default):
+    def test_get_calendar_not_default(professional_api, calendar_not_default):
         url = reverse(
             "api:calendar-detail",
             kwargs={
@@ -263,13 +254,13 @@ class TestCalendarViewSet:
             },
         )
 
-        response = admin_api.get(url)
+        response = professional_api.get(url)
 
         assert response.status_code == 404
 
     @staticmethod
     def test_get_calendar_not_active_and_default(
-        admin_api, calendar_not_active_and_default
+        professional_api, calendar_not_active_and_default
     ):
         url = reverse(
             "api:calendar-detail",
@@ -278,19 +269,19 @@ class TestCalendarViewSet:
             },
         )
 
-        response = admin_api.get(url)
+        response = professional_api.get(url)
 
         assert response.status_code == 404
 
     @staticmethod
     def test_get_calendar_by_id_not_active_and_default(
-        admin_api, calendar_not_active_and_default
+        professional_api, calendar_not_active_and_default
     ):
         url = reverse(
             "api:calendar-detail",
             kwargs={"multiple_lookup_field": calendar_not_active_and_default.id},
         )
 
-        response = admin_api.get(url)
+        response = professional_api.get(url)
 
         assert response.status_code == 200

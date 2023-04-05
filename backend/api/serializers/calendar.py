@@ -79,6 +79,4 @@ class CalendarSerializer(serializers.ModelSerializer):
                 professional=request.user.professional, is_default=True
             ).update(is_default=False)
 
-        print(validated_data)
-
         return super().update(instance, validated_data)

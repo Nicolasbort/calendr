@@ -1,8 +1,8 @@
 from api.models.plan import Plan
 from api.models.profession import Profession
 from api.serializers.address import AddressSerializer
-from api.serializers.patient import PatientSerializer
 from api.serializers.professional import ProfessionalSerializer
+from api.serializers.signup import PatientSignupSerializer
 from django.db.transaction import atomic
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
@@ -41,7 +41,7 @@ class SignUpViewSet(viewsets.GenericViewSet):
     @atomic
     @action(methods=["POST"], detail=False, url_path="patient")
     def patient(self, request, **kwargs):
-        serializer = PatientSerializer(data=request.data)
+        serializer = PatientSignupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 

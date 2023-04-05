@@ -8,7 +8,7 @@ def slot(calendar):
         calendar=calendar,
         week_day=1,
         time_start="15:00:00",
-        time_end="16:00:00",
+        time_end="17:00:00",
     )
 
 

@@ -1,7 +1,6 @@
-from datetime import date, datetime
+from datetime import datetime
 
 from api.models.appointment import Appointment
-from api.models.professional import Professional
 from api.utils.datetime import diff
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
@@ -51,13 +50,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        return super().create(validated_data)
+
+    def save(self, **kwargs):
         request = self.context.get("request")
 
-        try:
-            professional = Professional.objects.get(profile__pk=request.user.id)
-        except Professional.DoesNotExist:
-            raise ValidationError("Professional does not exist")
-        else:
-            return Appointment.objects.create(
-                **validated_data, professional=professional
-            )
+        kwargs["professional"] = request.user.professional
+
+        return super().save(**kwargs)

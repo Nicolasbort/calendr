@@ -38,8 +38,6 @@ class TestSignupViewSet:
             url, json.dumps(data), content_type="application/json"
         )
 
-        print(response.json())
-
         assert response.status_code == 200
 
         assert Professional.objects.count() == 1

@@ -21,20 +21,20 @@ class BaseProfileSerializer(serializers.ModelSerializer):
         self, validated_data: dict, model_class: Professional | Patient
     ) -> Professional | Patient:
         profile = Profile(is_staff=False)
-        model = model_class()
+        instance = model_class()
 
         for attr, value in validated_data.items():
             if attr in Profile.WRITABLE_KEYS:
                 setattr(profile, attr, value)
             else:
-                setattr(model, attr, value)
+                setattr(instance, attr, value)
 
-        model.profile = profile
+        instance.profile = profile
 
         profile.save()
-        model.save()
+        instance.save()
 
-        return model
+        return instance
 
     def update(self, instance, validated_data: dict):
         profile = instance.profile
