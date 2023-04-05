@@ -16,3 +16,20 @@ def admin_patient(admin_professional, patient_profile):
         profile=patient_profile,
         notify_pending_payment=True,
     )
+
+
+@pytest.fixture()
+def patient_fields():
+    return [
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "username",
+        "phone",
+        "profile",
+        "professional",
+        "notify_pending_payment",
+        "created_at",
+        "modified_at",
+    ]

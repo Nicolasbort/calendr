@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from django import db
 from django.db import models
 from django.utils import timezone
 
@@ -49,7 +50,12 @@ class Timestamp(models.Model):
 
 
 class Uuid(models.Model):
-    id = models.UUIDField(default=uuid4, editable=False, primary_key=True, unique=True)
+    id = models.UUIDField(default=uuid4, editable=False, primary_key=True)
 
+    class Meta:
+        abstract = True
+
+
+class BaseModel(Uuid, Timestamp, SoftDeletable):
     class Meta:
         abstract = True

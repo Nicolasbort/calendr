@@ -104,7 +104,9 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
+        url_patch = reverse(
+            "api:calendar-detail", kwargs={"multiple_lookup_field": calendar.id}
+        )
 
         calendar_update_data["slots"].append(
             {
@@ -153,7 +155,9 @@ class TestCalendarViewSet:
 
         count_calendar_slots_before = calendar.slots.count()
 
-        url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
+        url_patch = reverse(
+            "api:calendar-detail", kwargs={"multiple_lookup_field": calendar.id}
+        )
 
         del calendar_update_data["slots"]
 
@@ -187,11 +191,11 @@ class TestCalendarViewSet:
 
         calendar = Calendar.objects.first()
 
-        url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
+        url_patch = reverse(
+            "api:calendar-detail", kwargs={"multiple_lookup_field": calendar.id}
+        )
 
         calendar_update_data["professional"] = str(professional.id)
-
-        print(calendar_update_data)
 
         response = admin_api.patch(
             url_patch, json.dumps(calendar_update_data), content_type="application/json"
@@ -204,10 +208,10 @@ class TestCalendarViewSet:
         assert calendar.professional.id == admin_professional.id
 
     @staticmethod
-    def test_get_calendar_by_pk(admin_api, calendar):
+    def test_get_calendar_by_id(admin_api, calendar):
         url = reverse(
             "api:calendar-detail",
-            kwargs={"pk": calendar.id},
+            kwargs={"multiple_lookup_field": calendar.id},
         )
 
         response = admin_api.get(url)
@@ -224,7 +228,7 @@ class TestCalendarViewSet:
     def test_get_calendar_by_username(admin_api, calendar):
         url = reverse(
             "api:calendar-detail",
-            kwargs={"pk": calendar.professional.profile.username},
+            kwargs={"multiple_lookup_field": calendar.professional.profile.username},
         )
 
         response = admin_api.get(url)
@@ -241,7 +245,9 @@ class TestCalendarViewSet:
     def test_get_calendar_not_active(admin_api, calendar_not_active):
         url = reverse(
             "api:calendar-detail",
-            kwargs={"pk": calendar_not_active.professional.profile.username},
+            kwargs={
+                "multiple_lookup_field": calendar_not_active.professional.profile.username
+            },
         )
 
         response = admin_api.get(url)
@@ -252,7 +258,9 @@ class TestCalendarViewSet:
     def test_get_calendar_not_default(admin_api, calendar_not_default):
         url = reverse(
             "api:calendar-detail",
-            kwargs={"pk": calendar_not_default.professional.profile.username},
+            kwargs={
+                "multiple_lookup_field": calendar_not_default.professional.profile.username
+            },
         )
 
         response = admin_api.get(url)
@@ -266,7 +274,7 @@ class TestCalendarViewSet:
         url = reverse(
             "api:calendar-detail",
             kwargs={
-                "pk": calendar_not_active_and_default.professional.profile.username
+                "multiple_lookup_field": calendar_not_active_and_default.professional.profile.username
             },
         )
 
@@ -280,7 +288,7 @@ class TestCalendarViewSet:
     ):
         url = reverse(
             "api:calendar-detail",
-            kwargs={"pk": calendar_not_active_and_default.id},
+            kwargs={"multiple_lookup_field": calendar_not_active_and_default.id},
         )
 
         response = admin_api.get(url)

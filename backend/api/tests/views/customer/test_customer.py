@@ -3,7 +3,7 @@ from django.urls import reverse
 
 
 @pytest.mark.django_db
-class TestCustomerProfessionalViewSet:
+class TestCustomerViewSet:
     @staticmethod
     def test_get_default_professional_calendar(patient_api, calendar):
         url = reverse(

@@ -1,9 +1,9 @@
 from api.models.appointment import Appointment
-from api.models.base_model import SoftDeletable, Timestamp, Uuid
+from api.models.base_model import BaseModel
 from django.db import models
 
 
-class Payment(Uuid, Timestamp, SoftDeletable):
+class Payment(BaseModel):
     appointment = models.ForeignKey(
         Appointment, on_delete=models.CASCADE, related_name="payments"
     )

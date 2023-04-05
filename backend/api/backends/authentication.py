@@ -21,7 +21,7 @@ class CustomAuthBackend(ModelBackend):
             if profile.check_password(password) and self.user_can_authenticate(profile):
                 return profile
 
-    def get_user(self, user_id: str | UUID) -> Optional[AbstractBaseUser]:
+    def get_user(self, user_id: str | int) -> Optional[AbstractBaseUser]:
         try:
             return Profile.objects.get(pk=user_id)
         except Profile.DoesNotExist:

@@ -4,8 +4,7 @@ from rest_framework import viewsets
 
 
 class BaseViewSet(viewsets.ModelViewSet):
-    # permission_classes = [IsAdminOrProfessional, BelongsToProfessional]
-    permission_classes = []
+    permission_classes = [IsAdminOrProfessional, BelongsToProfessional]
     # filter_backends = (DjangoFilterBackend,)
     # filterset_fields = ("patient__id",)
 

@@ -8,27 +8,13 @@ from django.urls import reverse
 @pytest.mark.django_db
 class TestPatientViewSet:
     @staticmethod
-    def test_list_patient(admin_api, patient):
+    def test_list_patient(admin_api, patient, patient_fields):
         url = reverse("api:patient-detail", kwargs={"pk": patient.id})
-
-        expected_fields = [
-            "id",
-            "first_name",
-            "last_name",
-            "email",
-            "username",
-            "phone",
-            "profile",
-            "professional",
-            "notify_pending_payment",
-            "created_at",
-            "modified_at",
-        ]
 
         response = admin_api.get(url)
 
         assert response.status_code == 200
-        assert set(response.json().keys()) == set(expected_fields)
+        assert set(response.json().keys()) == set(patient_fields)
 
     @staticmethod
     def test_create_patient(admin_api, professional):

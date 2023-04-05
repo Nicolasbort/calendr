@@ -45,8 +45,10 @@ def create_profie() -> Profile:
         username="user",
         first_name="User",
         last_name="Auto",
+        phone="11888888888",
         is_staff=False,
         is_superuser=False,
+        email_verified=True,
     )
     profile.set_password("password")
     profile.save()
@@ -60,8 +62,10 @@ def create_admin() -> Profile:
         username="admin",
         first_name="Admin",
         last_name="Auto",
+        phone="11999999999",
         is_staff=True,
         is_superuser=True,
+        email_verified=True,
     )
     profile.set_password("password")
     profile.save()

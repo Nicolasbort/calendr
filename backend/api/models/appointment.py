@@ -2,7 +2,7 @@ from decimal import Decimal
 from functools import cached_property
 
 from api.constants.appointment import TypeChoices
-from api.models.base_model import SoftDeletable, Timestamp, Uuid
+from api.models.base_model import BaseModel
 from api.models.patient import Patient
 from api.models.professional import Professional
 from api.models.slot import Slot
@@ -11,7 +11,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 
-class Appointment(Uuid, Timestamp, SoftDeletable):
+class Appointment(BaseModel):
     professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,

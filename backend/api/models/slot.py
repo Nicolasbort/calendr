@@ -1,13 +1,13 @@
 from functools import cached_property
 
 from api.constants.slot import WeekDayChoices
-from api.models.base_model import Timestamp, Uuid
+from api.models.base_model import BaseModel
 from api.models.calendar import Calendar
 from api.utils.datetime import diff
 from django.db import models
 
 
-class Slot(Uuid, Timestamp):
+class Slot(BaseModel):
     calendar = models.ForeignKey(
         Calendar, on_delete=models.CASCADE, related_name="slots", db_index=True
     )

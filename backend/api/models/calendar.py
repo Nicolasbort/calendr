@@ -1,9 +1,9 @@
-from api.models.base_model import SoftDeletable, Timestamp, Uuid
+from api.models.base_model import BaseModel
 from api.models.professional import Professional
 from django.db import models
 
 
-class Calendar(Uuid, Timestamp, SoftDeletable):
+class Calendar(BaseModel):
     name = models.CharField(max_length=255, null=True)
     duration = models.PositiveSmallIntegerField()
     interval = models.PositiveSmallIntegerField(default=0)

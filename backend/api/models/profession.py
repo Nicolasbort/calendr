@@ -1,10 +1,10 @@
 from functools import cache
 
-from api.models.base_model import SoftDeletable, Timestamp, Uuid
+from api.models.base_model import BaseModel
 from django.db import models
 
 
-class Profession(Uuid, Timestamp, SoftDeletable):
+class Profession(BaseModel):
     name = models.CharField(max_length=32, unique=True)
 
     def __str__(self) -> str:
