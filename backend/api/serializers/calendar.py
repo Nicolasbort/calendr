@@ -2,27 +2,34 @@ import logging
 
 from api.models.calendar import Calendar
 from api.models.slot import Slot
+from api.serializers.period import PeriodSerializer
 from api.serializers.professional import ProfessionalSerializer
-from api.serializers.slot import CalendarSlotSerializer, SlotSerializer
-from api.services.slot import group_by_weekday
+from api.serializers.slot import CalendarSlotSerializer
+from api.services.slot import divide_slots_by_duration
 from api.utils.serializers import get_serialized_data
 from rest_framework import serializers
 
 logger = logging.getLogger("django")
 
 
-class ListCalendarSerializer(serializers.ModelSerializer):
+class ShowCalendarSerializer(serializers.ModelSerializer):
+    professional = ProfessionalSerializer(read_only=True)
+
     class Meta:
         model = Calendar
+        read_only_fields = ["professional"]
         exclude = ("deleted_at",)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
 
-        serializer = SlotSerializer(many=True, data=instance.slots)
-        serializer.is_valid()
+        periods = divide_slots_by_duration(
+            instance.slots.all(), instance.duration + instance.interval
+        )
+        period_serializer = PeriodSerializer(data=periods, many=True)
+        period_serializer.is_valid()
 
-        data["slots"] = group_by_weekday(serializer.data)
+        data["periods"] = period_serializer.data
         data["professional"] = get_serialized_data(
             ProfessionalSerializer, instance.professional
         )

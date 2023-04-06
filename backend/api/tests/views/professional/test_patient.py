@@ -8,13 +8,54 @@ from django.urls import reverse
 @pytest.mark.django_db
 class TestPatientViewSet:
     @staticmethod
-    def test_list_patient(professional_api, patient, patient_fields):
+    def test_get_patient(professional_api, patient, patient_fields):
         url = reverse("api:patient-detail", kwargs={"pk": patient.id})
 
         response = professional_api.get(url)
 
         assert response.status_code == 200
         assert set(response.json().keys()) == set(patient_fields)
+
+    @staticmethod
+    def test_get_patient_has_appointments(professional_api, patient, appointment):
+        url = reverse("api:patient-detail", kwargs={"pk": patient.id})
+
+        response = professional_api.get(url)
+
+        assert response.status_code == 200
+
+        data = response.json()
+
+        assert str(patient.id) == data["id"]
+
+        for appointment_json in data["appointments"]:
+            assert str(appointment.id) == appointment_json["id"]
+
+    @staticmethod
+    def test_list_patient_filter_full_name(professional_api, patient):
+        full_name = patient.full_name
+
+        url = reverse("api:patient-list") + f"?name={full_name}"
+
+        response = professional_api.get(url)
+
+        assert response.status_code == 200
+
+        data = response.json()
+
+        assert len(data) == 1
+        assert str(patient.id) == data[0]["id"]
+
+    @staticmethod
+    def test_list_patient_filter_wrong_full_name(professional_api, patient):
+        full_name = "Wrong Name"
+
+        url = reverse("api:patient-list") + f"?name={full_name}"
+
+        response = professional_api.get(url)
+
+        assert response.status_code == 200
+        assert len(response.json()) == 0
 
     @staticmethod
     def test_create_patient(professional_api, professional):

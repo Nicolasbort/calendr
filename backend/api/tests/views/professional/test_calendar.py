@@ -1,4 +1,3 @@
-import datetime
 import json
 
 import pytest
@@ -103,8 +102,8 @@ class TestCalendarViewSet:
             {
                 "id": str(slot.id),
                 "week_day": slot.week_day,
-                "time_start": slot.time_start,
-                "time_end": slot.time_end,
+                "time_start": slot.time_start.strftime("%H:%M:%S"),
+                "time_end": slot.time_end.strftime("%H:%M:%S"),
             }
         )
 

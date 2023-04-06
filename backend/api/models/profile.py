@@ -17,7 +17,13 @@ class Profile(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
-    WRITABLE_KEYS = ["first_name", "last_name", "email", "username", "phone"]
+    WRITABLE_KEYS = [
+        "first_name",
+        "last_name",
+        "email",
+        "username",
+        "phone",
+    ]
     objects = UserManager()
 
     @builtins.property

@@ -1,5 +1,4 @@
-from api.permissions.belongs_to_professional import BelongsToProfessional
-from api.permissions.is_admin_or_professional import IsAdminOrProfessional
+from api.permissions import BelongsToProfessional, IsAdminOrProfessional
 from rest_framework import generics, permissions, viewsets
 
 
@@ -7,14 +6,18 @@ class SafeAPIView(
     generics.RetrieveAPIView, generics.ListAPIView, viewsets.GenericViewSet
 ):
     """
-    This viewset allows professionals to retrieve or list professions.
-    UNSAFE actions like create, update and delete, must be called using admin page.
+    This viewset allows anyone to list and retrieve models.
+    UNSAFE actions like create, update and delete are not allowed.
     """
 
     permission_classes = [permissions.AllowAny]
 
 
 class ProfessionalAPIView(viewsets.ModelViewSet):
+    """
+    This viewset allows professionals or admins to perform any model action.
+    """
+
     permission_classes = [IsAdminOrProfessional, BelongsToProfessional]
 
     def get_queryset(self):

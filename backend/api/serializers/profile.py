@@ -28,14 +28,3 @@ class ProfileSerializer(serializers.ModelSerializer):
         profile.save()
 
         return profile
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-
-        data["profession"] = get_serialized_data(
-            ProfessionSerializer, instance.profession
-        )
-        data["plan"] = get_serialized_data(PlanSerializer, instance.plan)
-        data["address"] = get_serialized_data(AddressSerializer, instance.address)
-
-        return data

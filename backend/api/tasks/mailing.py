@@ -1,8 +1,11 @@
 import json
 import logging
+from base64 import urlsafe_b64encode
 
+from api.auth import AccountActivationTokenGenerator
+from api.models.profile import Profile
 from calendr.celery import celery_app
-from calendr.settings import SEND_EMAIL_ACTIVE
+from calendr.settings import EMAIL_FROM, SEND_EMAIL_ACTIVE
 from django.core.mail import send_mail
 
 logger = logging.getLogger("django")
@@ -38,6 +41,47 @@ def send_email(subject: str, message: str, from_email: str, recipient_list: list
         return
 
     logger.info("Email sent")
+
+
+@celery_app.task(name="send_activation_email")
+def send_activation_email(profile_id):
+    profile = Profile.objects.get(pk=profile_id)
+
+    account_activation_token = AccountActivationTokenGenerator()
+    token = account_activation_token.make_token(profile)
+    uid = urlsafe_b64encode(str(profile.id).encode())
+
+    activation_data = {"token": token, "uid": uid}
+
+    if not SEND_EMAIL_ACTIVE:
+        serialized_data = json.dumps(activation_data)
+
+        logger.info(
+            f"""SEND_EMAIL_ACTIVE env is empty or false.
+            Emails will only be sent when this flag is true.
+            Serialized email data: {serialized_data}"""
+        )
+        return
+
+    serialized_data = json.dumps(activation_data)
+    success = send_mail(
+        "Ative seu email",
+        serialized_data,
+        EMAIL_FROM,
+        [profile.email],
+        fail_silently=False,
+    )
+
+    if not success:
+        serialized_data = json.dumps(activation_data)
+
+        logger.warning(
+            f"""Error when trying to send email.
+            Serialized email data: {serialized_data}"""
+        )
+        return
+
+    logger.info("Actication email sent")
 
 
 def __get_serialized_data(

@@ -1,13 +1,11 @@
 from api.models.patient import Patient
 from api.serializers.patient import PatientSerializer
-from rest_framework import generics, permissions, viewsets
+from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
-class CustomerViewSet(
-    viewsets.GenericViewSet, generics.CreateAPIView, generics.UpdateAPIView
-):
+class CustomerViewSet(viewsets.GenericViewSet):
     """
     Base viewset to create nested routes for customers
     """

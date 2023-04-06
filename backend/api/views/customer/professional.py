@@ -1,6 +1,6 @@
 from api.models.calendar import Calendar
 from api.models.professional import Professional
-from api.serializers.calendar import CalendarSerializer
+from api.serializers.calendar import ShowCalendarSerializer
 from api.serializers.professional import ProfessionalSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, viewsets
@@ -37,6 +37,6 @@ class ProfessionalViewSet(generics.RetrieveAPIView, viewsets.GenericViewSet):
 
         calendar = get_object_or_404(qs)
 
-        serializer = CalendarSerializer(calendar)
+        serializer = ShowCalendarSerializer(calendar)
 
         return Response(serializer.data)

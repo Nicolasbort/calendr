@@ -2,6 +2,7 @@ from api.models.patient import Patient
 from api.models.professional import Professional
 from api.models.profile import Profile
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SkipField
 from rest_framework.relations import PKOnlyObject
 
@@ -14,14 +15,20 @@ class BaseProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     email = serializers.EmailField()
-    username = serializers.CharField()
-    phone = serializers.CharField(required=False)
+    phone = serializers.CharField()
+    password = serializers.CharField(required=False)
+    username = serializers.CharField(required=False)
 
     def create(
         self, validated_data: dict, model_class: Professional | Patient
     ) -> Professional | Patient:
-        profile = Profile(is_staff=False)
+        password = validated_data.pop("password", None)
+        if password is None:
+            ValidationError("password is required")
+
         instance = model_class()
+        profile = Profile(is_staff=False)
+        profile.set_password(password)
 
         for attr, value in validated_data.items():
             if attr in Profile.WRITABLE_KEYS:
@@ -37,6 +44,8 @@ class BaseProfileSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data: dict):
+        validated_data.pop("password", None)
+
         profile = instance.profile
 
         for attr, value in validated_data.items():

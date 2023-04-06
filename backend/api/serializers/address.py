@@ -5,6 +5,8 @@ from rest_framework import serializers
 
 
 class AddressSerializer(serializers.ModelSerializer):
+    full_address = serializers.ReadOnlyField()
+
     class Meta:
         model = Address
         fields = "__all__"

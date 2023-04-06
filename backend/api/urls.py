@@ -3,7 +3,6 @@ from api.views import (
     LoggedUserView,
     PlanViewSet,
     ProfessionViewSet,
-    ProfileViewSet,
     SignUpViewSet,
     TestViewSet,
 )
@@ -21,7 +20,6 @@ router.register("profession", ProfessionViewSet, basename="profession")
 router.register("plan", PlanViewSet, basename="plan")
 
 router.register("test", TestViewSet, basename="log")
-router.register("profile", ProfileViewSet, basename="profile")
 router.register("sign-up", SignUpViewSet, basename="sign-up")
 router.register("appointment", Professional.AppointmentViewSet, basename="appointment")
 router.register("calendar", Professional.CalendarViewSet, basename="calendar")
