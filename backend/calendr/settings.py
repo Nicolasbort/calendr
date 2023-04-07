@@ -232,3 +232,7 @@ CACHES = {
         "LOCATION": os.environ.get("REDIS_URL"),
     }
 }
+
+
+OTP_PERIOD = os.environ.get("OTP_PERIOD")
+OTP_SECRET = os.environ.get("OTP_SECRET")

@@ -1,10 +1,11 @@
 Django==4.1.7
 django-filter==22.1
+django-otp==1.1.6
+django-hosts==5.2
+django-extensions==3.2.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
-django_extensions==3.2.1
-django_hosts==5.2
-drf_nested_routers==0.93.4
+drf-nested-routers==0.93.4
 psycopg2==2.9.3
 pytest-django==4.5.2
 pytest-cov==4.0.0

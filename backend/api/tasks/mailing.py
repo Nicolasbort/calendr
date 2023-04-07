@@ -1,8 +1,6 @@
 import json
 import logging
-from base64 import urlsafe_b64encode
 
-from api.auth import AccountActivationTokenGenerator
 from api.models.profile import Profile
 from calendr.celery import celery_app
 from calendr.settings import EMAIL_FROM, SEND_EMAIL_ACTIVE
@@ -45,13 +43,11 @@ def send_email(subject: str, message: str, from_email: str, recipient_list: list
 
 @celery_app.task(name="send_activation_email")
 def send_activation_email(profile_id):
-    profile = Profile.objects.get(pk=profile_id)
+    profile: Profile = Profile.objects.get(pk=profile_id)
 
-    account_activation_token = AccountActivationTokenGenerator()
-    token = account_activation_token.make_token(profile)
-    uid = urlsafe_b64encode(str(profile.id).encode())
+    token = profile.generate_token()
 
-    activation_data = {"token": token, "uid": uid}
+    activation_data = {"token": token}
 
     if not SEND_EMAIL_ACTIVE:
         serialized_data = json.dumps(activation_data)
