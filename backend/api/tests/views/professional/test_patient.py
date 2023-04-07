@@ -32,7 +32,7 @@ class TestPatientViewSet:
             assert str(appointment.id) == appointment_json["id"]
 
     @staticmethod
-    def test_list_patient_filter_full_name(professional_api, patient):
+    def test_list_patient_filter_exact_full_name(professional_api, patient):
         full_name = patient.full_name
 
         url = reverse("api:patient-list") + f"?name={full_name}"
@@ -47,8 +47,39 @@ class TestPatientViewSet:
         assert str(patient.id) == data[0]["id"]
 
     @staticmethod
+    def test_list_patient_filter_exact_first_name(professional_api, patient):
+        first_name = patient.profile.first_name
+
+        url = reverse("api:patient-list") + f"?name={first_name}"
+
+        response = professional_api.get(url)
+
+        assert response.status_code == 200
+
+        data = response.json()
+
+        assert len(data) == 1
+        assert str(patient.id) == data[0]["id"]
+
+    @staticmethod
+    def test_list_patient_filter_close_full_name(professional_api, patient):
+        full_name = patient.full_name
+        close_full_name = full_name[:-1] + "RR"
+
+        url = reverse("api:patient-list") + f"?name={close_full_name}"
+
+        response = professional_api.get(url)
+
+        assert response.status_code == 200
+
+        data = response.json()
+
+        assert len(data) == 1
+        assert str(patient.id) == data[0]["id"]
+
+    @staticmethod
     def test_list_patient_filter_wrong_full_name(professional_api, patient):
-        full_name = "Wrong Name"
+        full_name = "This is a wrong name"
 
         url = reverse("api:patient-list") + f"?name={full_name}"
 
@@ -68,6 +99,7 @@ class TestPatientViewSet:
             "username": "patient",
             "phone": "99999999",
             "notify_pending_payment": True,
+            "notify_appointment": True,
         }
 
         response = professional_api.post(
@@ -92,6 +124,7 @@ class TestPatientViewSet:
 
         assert patient.professional.id == professional.id
         assert patient.notify_pending_payment is True
+        assert patient.notify_appointment is True
 
     @staticmethod
     def test_create_patient_no_phone(professional_api, professional):
@@ -109,24 +142,7 @@ class TestPatientViewSet:
             url, json.dumps(data), content_type="application/json"
         )
 
-        assert response.status_code == 201
-
-        patient = Patient.objects.first()
-
-        assert patient is not None
-
-        profile = Profile.objects.filter(patient=patient).first()
-
-        assert profile is not None
-
-        assert profile.first_name == "First"
-        assert profile.last_name == "Last"
-        assert profile.email == "patient@example.com"
-        assert profile.username == "patient"
-        assert profile.phone == None
-
-        assert patient.professional.id == professional.id
-        assert patient.notify_pending_payment is True
+        assert response.status_code == 400
 
     @staticmethod
     def test_create_patient_other_professional(
@@ -138,6 +154,7 @@ class TestPatientViewSet:
             "first_name": "First",
             "last_name": "Last",
             "email": "patient@example.com",
+            "phone": "5399999999",
             "username": "patient",
             "notify_pending_payment": True,
             "professional": str(other_professional.id),
@@ -161,7 +178,7 @@ class TestPatientViewSet:
         assert profile.last_name == "Last"
         assert profile.email == "patient@example.com"
         assert profile.username == "patient"
-        assert profile.phone == None
+        assert profile.phone == "5399999999"
 
         assert patient.professional.id == professional.id
         assert patient.notify_pending_payment is True

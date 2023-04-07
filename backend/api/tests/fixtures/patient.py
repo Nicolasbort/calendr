@@ -30,6 +30,7 @@ def patient_fields():
         "profile",
         "professional",
         "notify_pending_payment",
+        "notify_appointment",
         "appointments",
         "created_at",
         "modified_at",

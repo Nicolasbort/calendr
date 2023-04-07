@@ -3,6 +3,7 @@ import os
 
 from api.constants.city import StateChoices
 from api.models import Address, City, Plan, Profession, Professional, Profile
+from api.models.patient import Patient
 from django.core.management.base import BaseCommand
 
 logger = logging.getLogger("django")
@@ -36,16 +37,17 @@ def clear_data():
     City.objects.all().delete()
     Plan.all_objects.all().delete()
     Profession.all_objects.all().delete()
+    Patient.all_objects.all().delete()
     Professional.all_objects.all().delete()
 
 
-def create_profie() -> Profile:
+def create_profie(custom_email=None) -> Profile:
     profile = Profile(
-        email="user@example.com",
-        username="user",
+        email=custom_email or "user@example.com",
+        username=custom_email or "user",
         first_name="User",
         last_name="Auto",
-        phone="11888888888",
+        phone="11888888888" if custom_email else "99999999",
         is_staff=False,
         is_superuser=False,
         email_verified=True,
@@ -110,6 +112,13 @@ def create_professional(address, profession, plan, profile) -> Professional:
     )
 
 
+def create_patient(profile, professional) -> Patient:
+    return Patient.objects.create(
+        professional=professional,
+        profile=profile,
+    )
+
+
 def run_seed(self, mode):
     """Seed database based on mode
 
@@ -145,5 +154,7 @@ def run_seed(self, mode):
     plan = create_plan()
     profession = create_profession()
     profile = create_profie()
-    create_professional(address, profession, plan, profile)
+    professional = create_professional(address, profession, plan, profile)
     create_admin()
+    other_profile = create_profie("patient@example.com")
+    create_patient(other_profile, professional)
