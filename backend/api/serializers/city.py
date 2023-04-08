@@ -1,8 +1,8 @@
 from api.models.city import City
-from rest_framework import serializers
+from api.serializers.generic import BaseSerializer
 
 
-class CitySerializer(serializers.ModelSerializer):
+class CitySerializer(BaseSerializer):
     class Meta:
         model = City
         fields = (

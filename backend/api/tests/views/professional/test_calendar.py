@@ -94,9 +94,7 @@ class TestCalendarViewSet:
         calendar,
         calendar_update_data,
     ):
-        url_patch = reverse(
-            "api:calendar-detail", kwargs={"multiple_lookup_field": calendar.id}
-        )
+        url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
 
         calendar_update_data["slots"].append(
             {
@@ -132,22 +130,12 @@ class TestCalendarViewSet:
     def test_calendar_with_slots_on_creation_empty_on_update(
         professional_api,
         professional,
-        calendar_create_data,
+        calendar,
         calendar_update_data,
     ):
-        url_post = reverse("api:calendar-list")
-
-        response = professional_api.post(
-            url_post, json.dumps(calendar_create_data), content_type="application/json"
-        )
-
-        calendar = Calendar.objects.first()
-
         count_calendar_slots_before = calendar.slots.count()
 
-        url_patch = reverse(
-            "api:calendar-detail", kwargs={"multiple_lookup_field": calendar.id}
-        )
+        url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
 
         del calendar_update_data["slots"]
 
@@ -170,20 +158,10 @@ class TestCalendarViewSet:
         professional_api,
         professional,
         other_professional,
-        calendar_create_data,
+        calendar,
         calendar_update_data,
     ):
-        url_post = reverse("api:calendar-list")
-
-        response = professional_api.post(
-            url_post, json.dumps(calendar_create_data), content_type="application/json"
-        )
-
-        calendar = Calendar.objects.first()
-
-        url_patch = reverse(
-            "api:calendar-detail", kwargs={"multiple_lookup_field": calendar.id}
-        )
+        url_patch = reverse("api:calendar-detail", kwargs={"pk": calendar.id})
 
         calendar_update_data["professional"] = str(other_professional.id)
 
@@ -196,91 +174,3 @@ class TestCalendarViewSet:
         calendar.refresh_from_db()
 
         assert calendar.professional.id == professional.id
-
-    @staticmethod
-    def test_get_calendar_by_id(professional_api, calendar):
-        url = reverse(
-            "api:calendar-detail",
-            kwargs={"multiple_lookup_field": calendar.id},
-        )
-
-        response = professional_api.get(url)
-
-        assert response.status_code == 200
-
-        returned_calendar = response.json()
-
-        assert str(calendar.id) == returned_calendar["id"]
-        assert str(calendar.professional.id) == returned_calendar["professional"]
-        assert calendar.name == returned_calendar["name"]
-
-    @staticmethod
-    def test_get_calendar_by_username(professional_api, calendar):
-        url = reverse(
-            "api:calendar-detail",
-            kwargs={"multiple_lookup_field": calendar.professional.profile.username},
-        )
-
-        response = professional_api.get(url)
-
-        assert response.status_code == 200
-
-        returned_calendar = response.json()
-
-        assert str(calendar.id) == returned_calendar["id"]
-        assert str(calendar.professional.id) == returned_calendar["professional"]
-        assert calendar.name == returned_calendar["name"]
-
-    @staticmethod
-    def test_get_calendar_not_active(professional_api, calendar_not_active):
-        url = reverse(
-            "api:calendar-detail",
-            kwargs={
-                "multiple_lookup_field": calendar_not_active.professional.profile.username
-            },
-        )
-
-        response = professional_api.get(url)
-
-        assert response.status_code == 404
-
-    @staticmethod
-    def test_get_calendar_not_default(professional_api, calendar_not_default):
-        url = reverse(
-            "api:calendar-detail",
-            kwargs={
-                "multiple_lookup_field": calendar_not_default.professional.profile.username
-            },
-        )
-
-        response = professional_api.get(url)
-
-        assert response.status_code == 404
-
-    @staticmethod
-    def test_get_calendar_not_active_and_default(
-        professional_api, calendar_not_active_and_default
-    ):
-        url = reverse(
-            "api:calendar-detail",
-            kwargs={
-                "multiple_lookup_field": calendar_not_active_and_default.professional.profile.username
-            },
-        )
-
-        response = professional_api.get(url)
-
-        assert response.status_code == 404
-
-    @staticmethod
-    def test_get_calendar_by_id_not_active_and_default(
-        professional_api, calendar_not_active_and_default
-    ):
-        url = reverse(
-            "api:calendar-detail",
-            kwargs={"multiple_lookup_field": calendar_not_active_and_default.id},
-        )
-
-        response = professional_api.get(url)
-
-        assert response.status_code == 200

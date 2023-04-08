@@ -1,10 +1,16 @@
 from api.models.patient import Patient
 from api.models.professional import Professional
 from api.models.profile import Profile
+from drf_spectacular.utils import extend_schema_serializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SkipField
 from rest_framework.relations import PKOnlyObject
+
+
+@extend_schema_serializer(exclude_fields=["deleted_at"])
+class BaseSerializer(serializers.ModelSerializer):
+    pass
 
 
 class BaseProfileSerializer(serializers.ModelSerializer):

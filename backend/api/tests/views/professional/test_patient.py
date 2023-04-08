@@ -43,8 +43,11 @@ class TestPatientViewSet:
 
         data = response.json()
 
-        assert len(data) == 1
-        assert str(patient.id) == data[0]["id"]
+        results = data["results"]
+        count = data["count"]
+
+        assert count == 1
+        assert str(patient.id) == results[0]["id"]
 
     @staticmethod
     def test_list_patient_filter_exact_first_name(professional_api, patient):
@@ -58,8 +61,11 @@ class TestPatientViewSet:
 
         data = response.json()
 
-        assert len(data) == 1
-        assert str(patient.id) == data[0]["id"]
+        results = data["results"]
+        count = data["count"]
+
+        assert count == 1
+        assert str(patient.id) == results[0]["id"]
 
     @staticmethod
     def test_list_patient_filter_close_full_name(professional_api, patient):
@@ -74,8 +80,11 @@ class TestPatientViewSet:
 
         data = response.json()
 
-        assert len(data) == 1
-        assert str(patient.id) == data[0]["id"]
+        results = data["results"]
+        count = data["count"]
+
+        assert count == 1
+        assert str(patient.id) == results[0]["id"]
 
     @staticmethod
     def test_list_patient_filter_wrong_full_name(professional_api, patient):
@@ -86,7 +95,12 @@ class TestPatientViewSet:
         response = professional_api.get(url)
 
         assert response.status_code == 200
-        assert len(response.json()) == 0
+
+        data = response.json()
+
+        count = data["count"]
+
+        assert count == 0
 
     @staticmethod
     def test_create_patient(professional_api, professional):

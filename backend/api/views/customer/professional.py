@@ -1,25 +1,44 @@
+from uuid import UUID
+
 from api.models.calendar import Calendar
 from api.models.professional import Professional
 from api.serializers.calendar import ShowCalendarSerializer
 from api.serializers.professional import ProfessionalSerializer
 from django.shortcuts import get_object_or_404
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import generics, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            "multiple_lookup_field",
+            OpenApiTypes.STR,
+            OpenApiParameter.PATH,
+            description="UUID or username of the professional",
+        )
+    ]
+)
 class ProfessionalViewSet(generics.RetrieveAPIView, viewsets.GenericViewSet):
-    lookup_field = "username"
+    lookup_field = "multiple_lookup_field"
+    queryset = Professional.objects.all()
     serializer_class = ProfessionalSerializer
     permission_classes = [permissions.AllowAny]
 
-    def get_queryset(self):
-        return Professional.objects.filter(
-            profile__username=self.kwargs.get("username")
-        )
-
     def get_object(self):
-        obj = get_object_or_404(self.get_queryset())
+        value = self.kwargs[self.lookup_field]
+
+        try:
+            UUID(value)
+
+            filter_kwargs = {"pk": value}
+        except ValueError:
+            filter_kwargs = {"profile__username": value}
+
+        obj = get_object_or_404(self.queryset, **filter_kwargs)
 
         self.check_object_permissions(self.request, obj)
 

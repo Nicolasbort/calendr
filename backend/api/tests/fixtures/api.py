@@ -24,3 +24,8 @@ def patient_api(patient_profile):
     client.force_authenticate(patient_profile)
 
     return client
+
+
+@pytest.fixture()
+def no_auth_api():
+    return APIClient()

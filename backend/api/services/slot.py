@@ -6,7 +6,7 @@ from api.typings.period import Period
 from api.utils.datetime import add_minutes_to_time
 
 
-def divide_slots_by_duration(slots: list[Slot], duration: int) -> list[Period]:
+def split_slots_into_periods(slots: list[Slot], duration: int) -> list[Period]:
     """
     duration: 30
     slot 1: "09:00" -> "11:00" & slot 2: "13:00" -> "14:00"
@@ -20,14 +20,14 @@ def divide_slots_by_duration(slots: list[Slot], duration: int) -> list[Period]:
         if week_day not in periods:
             periods[week_day] = []
 
-        divided_periods = divide_slot_into_periods(slot, duration)
+        divided_periods = split_slot_into_periods(slot, duration)
         periods[week_day].extend(divided_periods)
 
     return periods
 
 
 @cache
-def divide_slot_into_periods(slot: Slot, duration: int) -> list[Period]:
+def split_slot_into_periods(slot: Slot, duration: int) -> list[Period]:
     periods_quantity = floor(slot.duration / duration)
     periods = [0] * periods_quantity
 
@@ -38,8 +38,6 @@ def divide_slot_into_periods(slot: Slot, duration: int) -> list[Period]:
         period_end = add_minutes_to_time(last_period_end, duration)
         last_period_end = period_end
 
-        period: Period = {"time_start": period_start, "time_end": period_end}
-
-        periods[idx] = period
+        periods[idx] = Period(time_start=period_start, time_end=period_end)
 
     return periods

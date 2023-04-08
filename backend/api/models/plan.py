@@ -1,5 +1,3 @@
-from functools import cache
-
 from api.models.base_model import BaseModel
 from django.db import models
 
@@ -10,7 +8,6 @@ class Plan(BaseModel):
     def __str__(self) -> str:
         return self.name
 
-    @cache
     @staticmethod
     def get_free_plan():
         return Plan.objects.order_by("created_at").first()

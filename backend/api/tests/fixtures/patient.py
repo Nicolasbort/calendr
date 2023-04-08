@@ -27,7 +27,6 @@ def patient_fields():
         "email",
         "username",
         "phone",
-        "profile",
         "professional",
         "notify_pending_payment",
         "notify_appointment",

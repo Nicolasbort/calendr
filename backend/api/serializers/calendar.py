@@ -2,18 +2,19 @@ import logging
 
 from api.models.calendar import Calendar
 from api.models.slot import Slot
-from api.serializers.period import PeriodSerializer
+from api.serializers.generic import BaseSerializer
+from api.serializers.period import AvailabilitySerializer
 from api.serializers.professional import ProfessionalSerializer
 from api.serializers.slot import CalendarSlotSerializer
-from api.services.slot import divide_slots_by_duration
+from api.services.slot import split_slots_into_periods
 from api.utils.serializers import get_serialized_data
-from rest_framework import serializers
 
 logger = logging.getLogger("django")
 
 
-class ShowCalendarSerializer(serializers.ModelSerializer):
+class ShowCalendarSerializer(BaseSerializer):
     professional = ProfessionalSerializer(read_only=True)
+    availability = AvailabilitySerializer(read_only=True)
 
     class Meta:
         model = Calendar
@@ -23,13 +24,13 @@ class ShowCalendarSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
 
-        periods = divide_slots_by_duration(
+        periods = split_slots_into_periods(
             instance.slots.all(), instance.duration + instance.interval
         )
-        period_serializer = PeriodSerializer(data=periods, many=True)
-        period_serializer.is_valid()
+        availability_serializer = AvailabilitySerializer(data=periods)
+        availability_serializer.is_valid()
 
-        data["periods"] = period_serializer.data
+        data["availability"] = availability_serializer.data
         data["professional"] = get_serialized_data(
             ProfessionalSerializer, instance.professional
         )
@@ -37,7 +38,7 @@ class ShowCalendarSerializer(serializers.ModelSerializer):
         return data
 
 
-class CalendarSerializer(serializers.ModelSerializer):
+class CalendarSerializer(BaseSerializer):
     slots = CalendarSlotSerializer(many=True, allow_empty=True, required=False)
 
     class Meta:

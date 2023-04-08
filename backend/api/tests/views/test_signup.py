@@ -11,7 +11,7 @@ from django.urls import reverse
 @pytest.mark.django_db
 class TestSignupViewSet:
     @staticmethod
-    def test_signup_professional(admin_api, city, plan, profession):
+    def test_signup_professional(no_auth_api, city, plan, profession):
         url = reverse("api:sign-up-professional")
 
         data = {
@@ -34,7 +34,7 @@ class TestSignupViewSet:
             },
         }
 
-        response = admin_api.post(
+        response = no_auth_api.post(
             url, json.dumps(data), content_type="application/json"
         )
 
@@ -46,6 +46,8 @@ class TestSignupViewSet:
         profile = professional.profile
         address = professional.address
 
+        assert professional.plan.id == plan.id
+        assert professional.profession.id == profession.id
         assert professional.picture == "picture.png"
         assert professional.bio == "lorem ipsum"
         assert professional.genre == "M"
@@ -65,7 +67,50 @@ class TestSignupViewSet:
         assert str(address.city.id) == str(city.id)
 
     @staticmethod
-    def test_signup_atomiticy(admin_api, city, plan, profession):
+    def test_signup_professional_no_address(no_auth_api, plan, profession):
+        url = reverse("api:sign-up-professional")
+
+        data = {
+            "picture": "picture.png",
+            "bio": "lorem ipsum",
+            "genre": "M",
+            "birthday": "1995-01-01",
+            "first_name": "First",
+            "last_name": "Last",
+            "password": "password",
+            "email": "professional@example.com",
+            "username": "professional",
+            "phone": "99999999",
+        }
+
+        response = no_auth_api.post(
+            url, json.dumps(data), content_type="application/json"
+        )
+
+        assert response.status_code == 200
+
+        assert Professional.objects.count() == 1
+
+        professional = Professional.objects.first()
+        profile = professional.profile
+
+        assert professional.plan.id == plan.id
+        assert professional.profession.id == profession.id
+        assert professional.address is None
+        assert professional.picture == "picture.png"
+        assert professional.bio == "lorem ipsum"
+        assert professional.genre == "M"
+        assert professional.birthday.strftime("%Y-%m-%d") == "1995-01-01"
+
+        assert profile.first_name == "First"
+        assert profile.last_name == "Last"
+        assert profile.email == "professional@example.com"
+        assert profile.username == "professional"
+        assert profile.phone == "99999999"
+        assert profile.password is not None
+
+    @staticmethod
+    def test_signup_atomiticy(no_auth_api, city, plan, profession):
         url = reverse("api:sign-up-professional")
 
         data = {
@@ -88,7 +133,7 @@ class TestSignupViewSet:
             },
         }
 
-        response = admin_api.post(
+        response = no_auth_api.post(
             url, json.dumps(data), content_type="application/json"
         )
 
@@ -96,10 +141,10 @@ class TestSignupViewSet:
 
         assert Professional.objects.count() == 0
         assert Address.objects.count() == 0
-        assert Profile.objects.count() == 1  # Only the admin profile
+        assert Profile.objects.count() == 0
 
     @staticmethod
-    def test_signup_patient(admin_api, professional):
+    def test_signup_patient(no_auth_api, professional):
         url = reverse("api:sign-up-patient")
 
         data = {
@@ -113,7 +158,7 @@ class TestSignupViewSet:
             "phone": "99999999",
         }
 
-        response = admin_api.post(
+        response = no_auth_api.post(
             url, json.dumps(data), content_type="application/json"
         )
 
@@ -134,7 +179,7 @@ class TestSignupViewSet:
         assert profile.password is not None
 
     @staticmethod
-    def test_signup_patient_atomocity(admin_api, professional):
+    def test_signup_patient_atomocity(no_auth_api, professional):
         url = reverse("api:sign-up-patient")
 
         data = {
@@ -148,11 +193,11 @@ class TestSignupViewSet:
             "phone": "99999999",
         }
 
-        response = admin_api.post(
+        response = no_auth_api.post(
             url, json.dumps(data), content_type="application/json"
         )
 
         assert response.status_code == 400
 
         assert Patient.objects.count() == 0
-        assert Profile.objects.count() == 2  # Only the admin and professional profile
+        assert Profile.objects.count() == 1  # Only the professional profile

@@ -1,18 +1,15 @@
 from api.models.profile import Profile
-from api.serializers.address import AddressSerializer
-from api.serializers.plan import PlanSerializer
-from api.serializers.profession import ProfessionSerializer
-from api.utils.serializers import get_serialized_data
+from api.serializers.generic import BaseSerializer
 from rest_framework import serializers
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ProfileSerializer(BaseSerializer):
     full_name = serializers.ReadOnlyField()
 
     class Meta:
         model = Profile
         read_only_fields = (
-            "uuid",
+            "id",
             "created_at",
             "modified_at",
         )

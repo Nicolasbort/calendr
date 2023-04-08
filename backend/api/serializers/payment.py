@@ -1,12 +1,12 @@
 from api.models.payment import Payment
-from rest_framework import serializers
+from api.serializers.generic import BaseSerializer
 
 
-class PaymentSerializer(serializers.ModelSerializer):
+class PaymentSerializer(BaseSerializer):
     class Meta:
         model = Payment
         read_only_fields = (
-            "uuid",
+            "id",
             "created_at",
             "modified_at",
         )

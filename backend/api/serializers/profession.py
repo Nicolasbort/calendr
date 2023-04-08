@@ -1,11 +1,13 @@
 from api.models.profession import Profession
-from rest_framework import serializers
+from api.serializers.generic import BaseSerializer
 
 
-class ProfessionSerializer(serializers.ModelSerializer):
+class ProfessionSerializer(BaseSerializer):
     class Meta:
         model = Profession
-        fields = (
+        read_only_fields = (
             "id",
-            "name",
+            "created_at",
+            "modified_at",
         )
+        fields = read_only_fields + ("name",)

@@ -1,18 +1,19 @@
 from datetime import datetime
 
 from api.models.appointment import Appointment
+from api.serializers.generic import BaseSerializer
 from api.utils.datetime import diff
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 
 
-class AppointmentSerializer(serializers.ModelSerializer):
+class AppointmentSerializer(BaseSerializer):
     duration = serializers.ReadOnlyField()
 
     class Meta:
         model = Appointment
         read_only_fields = (
-            "uuid",
+            "id",
             "professional",
             "duration",
             "created_at",
@@ -49,12 +50,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def create(self, validated_data):
-        return super().create(validated_data)
-
     def save(self, **kwargs):
         request = self.context.get("request")
 
-        kwargs["professional"] = request.user.professional
-
-        return super().save(**kwargs)
+        return super().save(professional=request.user.professional)

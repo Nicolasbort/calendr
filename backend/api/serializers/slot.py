@@ -1,16 +1,17 @@
 from api.models.slot import Slot
+from api.serializers.generic import BaseSerializer
 from rest_framework import serializers
 
 
-class SlotSerializer(serializers.ModelSerializer):
-    duration = serializers.ReadOnlyField()
+class SlotSerializer(BaseSerializer):
+    duration = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Slot
         fields = "__all__"
 
 
-class CalendarSlotSerializer(serializers.ModelSerializer):
+class CalendarSlotSerializer(BaseSerializer):
     class Meta:
         model = Slot
         fields = [

@@ -3,7 +3,6 @@ from time import time
 
 from calendr.settings import OTP_PERIOD, OTP_SECRET
 from django_otp.oath import TOTP
-from pyotp import TOTP
 
 
 def full_name(profile) -> str:

@@ -16,7 +16,7 @@ class Profile(AbstractBaseUser, PermissionsMixin, BaseModel):
     is_staff = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
 
-    USERNAME_FIELD = "email"
+    USERNAME_FIELD = "username"
     REQUIRED_FIELDS = []
     WRITABLE_KEYS = [
         "first_name",
@@ -33,6 +33,10 @@ class Profile(AbstractBaseUser, PermissionsMixin, BaseModel):
     @builtins.property
     def full_name(self) -> str:
         return profile_calcs.full_name(self)
+
+    @builtins.property
+    def is_active(self) -> bool:
+        return True
 
     def generate_token(self) -> str:
         return profile_calcs.generate_token(self)

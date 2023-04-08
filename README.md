@@ -40,3 +40,13 @@ In order to run the seed manually open the API container and run:
 Run inside the API container:
 
 `pytest`
+
+## Swagger
+
+Swagger is visble in the route `/swagger` -> `api.calendr:8000/swagger`
+
+### How to create/update a Swagger schema
+
+Run inside the API container:
+
+`./manage.py spectacular --file schema.yml`

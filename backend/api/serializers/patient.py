@@ -1,22 +1,21 @@
 from api.models.patient import Patient
 from api.serializers.appointment import AppointmentSerializer
-from api.serializers.base_profile import BaseProfileSerializer
+from api.serializers.generic import BaseProfileSerializer, BaseSerializer
 
 
-class PatientSerializer(BaseProfileSerializer):
+class PatientSerializer(BaseProfileSerializer, BaseSerializer):
     appointments = AppointmentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Patient
         read_only_fields = (
-            "uuid",
+            "id",
             "created_at",
             "modified_at",
-            "profile",
             "professional",
             "appointments",
         )
-        exclude = ("deleted_at",)
+        exclude = ("deleted_at", "profile")
 
     def create(self, validated_data) -> Patient:
         return super().create(validated_data, Patient)
@@ -24,6 +23,4 @@ class PatientSerializer(BaseProfileSerializer):
     def save(self, **kwargs):
         request = self.context.get("request")
 
-        kwargs["professional"] = request.user.professional
-
-        return super().save(**kwargs)
+        return super().save(professional=request.user.professional)
