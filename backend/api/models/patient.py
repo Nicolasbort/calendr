@@ -7,14 +7,20 @@ from django.db import models
 
 
 class Patient(BaseModel):
-    notify_appointment = models.BooleanField(default=True)
-    notify_pending_payment = models.BooleanField(default=True)
     profile = models.OneToOneField(
-        Profile, on_delete=models.CASCADE, related_name="patient", db_index=True
+        Profile,
+        on_delete=models.CASCADE,
+        related_name="patient",
+        db_index=True,
     )
     professional = models.ForeignKey(
-        Professional, on_delete=models.CASCADE, related_name="patients", db_index=True
+        Professional,
+        on_delete=models.CASCADE,
+        related_name="patients",
+        db_index=True,
     )
+    notify_appointment = models.BooleanField(default=True)
+    notify_pending_payment = models.BooleanField(default=True)
 
     @cached_property
     def full_name(self) -> str:

@@ -237,10 +237,6 @@ LOGGING = {
     "loggers": LOGGING_LOGGERS,
 }
 
-# Google Calendar
-GOOGLE_CALENDAR_SECRET_ID = os.environ.get("GOOGLE_CALENDAR_CLIENT_ID")
-GOOGLE_CALENDAR_CLIENT_SECRET = os.environ.get("GOOGLE_CALENDAR_CLIENT_SECRET")
-
 # Email
 EMAIL_FROM = os.environ.get("EMAIL_FROM")
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
@@ -261,5 +257,13 @@ CACHES = {
 }
 
 
+# OTP
 OTP_PERIOD = os.environ.get("OTP_PERIOD")
 OTP_SECRET = os.environ.get("OTP_SECRET")
+
+# Google Calendar
+GOOGLE_CALENDAR_API_URL = os.environ.get("GOOGLE_CALENDAR_API_URL")
+GOOGLE_OAUTH_URL = os.environ.get("GOOGLE_OAUTH_URL")
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+GOOGLE_REDIRECT_URI = os.environ.get("GOOGLE_REDIRECT_URI")

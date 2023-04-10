@@ -2,6 +2,7 @@ from datetime import datetime
 
 from api.models.appointment import Appointment
 from api.serializers.generic import BaseSerializer
+from api.tasks.google_calendar import schedule_event
 from api.utils.datetime import diff
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
@@ -16,6 +17,7 @@ class AppointmentSerializer(BaseSerializer):
             "id",
             "professional",
             "duration",
+            "link",
             "created_at",
             "modified_at",
         )
@@ -49,6 +51,17 @@ class AppointmentSerializer(BaseSerializer):
             )
 
         return attrs
+
+    def create(self, validated_data):
+        appointment = super().create(validated_data)
+
+        schedule_event.delay(
+            professional_id=appointment.professional.id,
+            appointment_id=appointment.id,
+            patient_emails=[appointment.patient.profile.email],
+        )
+
+        return appointment
 
     def save(self, **kwargs):
         request = self.context.get("request")

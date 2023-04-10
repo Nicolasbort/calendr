@@ -6,12 +6,8 @@ from rest_framework.response import Response
 
 
 class CustomerViewSet(viewsets.GenericViewSet):
-    """
-    Base viewset to create nested routes for customers
-    """
-
     serializer_class = PatientSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Patient.objects.filter(profile=self.request.user)

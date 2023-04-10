@@ -1,3 +1,4 @@
 from .belongs_to_professional import BelongsToProfessional
 from .is_admin_or_professional import IsAdminOrProfessional
 from .is_admin_or_read_only import IsAdminOrReadOnly
+from .is_professional import IsProfessional

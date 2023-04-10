@@ -15,13 +15,22 @@ class Professional(BaseModel):
         db_index=True,
     )
     plan = models.ForeignKey(
-        Plan, on_delete=models.RESTRICT, related_name="professionals", db_index=True
+        Plan,
+        on_delete=models.RESTRICT,
+        related_name="professionals",
+        db_index=True,
     )
     profile = models.OneToOneField(
-        Profile, on_delete=models.CASCADE, related_name="professional", db_index=True
+        Profile,
+        on_delete=models.CASCADE,
+        related_name="professional",
+        db_index=True,
     )
     address = models.OneToOneField(
-        Address, on_delete=models.RESTRICT, related_name="professional", null=True
+        Address,
+        on_delete=models.RESTRICT,
+        related_name="professional",
+        null=True,
     )
     picture = models.CharField(max_length=128, null=True)
     genre = models.CharField(max_length=1, choices=GenreChoices.choices)

@@ -158,7 +158,8 @@ class Migration(migrations.Migration):
                         max_length=16,
                     ),
                 ),
-                ("note", models.TextField(blank=True, max_length=128, null=True)),
+                ("note", models.CharField(blank=True, max_length=128, null=True)),
+                ("link", models.CharField(max_length=255, null=True)),
                 ("notify_appointment", models.BooleanField(default=True)),
             ],
             options={
@@ -481,6 +482,50 @@ class Migration(migrations.Migration):
             ],
             options={
                 "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="ThirdParty",
+            fields=[
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("modified_at", models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        choices=[("google-calendar", "Google Calendar")], max_length=32
+                    ),
+                ),
+                ("access_token", models.TextField()),
+                ("refresh_token", models.TextField(null=True)),
+                ("expire_at", models.DateTimeField(null=True)),
+                (
+                    "scopes",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(max_length=255),
+                        blank=True,
+                        size=None,
+                    ),
+                ),
+                (
+                    "professional",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="third_parties",
+                        to="api.professional",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name_plural": "Third Parties",
             },
         ),
         migrations.AddField(

@@ -8,3 +8,4 @@ from .profession import *
 from .professional import *
 from .profile import *
 from .slot import *
+from .third_party import *

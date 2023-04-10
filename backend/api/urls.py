@@ -25,6 +25,7 @@ router.register("sign-up", SignUpViewSet, basename="sign-up")
 router.register("appointment", Professional.AppointmentViewSet, basename="appointment")
 router.register("calendar", Professional.CalendarViewSet, basename="calendar")
 router.register("patient", Professional.PatientViewSet, basename="patient")
+router.register("oauth", Professional.OauthViewSet, basename="oauth")
 
 # Customer routes
 customer_router = routers.SimpleRouter()

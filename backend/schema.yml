@@ -531,12 +531,10 @@ paths:
   /customer/me/:
     get:
       operationId: customer_me_retrieve
-      description: Base viewset to create nested routes for customers
       tags:
       - customer
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -586,7 +584,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Professional'
+                $ref: '#/components/schemas/ShowCalendar'
           description: ''
   /me/:
     get:
@@ -601,6 +599,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Profile'
+          description: ''
+  /oauth/authorize/:
+    post:
+      operationId: oauth_authorize_create
+      tags:
+      - oauth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Oauth'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Oauth'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Oauth'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThirdParty'
           description: ''
   /patient/:
     get:
@@ -1209,22 +1233,26 @@ components:
           type: string
           format: date-time
           readOnly: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
         time_start:
           type: string
           format: time
         time_end:
           type: string
           format: time
-        price:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
         type:
           $ref: '#/components/schemas/TypeEnum'
         note:
           type: string
           nullable: true
           maxLength: 128
+        link:
+          type: string
+          readOnly: true
+          nullable: true
         notify_appointment:
           type: boolean
         professional:
@@ -1241,6 +1269,7 @@ components:
       - created_at
       - duration
       - id
+      - link
       - modified_at
       - patient
       - price
@@ -1249,6 +1278,15 @@ components:
       - time_end
       - time_start
       - type
+    Availability:
+      type: object
+      properties:
+        periods:
+          type: array
+          items:
+            $ref: '#/components/schemas/Period'
+      required:
+      - periods
     Calendar:
       type: object
       properties:
@@ -1338,6 +1376,19 @@ components:
         * `M` - Masculino
         * `F` - Feminimo
         * `O` - Outro
+    NameEnum:
+      enum:
+      - google-calendar
+      type: string
+      description: '* `google-calendar` - Google Calendar'
+    Oauth:
+      type: object
+      properties:
+        code:
+          type: string
+          writeOnly: true
+      required:
+      - code
     PaginatedAppointmentList:
       type: object
       properties:
@@ -1476,22 +1527,26 @@ components:
           type: string
           format: date-time
           readOnly: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
         time_start:
           type: string
           format: time
         time_end:
           type: string
           format: time
-        price:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
         type:
           $ref: '#/components/schemas/TypeEnum'
         note:
           type: string
           nullable: true
           maxLength: 128
+        link:
+          type: string
+          readOnly: true
+          nullable: true
         notify_appointment:
           type: boolean
         professional:
@@ -1685,6 +1740,21 @@ components:
       - modified_at
       - phone
       - professional
+    Period:
+      type: object
+      properties:
+        time_start:
+          type: string
+          format: time
+        time_end:
+          type: string
+          format: time
+        is_scheduled:
+          type: boolean
+      required:
+      - is_scheduled
+      - time_end
+      - time_start
     Plan:
       type: object
       properties:
@@ -1931,6 +2001,52 @@ components:
       - modified_at
       - password
       - username
+    ShowCalendar:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        professional:
+          allOf:
+          - $ref: '#/components/schemas/Professional'
+          readOnly: true
+        availability:
+          allOf:
+          - $ref: '#/components/schemas/Availability'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 255
+        duration:
+          type: integer
+          maximum: 32767
+          minimum: 0
+        interval:
+          type: integer
+          maximum: 32767
+          minimum: 0
+        is_default:
+          type: boolean
+        is_active:
+          type: boolean
+      required:
+      - availability
+      - created_at
+      - duration
+      - id
+      - modified_at
+      - professional
     StateEnum:
       enum:
       - AC
@@ -1987,6 +2103,46 @@ components:
         * `SP` - São Paulo
         * `SE` - Sergipe
         * `TO` - Tocantins
+    ThirdParty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          $ref: '#/components/schemas/NameEnum'
+        expire_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        scopes:
+          type: array
+          items:
+            type: string
+            maxLength: 255
+          readOnly: true
+        professional:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - created_at
+      - expire_at
+      - id
+      - modified_at
+      - name
+      - professional
+      - scopes
     TokenObtainPair:
       type: object
       properties:

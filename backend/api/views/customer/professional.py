@@ -44,6 +44,7 @@ class ProfessionalViewSet(generics.RetrieveAPIView, viewsets.GenericViewSet):
 
         return obj
 
+    @extend_schema(responses=ShowCalendarSerializer)
     @action(methods=["GET"], detail=True, url_path="calendar")
     def get_calendar_default(self, request, *args, **kwargs):
         professional = self.get_object()
