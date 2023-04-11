@@ -12,6 +12,7 @@ class TestAppointmentViewSet:
         data = {
             "patient": str(patient.id),
             "slot": str(slot.id),
+            "date": "2023-04-10",  # Monday
             "time_end": "17:00:00",
             "time_start": "16:30:00",
             "price": "150.00",
@@ -34,6 +35,7 @@ class TestAppointmentViewSet:
         assert str(appointment.slot.id) == str(slot.id)
         assert appointment.time_end.strftime("%H:%M:%S") == "17:00:00"
         assert appointment.time_start.strftime("%H:%M:%S") == "16:30:00"
+        assert appointment.date.strftime("%Y-%m-%d") == "2023-04-10"
         assert appointment.duration == 30
         assert str(appointment.price) == "150.00"
         assert appointment.type == "online"
@@ -45,6 +47,7 @@ class TestAppointmentViewSet:
         data = {
             "patient": str(patient.id),
             "slot": str(slot.id),
+            "date": "2023-04-10",  # Monday
             "time_end": "17:01:00",
             "time_start": "16:31:00",
             "price": "150.00",
@@ -66,12 +69,41 @@ class TestAppointmentViewSet:
         ]
 
     @staticmethod
+    def test_create_appointment_invalid_date(
+        professional_api, professional, patient, slot
+    ):
+        data = {
+            "patient": str(patient.id),
+            "slot": str(slot.id),
+            "date": "2023-04-11",  # Tuesday
+            "time_end": "17:01:00",
+            "time_start": "16:30:00",
+            "price": "150.00",
+            "type": "online",
+        }
+
+        url = reverse("api:appointment-list")
+
+        response = professional_api.post(
+            url, json.dumps(data), content_type="application/json"
+        )
+
+        response_data = response.json()
+
+        assert response.status_code == 400
+        assert "non_field_errors" in response_data
+        assert response_data["non_field_errors"] == [
+            "Ensure the appointment date is in the correct day of the week"
+        ]
+
+    @staticmethod
     def test_create_appointment_invalid_duration(
         professional_api, professional, patient, slot
     ):
         data = {
             "patient": str(patient.id),
             "slot": str(slot.id),
+            "date": "2023-04-10",  # Monday
             "time_end": "17:00:00",
             "time_start": "16:31:00",
             "price": "150.00",
@@ -100,6 +132,7 @@ class TestAppointmentViewSet:
             "professional": str(other_professional.id),
             "patient": str(patient.id),
             "slot": str(slot.id),
+            "date": "2023-04-10",  # Monday
             "time_end": "17:00:00",
             "time_start": "16:30:00",
             "price": "150.00",

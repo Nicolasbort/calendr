@@ -3,9 +3,6 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-print("ADMIN\n")
-
-
 urlpatterns = [
     path("", views.index, name="index"),
     path("billing/", views.billing, name="billing"),

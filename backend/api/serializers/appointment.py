@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from api.constants.slot import WeekDayChoices
 from api.models.appointment import Appointment
 from api.serializers.generic import BaseSerializer
 from api.tasks.google_calendar import schedule_event
@@ -36,6 +37,12 @@ class AppointmentSerializer(BaseSerializer):
         slot = attrs["slot"]
         time_end = attrs["time_end"]
         time_start = attrs["time_start"]
+        date = attrs["date"]
+
+        if date.weekday() != WeekDayChoices.to_python(slot.week_day):
+            raise ValidationError(
+                f"Ensure the appointment date is in the correct day of the week"
+            )
 
         if time_end > slot.time_end or time_start < slot.time_start:
             raise ValidationError(

@@ -9,3 +9,7 @@ class WeekDayChoices(models.IntegerChoices):
     THURDAY = 4, "Quinta"
     FRIDAY = 5, "Sexta"
     SATURDAY = 6, "Sábado"
+
+    @classmethod
+    def to_python(cls, week_day: int) -> int:
+        return week_day - 1 if week_day > 0 else 6

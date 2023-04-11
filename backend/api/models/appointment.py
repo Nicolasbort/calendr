@@ -34,6 +34,7 @@ class Appointment(BaseModel):
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.00"))],
     )
+    date = models.DateField()
     time_start = models.TimeField()
     time_end = models.TimeField()
     type = models.CharField(max_length=16, choices=TypeChoices.choices)
