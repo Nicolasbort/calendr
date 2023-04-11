@@ -8,14 +8,14 @@ from api.serializers.third_party import ThirdPartySerializer
 from api.services.third_parties.google_calendar import GoogleCalendar
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet
 
 
 @extend_schema(request=OauthSerializer, responses=ThirdPartySerializer)
-class OauthViewSet(ViewSet):
+class OauthViewSet(viewsets.ViewSet):
     permission_classes = [IsProfessional]
 
     @action(methods=["POST"], detail=False, url_path="authorize")
@@ -28,7 +28,7 @@ class OauthViewSet(ViewSet):
         success, data = GoogleCalendar.exchange_code(code)
 
         if not success:
-            return Response(status=400, data=data)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
         access_token = data["access_token"]
         refresh_token = data["refresh_token"]
@@ -36,7 +36,7 @@ class OauthViewSet(ViewSet):
         scopes = data["scope"].split(" ") if data.get("scope") else []
 
         now = timezone.now()
-        expire_at = now + timedelta(0, expires_in)
+        expire_at = now + timedelta(seconds=expires_in)
 
         professional = self.request.user.professional
         third_party, _ = ThirdParty.objects.update_or_create(
@@ -53,5 +53,6 @@ class OauthViewSet(ViewSet):
         )
 
         return Response(
-            status=200, data=ThirdPartySerializer(instance=third_party).data
+            status=status.HTTP_200_OK,
+            data=ThirdPartySerializer(instance=third_party).data,
         )

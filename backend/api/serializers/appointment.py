@@ -58,7 +58,7 @@ class AppointmentSerializer(BaseSerializer):
         schedule_event.delay(
             professional_id=appointment.professional.id,
             appointment_id=appointment.id,
-            patient_emails=[appointment.patient.profile.email],
+            patient_ids=[appointment.patient.id],
         )
 
         return appointment

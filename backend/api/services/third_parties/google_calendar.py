@@ -1,8 +1,16 @@
 import json
 from datetime import time
-from typing import Union
+from typing import Tuple
 
 import requests
+from api.models.appointment import Appointment
+from api.models.patient import Patient
+from api.typings.google_calendar import (
+    Event,
+    EventResponseError,
+    EventResponseSuccess,
+    ExchangeCode,
+)
 from django.conf import settings
 
 
@@ -11,8 +19,9 @@ class GoogleCalendar:
         self.API_URL = settings.GOOGLE_CALENDAR_API_URL
         self.EVENTS_URL = f"{self.API_URL}/primary/events"
         self.ACCESS_TOKEN = access_token
+        self.TIMEZONE = "America/Sao_Paulo"
 
-    def get_headers(self):
+    def get_headers(self) -> dict[str, str]:
         return {
             "Authorization": f"Bearer {self.ACCESS_TOKEN}",
             "Content-Type": "application/json",
@@ -20,33 +29,44 @@ class GoogleCalendar:
 
     def get_event_body(
         self,
-        start_time: time,
-        end_time: time,
+        appointment: Appointment,
         summary: str,
         description: str,
-        attendees_emails: list[str],
-    ):
+        patients: list[Patient],
+    ) -> Event:
         attendees = [
-            {"email": email, "responseStatus": "needsAction"}
-            for email in attendees_emails
+            {
+                "email": patient.profile.email,
+                "displayName": patient.full_name,
+                "responseStatus": "needsAction",
+            }
+            for patient in patients
         ]
 
         return {
+            "id": appointment.id,
             "summary": summary,
             "description": description,
             "start": {
-                "dateTime": start_time.isoformat(),
-                "timeZone": "UTC",
+                "dateTime": appointment.time_start.isoformat(),
+                "timeZone": self.TIMEZONE,
             },
             "end": {
-                "dateTime": end_time.isoformat(),
-                "timeZone": "UTC",
+                "dateTime": appointment.time_end.isoformat(),
+                "timeZone": self.TIMEZONE,
             },
             "attendees": attendees,
+            "reminders": {
+                "useDefault": False,
+                "overrides": {
+                    "minutes": 60,
+                    "method": "email",
+                },
+            },
         }
 
     @classmethod
-    def exchange_code(cls, code: str) -> Union[bool, dict]:
+    def exchange_code(cls, code: str) -> Tuple[bool, ExchangeCode]:
         data = {
             "code": code,
             "client_id": settings.GOOGLE_CLIENT_ID,
@@ -64,15 +84,12 @@ class GoogleCalendar:
 
     def create_event(
         self,
-        start_time: time,
-        end_time: time,
+        appointment: Appointment,
         summary: str,
         description: str,
-        attendees_emails: list[str],
-    ) -> Union[bool, dict]:
-        event = self.get_event_body(
-            start_time, end_time, summary, description, attendees_emails
-        )
+        patients: list[Patient],
+    ) -> Tuple[bool, EventResponseSuccess | EventResponseError]:
+        event = self.get_event_body(appointment, summary, description, patients)
 
         response = requests.post(
             self.EVENTS_URL, headers=self.get_headers(), json=event
@@ -90,18 +107,14 @@ class GoogleCalendar:
 
     def update_event(
         self,
-        event_id: str,
-        start_time: time,
-        end_time: time,
+        appointment: Appointment,
         summary: str,
         description: str,
         attendees_emails: list[str],
-    ) -> Union[bool, dict]:
-        event = self.get_event_body(
-            start_time, end_time, summary, description, attendees_emails
-        )
+    ) -> Tuple[bool, EventResponseSuccess | EventResponseError]:
+        event = self.get_event_body(appointment, summary, description, attendees_emails)
 
-        update_url = f"{self.EVENTS_URL}/{event_id}"
+        update_url = f"{self.EVENTS_URL}/{appointment.id}"
         response = requests.put(update_url, headers=self.get_headers(), json=event)
 
         data = response.json()
@@ -110,7 +123,7 @@ class GoogleCalendar:
             return True, data
 
         return False, {
-            "status_code": response.status_code,
+            "status": response.status_code,
             "detail": data,
         }
 
