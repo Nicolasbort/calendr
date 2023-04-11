@@ -21,11 +21,17 @@ Add `127.0.0.1 api.calendr admin.calendr` to the file file to access the API usi
 
 `docker-compose up -d`
 
+## Check logs
+
+`docker-compose logs -f --tail 100 <docker service>`
+
+Exemple: `docker-compose logs -f --tail 100 calendr_api` to see the API logs
+
 ## Seed database
 
 The seeding process happens everytime the container is initiated.
 
-Seeding the database will populate the models `City`, `Profession`, `Plan` and will create an admin `Profile` with the following data:
+Seeding the database will populate the models `City`, `Profession`, `Patient`, `Plan` and will create an admin `Profile` with the following data:
 
 - username: `admin`
 - email: `admin@example.com`
@@ -33,7 +39,7 @@ Seeding the database will populate the models `City`, `Profession`, `Plan` and w
 
 In order to run the seed manually open the API container and run:
 
-`python manage.py seed`
+`./manage.py seed`
 
 ## Run tests
 
