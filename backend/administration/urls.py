@@ -1,7 +1,10 @@
+from administration import views
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
-from management import views
+
+print("ADMIN\n")
+
 
 urlpatterns = [
     path("", views.index, name="index"),

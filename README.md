@@ -1,6 +1,6 @@
 # App back-end
 
-API and management UI to provide and receive data from a psychology app
+API and administration UI to provide and receive data from a psychology app
 
 This code is formatted using Black and tested with pytest
 
@@ -11,7 +11,7 @@ To have a friendly url to access the API in the local environment, it's possible
 - **For Linux OS:** Open `/etc/hosts` file
 - **For Windows OS:** Open `C:\Windows\System32\Drivers\etc\hosts` file
 
-Add `127.0.0.1 api.calendr management.calendr` to the file file to access the API using `api.calendr:8000` and the management UI using `management.calendr:8000`
+Add `127.0.0.1 api.calendr admin.calendr` to the file file to access the API using `api.calendr:8000` and the administration UI using `admin.calendr:8000`
 
 ## How to build
 

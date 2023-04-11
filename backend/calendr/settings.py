@@ -31,7 +31,7 @@ DEBUG = bool(os.environ.get("DEBUG", default=0))
 ALLOWED_HOSTS = [
     "calendr",
     "api.calendr",
-    "management.calendr",
+    "admin.calendr",
     "localhost",
 ]
 
@@ -40,7 +40,7 @@ ADMINS = [("Nicolas", "bortoluzzinicolas@gmail.com")]
 # Application definition
 
 INSTALLED_APPS = [
-    "management",
+    "administration",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

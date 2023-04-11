@@ -1,3 +1,10 @@
+from administration.forms import (
+    LoginForm,
+    RegistrationForm,
+    UserPasswordChangeForm,
+    UserPasswordResetForm,
+    UserSetPasswordForm,
+)
 from django.contrib.auth import logout
 from django.contrib.auth.views import (
     LoginView,
@@ -6,13 +13,6 @@ from django.contrib.auth.views import (
     PasswordResetView,
 )
 from django.shortcuts import redirect, render
-from management.forms import (
-    LoginForm,
-    RegistrationForm,
-    UserPasswordChangeForm,
-    UserPasswordResetForm,
-    UserSetPasswordForm,
-)
 
 
 def index(request):

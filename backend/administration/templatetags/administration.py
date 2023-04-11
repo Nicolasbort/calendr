@@ -1,10 +1,10 @@
 import re
 
+from administration.utils import get_menu_items
 from django import template
 from django.contrib.admin.views.main import PAGE_VAR
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from management.utils import get_menu_items
 
 register = template.Library()
 
