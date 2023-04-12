@@ -3,9 +3,9 @@ from api.models.professional import Professional
 
 
 @pytest.fixture()
-def professional(profile, profession, plan):
+def professional(profile, profession, plan, address):
     return Professional.objects.create(
-        genre="M", profession=profession, plan=plan, profile=profile
+        genre="M", profession=profession, plan=plan, profile=profile, address=address
     )
 
 

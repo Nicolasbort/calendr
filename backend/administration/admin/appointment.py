@@ -7,8 +7,6 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_display = (
         "professional",
         "patient",
-        "time_start",
-        "time_end",
-        "price",
+        "session",
         "type",
     )

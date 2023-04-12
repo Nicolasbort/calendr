@@ -1,9 +1,12 @@
+from decimal import Decimal
+
 from api.constants.profile import GenreChoices
 from api.models.address import Address
 from api.models.base_model import BaseModel
 from api.models.plan import Plan
 from api.models.profession import Profession
 from api.models.profile import Profile
+from django.core.validators import MinValueValidator
 from django.db import models
 
 

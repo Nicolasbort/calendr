@@ -25,7 +25,7 @@ class TestOauthViewSet:
         assert response.status_code == 400
 
     @staticmethod
-    @patch("api.services.third_parties.google_calendar.GoogleCalendar.exchange_code")
+    @patch("api.services.google_calendar.GoogleCalendar.exchange_code")
     def test_connect_google_calendar(
         mock_exchange_code, professional_api, professional
     ):
@@ -62,7 +62,7 @@ class TestOauthViewSet:
         assert third_party.scopes == []
 
     @staticmethod
-    @patch("api.services.third_parties.google_calendar.GoogleCalendar.exchange_code")
+    @patch("api.services.google_calendar.GoogleCalendar.exchange_code")
     def test_connect_google_calendar_already_has_integration(
         mock_exchange_code, professional_api, professional, google_third_party
     ):
@@ -100,7 +100,7 @@ class TestOauthViewSet:
         assert google_third_party.scopes == ["profile", "email"]
 
     @staticmethod
-    @patch("api.services.third_parties.google_calendar.GoogleCalendar.exchange_code")
+    @patch("api.services.google_calendar.GoogleCalendar.exchange_code")
     def test_connect_google_calendar_invalid_code(
         mock_exchange_code, professional_api, professional
     ):

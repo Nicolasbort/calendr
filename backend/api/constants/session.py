@@ -12,4 +12,8 @@ class WeekDayChoices(models.IntegerChoices):
 
     @classmethod
     def to_python(cls, week_day: int) -> int:
+        """
+        Week day choices are in Javascript format, starting on Sunday = 0.
+        Python starts the week on Monday = 0
+        """
         return week_day - 1 if week_day > 0 else 6

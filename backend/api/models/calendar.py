@@ -27,3 +27,9 @@ class Calendar(BaseModel):
                 name="professional_default_active",
             ),
         ]
+
+    @classmethod
+    def unset_default(cls, professional_id: str):
+        cls.objects.filter(professional_id=professional_id, is_default=True).update(
+            is_default=False
+        )

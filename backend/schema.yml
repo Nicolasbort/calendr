@@ -6,8 +6,10 @@ paths:
   /appointment/:
     get:
       operationId: appointment_list
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - name: page
         required: false
@@ -28,8 +30,10 @@ paths:
           description: ''
     post:
       operationId: appointment_create
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       tags:
       - appointment
       requestBody:
@@ -56,8 +60,10 @@ paths:
   /appointment/{id}/:
     get:
       operationId: appointment_retrieve
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -79,8 +85,10 @@ paths:
           description: ''
     put:
       operationId: appointment_update
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -114,8 +122,10 @@ paths:
           description: ''
     patch:
       operationId: appointment_partial_update
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -148,8 +158,10 @@ paths:
           description: ''
     delete:
       operationId: appointment_destroy
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -168,8 +180,10 @@ paths:
   /calendar/:
     get:
       operationId: calendar_list
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - name: page
         required: false
@@ -186,12 +200,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedCalendarList'
+                $ref: '#/components/schemas/PaginatedShowCalendarList'
           description: ''
     post:
       operationId: calendar_create
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       tags:
       - calendar
       requestBody:
@@ -218,8 +234,10 @@ paths:
   /calendar/{id}/:
     get:
       operationId: calendar_retrieve
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -237,12 +255,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Calendar'
+                $ref: '#/components/schemas/ShowCalendar'
           description: ''
     put:
       operationId: calendar_update
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -276,8 +296,10 @@ paths:
           description: ''
     patch:
       operationId: calendar_partial_update
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -310,8 +332,10 @@ paths:
           description: ''
     delete:
       operationId: calendar_destroy
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -397,7 +421,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedAppointmentList'
+                $ref: '#/components/schemas/PaginatedCustomerAppointmentList'
           description: ''
     post:
       operationId: customer_appointment_create
@@ -407,13 +431,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Appointment'
+              $ref: '#/components/schemas/CustomerAppointment'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Appointment'
+              $ref: '#/components/schemas/CustomerAppointment'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Appointment'
+              $ref: '#/components/schemas/CustomerAppointment'
         required: true
       security:
       - jwtAuth: []
@@ -422,7 +446,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Appointment'
+                $ref: '#/components/schemas/CustomerAppointment'
           description: ''
   /customer/appointment/{id}/:
     get:
@@ -444,7 +468,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Appointment'
+                $ref: '#/components/schemas/CustomerAppointment'
           description: ''
     put:
       operationId: customer_appointment_update
@@ -462,13 +486,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Appointment'
+              $ref: '#/components/schemas/CustomerAppointment'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Appointment'
+              $ref: '#/components/schemas/CustomerAppointment'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Appointment'
+              $ref: '#/components/schemas/CustomerAppointment'
         required: true
       security:
       - jwtAuth: []
@@ -477,7 +501,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Appointment'
+                $ref: '#/components/schemas/CustomerAppointment'
           description: ''
     patch:
       operationId: customer_appointment_partial_update
@@ -495,13 +519,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedAppointment'
+              $ref: '#/components/schemas/PatchedCustomerAppointment'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedAppointment'
+              $ref: '#/components/schemas/PatchedCustomerAppointment'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedAppointment'
+              $ref: '#/components/schemas/PatchedCustomerAppointment'
       security:
       - jwtAuth: []
       responses:
@@ -509,7 +533,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Appointment'
+                $ref: '#/components/schemas/CustomerAppointment'
           description: ''
     delete:
       operationId: customer_appointment_destroy
@@ -629,8 +653,10 @@ paths:
   /patient/:
     get:
       operationId: patient_list
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: query
         name: name
@@ -656,8 +682,10 @@ paths:
           description: ''
     post:
       operationId: patient_create
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       tags:
       - patient
       requestBody:
@@ -684,8 +712,10 @@ paths:
   /patient/{id}/:
     get:
       operationId: patient_retrieve
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -707,8 +737,10 @@ paths:
           description: ''
     put:
       operationId: patient_update
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -742,8 +774,10 @@ paths:
           description: ''
     patch:
       operationId: patient_partial_update
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -776,8 +810,10 @@ paths:
           description: ''
     delete:
       operationId: patient_destroy
-      description: This viewset allows professionals or admins to perform any model
-        action.
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -1233,16 +1269,9 @@ components:
           type: string
           format: date-time
           readOnly: true
-        price:
+        date:
           type: string
-          format: decimal
-          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
-        time_start:
-          type: string
-          format: time
-        time_end:
-          type: string
-          format: time
+          format: date
         type:
           $ref: '#/components/schemas/TypeEnum'
         note:
@@ -1262,31 +1291,20 @@ components:
         patient:
           type: string
           format: uuid
-        slot:
+        session:
           type: string
           format: uuid
       required:
       - created_at
+      - date
       - duration
       - id
       - link
       - modified_at
       - patient
-      - price
       - professional
-      - slot
-      - time_end
-      - time_start
+      - session
       - type
-    Availability:
-      type: object
-      properties:
-        periods:
-          type: array
-          items:
-            $ref: '#/components/schemas/Period'
-      required:
-      - periods
     Calendar:
       type: object
       properties:
@@ -1294,10 +1312,10 @@ components:
           type: string
           format: uuid
           readOnly: true
-        slots:
+        sessions:
           type: array
           items:
-            $ref: '#/components/schemas/CalendarSlot'
+            $ref: '#/components/schemas/CalendarSession'
         created_at:
           type: string
           format: date-time
@@ -1332,7 +1350,7 @@ components:
       - id
       - modified_at
       - professional
-    CalendarSlot:
+    CalendarSession:
       type: object
       properties:
         week_day:
@@ -1366,6 +1384,60 @@ components:
       - id
       - name
       - state
+    CustomerAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        duration:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        date:
+          type: string
+          format: date
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        note:
+          type: string
+          nullable: true
+          maxLength: 128
+        link:
+          type: string
+          readOnly: true
+          nullable: true
+        notify_appointment:
+          type: boolean
+        professional:
+          type: string
+          format: uuid
+        patient:
+          type: string
+          format: uuid
+          readOnly: true
+        session:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - date
+      - duration
+      - id
+      - link
+      - modified_at
+      - patient
+      - professional
+      - session
+      - type
     GenreEnum:
       enum:
       - M
@@ -1409,26 +1481,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Appointment'
-    PaginatedCalendarList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Calendar'
     PaginatedCityList:
       type: object
       properties:
@@ -1449,6 +1501,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/City'
+    PaginatedCustomerAppointmentList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerAppointment'
     PaginatedPatientList:
       type: object
       properties:
@@ -1509,6 +1581,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Profession'
+    PaginatedShowCalendarList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShowCalendar'
     PatchedAppointment:
       type: object
       properties:
@@ -1527,16 +1619,9 @@ components:
           type: string
           format: date-time
           readOnly: true
-        price:
+        date:
           type: string
-          format: decimal
-          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
-        time_start:
-          type: string
-          format: time
-        time_end:
-          type: string
-          format: time
+          format: date
         type:
           $ref: '#/components/schemas/TypeEnum'
         note:
@@ -1556,7 +1641,7 @@ components:
         patient:
           type: string
           format: uuid
-        slot:
+        session:
           type: string
           format: uuid
     PatchedCalendar:
@@ -1566,10 +1651,10 @@ components:
           type: string
           format: uuid
           readOnly: true
-        slots:
+        sessions:
           type: array
           items:
-            $ref: '#/components/schemas/CalendarSlot'
+            $ref: '#/components/schemas/CalendarSession'
         created_at:
           type: string
           format: date-time
@@ -1598,6 +1683,49 @@ components:
           type: string
           format: uuid
           readOnly: true
+    PatchedCustomerAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        duration:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        date:
+          type: string
+          format: date
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        note:
+          type: string
+          nullable: true
+          maxLength: 128
+        link:
+          type: string
+          readOnly: true
+          nullable: true
+        notify_appointment:
+          type: boolean
+        professional:
+          type: string
+          format: uuid
+        patient:
+          type: string
+          format: uuid
+          readOnly: true
+        session:
+          type: string
+          format: uuid
     PatchedPatient:
       type: object
       description: Base profile to abstract profile object in professional and patient
@@ -1740,21 +1868,6 @@ components:
       - modified_at
       - phone
       - professional
-    Period:
-      type: object
-      properties:
-        time_start:
-          type: string
-          format: time
-        time_end:
-          type: string
-          format: time
-        is_scheduled:
-          type: boolean
-      required:
-      - is_scheduled
-      - time_end
-      - time_start
     Plan:
       type: object
       properties:
@@ -2001,6 +2114,39 @@ components:
       - modified_at
       - password
       - username
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        week_day:
+          allOf:
+          - $ref: '#/components/schemas/WeekDayEnum'
+          minimum: 0
+          maximum: 32767
+        time_start:
+          type: string
+          format: time
+        time_end:
+          type: string
+          format: time
+      required:
+      - created_at
+      - id
+      - modified_at
+      - time_end
+      - time_start
+      - week_day
     ShowCalendar:
       type: object
       properties:
@@ -2012,10 +2158,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/Professional'
           readOnly: true
-        availability:
-          allOf:
-          - $ref: '#/components/schemas/Availability'
-          readOnly: true
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
         created_at:
           type: string
           format: date-time
@@ -2041,12 +2187,12 @@ components:
         is_active:
           type: boolean
       required:
-      - availability
       - created_at
       - duration
       - id
       - modified_at
       - professional
+      - sessions
     StateEnum:
       enum:
       - AC

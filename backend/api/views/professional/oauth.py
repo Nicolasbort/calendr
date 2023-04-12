@@ -5,7 +5,7 @@ from api.models.third_party import ThirdParty
 from api.permissions import IsProfessional
 from api.serializers.oauth import OauthSerializer
 from api.serializers.third_party import ThirdPartySerializer
-from api.services.third_parties.google_calendar import GoogleCalendar
+from api.services.google_calendar import GoogleCalendar
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets

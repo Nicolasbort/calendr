@@ -6,10 +6,10 @@ from django.urls import reverse
 class TestCustomerProfessionalViewSet:
     @staticmethod
     def test_get_default_professional_calendar_by_username(
-        patient_api, calendar, slot, other_slot
+        patient_api, calendar, session, other_session
     ):
-        other_slot.week_day = 2
-        other_slot.save(update_fields=["week_day"])
+        other_session.week_day = 2
+        other_session.save(update_fields=["week_day"])
 
         url = reverse(
             "api:customer-professional-get-calendar-default",
@@ -27,14 +27,14 @@ class TestCustomerProfessionalViewSet:
         assert calendar.name == returned_calendar["name"]
         assert returned_calendar["is_default"] == True
         assert returned_calendar["is_active"] == True
-        assert len(returned_calendar["availability"]) == 2
+        assert len(returned_calendar["sessions"]) == 2
 
     @staticmethod
     def test_get_default_professional_calendar_by_id(
-        patient_api, calendar, slot, other_slot
+        patient_api, calendar, session, other_session
     ):
-        other_slot.week_day = 2
-        other_slot.save(update_fields=["week_day"])
+        other_session.week_day = 2
+        other_session.save(update_fields=["week_day"])
 
         url = reverse(
             "api:customer-professional-get-calendar-default",
@@ -52,7 +52,7 @@ class TestCustomerProfessionalViewSet:
         assert calendar.name == returned_calendar["name"]
         assert returned_calendar["is_default"] == True
         assert returned_calendar["is_active"] == True
-        assert len(returned_calendar["availability"]) == 2
+        assert len(returned_calendar["sessions"]) == 2
 
     @staticmethod
     def test_get_calendar_not_active(patient_api, calendar_not_active):

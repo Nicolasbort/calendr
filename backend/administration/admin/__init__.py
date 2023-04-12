@@ -6,7 +6,7 @@ from .appointment import *
 from .calendar import *
 from .professional import *
 from .profile import *
-from .slot import *
+from .session import *
 
 admin.site.register(City)
 admin.site.register(Patient)

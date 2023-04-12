@@ -8,4 +8,4 @@ from .plan import Plan
 from .profession import Profession
 from .professional import Professional
 from .profile import Profile
-from .slot import Slot
+from .session import Session

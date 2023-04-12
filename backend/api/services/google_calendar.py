@@ -48,11 +48,11 @@ class GoogleCalendar:
             "summary": summary,
             "description": description,
             "start": {
-                "dateTime": appointment.time_start.isoformat(),
+                "dateTime": appointment.session.time_start.isoformat(),
                 "timeZone": self.TIMEZONE,
             },
             "end": {
-                "dateTime": appointment.time_end.isoformat(),
+                "dateTime": appointment.session.time_end.isoformat(),
                 "timeZone": self.TIMEZONE,
             },
             "attendees": attendees,

@@ -4,7 +4,7 @@ from api.constants.third_party import ThirdPartyNameChoices
 from api.models.appointment import Appointment
 from api.models.patient import Patient
 from api.models.third_party import ThirdParty
-from api.services.third_parties.google_calendar import GoogleCalendar
+from api.services.google_calendar import GoogleCalendar
 from calendr.celery import celery_app
 
 logger = logging.getLogger("django")
