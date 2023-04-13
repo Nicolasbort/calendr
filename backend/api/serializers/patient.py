@@ -1,6 +1,10 @@
 from api.models.patient import Patient
 from api.serializers.appointment import AppointmentSerializer
-from api.serializers.generic import BaseProfileSerializer, BaseSerializer
+from api.serializers.generic import (
+    DEFAULT_READ_ONLY_FIELDS,
+    BaseProfileSerializer,
+    BaseSerializer,
+)
 
 
 class PatientSerializer(BaseProfileSerializer, BaseSerializer):
@@ -9,13 +13,13 @@ class PatientSerializer(BaseProfileSerializer, BaseSerializer):
     class Meta:
         model = Patient
         read_only_fields = (
-            "id",
-            "created_at",
-            "modified_at",
             "professional",
             "appointments",
+        ) + DEFAULT_READ_ONLY_FIELDS
+        exclude = (
+            "deleted_at",
+            "profile",
         )
-        exclude = ("deleted_at", "profile")
 
     def create(self, validated_data) -> Patient:
         return super().create(validated_data, Patient)

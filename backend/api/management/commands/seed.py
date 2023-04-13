@@ -123,12 +123,17 @@ def create_profiles(faker: Faker, number) -> list[Profile]:
     profiles = []
 
     for i in range(number):
+        first_name = faker.first_name()
+        last_name = faker.last_name()
+        username = f"{first_name}_{last_name}".lower().replace(" ", "_")
+        email = f"{username}@{faker.free_email_domain()}"
+
         profiles.append(
             Profile(
-                first_name=faker.first_name(),
-                last_name=faker.last_name(),
-                username=f"{faker.word()}_{faker.word()}",
-                email=faker.email(),
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                email=email,
                 password=make_password("password"),
                 email_verified=faker.boolean(chance_of_getting_true=40),
                 phone=faker.msisdn(),
@@ -254,7 +259,6 @@ def get_random_date_by_weekday(weekday: int) -> datetime.date:
 def create_appointments(
     faker: Faker,
     sessions: list[Session],
-    professionals: list[Professional],
     patients: list[Patient],
 ) -> list[Appointment]:
     appointments = []
@@ -262,7 +266,6 @@ def create_appointments(
     for session in sessions:
         appointments.append(
             Appointment(
-                professional=random.choice(professionals),
                 patient=random.choice(patients),
                 session=session,
                 date=get_random_date_by_weekday(
@@ -308,7 +311,7 @@ def run_seed(self, mode):
     TOTAL_CITIES = round(TOTAL_PROFESSIONALS / 2)
     TOTAL_CALENDARS = round(TOTAL_PROFESSIONALS / 2)
     TOTAL_SESSIONS = TOTAL_CALENDARS * 10
-    TOTAL_APPOINTMENTS = TOTAL_CALENDARS
+    TOTAL_APPOINTMENTS = round(TOTAL_SESSIONS / 2)
 
     logger.info(
         f"""Amount of data being created:
@@ -339,6 +342,4 @@ def run_seed(self, mode):
     patients = create_patients(faker, profiles[TOTAL_PROFESSIONALS:], professionals)
     calendars = create_calendars(faker, professionals[:TOTAL_CALENDARS])
     sessions = create_sessions(faker, TOTAL_SESSIONS, calendars)
-    appointments = create_appointments(
-        faker, sessions[:TOTAL_APPOINTMENTS], professionals, patients
-    )
+    create_appointments(faker, random.sample(sessions, k=TOTAL_APPOINTMENTS), patients)

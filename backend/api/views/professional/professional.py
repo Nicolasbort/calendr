@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from api.permissions import BelongsToProfessional, IsAdminOrProfessional
 from api.serializers.professional import ProfessionalSerializer
 from rest_framework import mixins, viewsets

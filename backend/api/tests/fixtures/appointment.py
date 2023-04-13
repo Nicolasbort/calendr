@@ -4,9 +4,8 @@ from api.models.appointment import Appointment
 
 
 @pytest.fixture()
-def appointment(professional, patient, session):
+def appointment(patient, session):
     return Appointment.objects.create(
-        professional=professional,
         patient=patient,
         session=session,
         date="2023-01-01",

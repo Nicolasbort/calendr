@@ -141,7 +141,7 @@ class TestPatientViewSet:
         assert patient.notify_appointment is True
 
     @staticmethod
-    def test_create_patient_no_phone(professional_api, professional):
+    def test_create_patient_no_phone(professional_api):
         url = reverse("api:patient-list")
 
         data = {
@@ -261,7 +261,7 @@ class TestPatientViewSet:
         assert response.status_code == 403
 
     @staticmethod
-    def test_create_patient_forbiden(patient_api, patient):
+    def test_create_patient_forbiden(patient_api):
         url = reverse("api:patient-list")
 
         response = patient_api.post(url, content_type="application/json")

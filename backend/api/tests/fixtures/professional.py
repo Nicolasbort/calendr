@@ -17,7 +17,19 @@ def other_professional(other_profile, other_profession, premium_plan):
 
 
 @pytest.fixture()
-def admin_professional(admin_profile, profession, plan):
-    return Professional.objects.create(
-        genre="M", profession=profession, plan=plan, profile=admin_profile
-    )
+def customer_professional_fields():
+    return [
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "phone",
+        "username",
+        "full_name",
+        "address",
+        "profession",
+        "picture",
+        "genre",
+        "birthday",
+        "bio",
+    ]

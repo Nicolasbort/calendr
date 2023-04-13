@@ -76,3 +76,14 @@ def calendar_update_data():
             {"week_day": 5, "time_start": "09:00:00", "time_end": "09:30:00"},
         ],
     }
+
+
+@pytest.fixture()
+def customer_calendar_fields():
+    return [
+        "id",
+        "professional",
+        "sessions",
+        "period",
+        "name",
+    ]

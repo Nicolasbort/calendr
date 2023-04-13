@@ -26,5 +26,13 @@ class Patient(BaseModel):
     def full_name(self) -> str:
         return self.profile.full_name
 
+    @cached_property
+    def username(self) -> str:
+        return self.profile.username
+
+    @cached_property
+    def email(self) -> str:
+        return self.profile.email
+
     def __str__(self) -> str:
         return self.full_name

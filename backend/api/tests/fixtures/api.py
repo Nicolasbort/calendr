@@ -11,7 +11,7 @@ def admin_api(admin_profile):
 
 
 @pytest.fixture()
-def professional_api(profile):
+def professional_api(profile, professional):
     client = APIClient()
     client.force_authenticate(profile)
 
@@ -19,7 +19,7 @@ def professional_api(profile):
 
 
 @pytest.fixture()
-def patient_api(patient_profile):
+def patient_api(patient_profile, patient):
     client = APIClient()
     client.force_authenticate(patient_profile)
 

@@ -3,7 +3,6 @@ import builtins
 from api.constants.session import WeekDayChoices
 from api.models.base_model import BaseModel
 from api.models.calendar import Calendar
-from api.utils.datetime import diff
 from django.db import models
 
 
@@ -18,9 +17,16 @@ class Session(BaseModel):
     time_start = models.TimeField()
     time_end = models.TimeField()
 
+    def __str__(self) -> str:
+        week_day = WeekDayChoices(self.week_day).label
+        time_start = self.time_start.strftime("%H:%M")
+        time_end = self.time_end.strftime("%H:%M")
+
+        return f"{week_day} - {time_start} to {time_end}"
+
     @builtins.property
     def duration(self) -> int:
-        return diff(self.time_start, self.time_end)
+        return self.calendar.duration
 
     @builtins.property
     def is_scheduled(self) -> bool:

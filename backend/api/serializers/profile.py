@@ -1,20 +1,39 @@
 from api.models.profile import Profile
-from api.serializers.generic import BaseSerializer
+from api.serializers.generic import (
+    DEFAULT_READ_ONLY_FIELDS,
+    BaseSerializer,
+    ReadOnlySerializer,
+)
 from rest_framework import serializers
 
 
-class ProfileSerializer(BaseSerializer):
+class ProfileSerializer(ReadOnlySerializer):
     full_name = serializers.ReadOnlyField()
 
     class Meta:
         model = Profile
-        read_only_fields = (
-            "id",
-            "created_at",
+        read_only_fields = ("notifications",) + DEFAULT_READ_ONLY_FIELDS
+        exclude = (
             "modified_at",
+            "deleted_at",
+            "password",
+            "last_login",
+            "is_superuser",
+            "is_staff",
+            "groups",
+            "user_permissions",
         )
+
+
+class CreateProfileSerializer(BaseSerializer):
+    full_name = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Profile
+        read_only_fields = ("notifications",) + DEFAULT_READ_ONLY_FIELDS
         exclude = (
             "deleted_at",
+            "is_superuser",
             "is_staff",
         )
         extra_kwargs = {"password": {"write_only": True, "min_length": 4}}

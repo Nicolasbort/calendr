@@ -1,4 +1,4 @@
-from decimal import Decimal
+from functools import cached_property
 
 from api.constants.profile import GenreChoices
 from api.models.address import Address
@@ -6,7 +6,6 @@ from api.models.base_model import BaseModel
 from api.models.plan import Plan
 from api.models.profession import Profession
 from api.models.profile import Profile
-from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -40,5 +39,21 @@ class Professional(BaseModel):
     birthday = models.DateField(null=True)
     bio = models.TextField(null=True, blank=True)
 
-    def __str__(self) -> str:
+    @cached_property
+    def full_name(self) -> str:
         return self.profile.full_name
+
+    @cached_property
+    def username(self) -> str:
+        return self.profile.username
+
+    @cached_property
+    def email(self) -> str:
+        return self.profile.email
+
+    @cached_property
+    def notifications(self) -> list:
+        return self.profile.notifications or []
+
+    def __str__(self) -> str:
+        return self.full_name

@@ -1,12 +1,12 @@
 from api.models.city import City
-from api.serializers.generic import BaseSerializer
+from api.serializers.generic import ReadOnlySerializer
 
 
-class CitySerializer(BaseSerializer):
+class CitySerializer(ReadOnlySerializer):
     class Meta:
         model = City
-        fields = (
-            "id",
-            "name",
-            "state",
+        exclude = (
+            "deleted_at",
+            "created_at",
+            "modified_at",
         )

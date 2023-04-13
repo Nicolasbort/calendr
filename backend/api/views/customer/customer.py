@@ -1,12 +1,12 @@
 from api.models.patient import Patient
-from api.serializers.patient import PatientSerializer
+from api.serializers.customer.patient import CustomerPatientSerializer
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
 class CustomerViewSet(viewsets.GenericViewSet):
-    serializer_class = PatientSerializer
+    serializer_class = CustomerPatientSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):

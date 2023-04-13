@@ -1,13 +1,13 @@
 from api.models.patient import Patient
 from api.models.professional import Professional
-from api.serializers.address import AddressSerializer
+from api.serializers.address import CreateAddressSerializer
 from api.serializers.generic import BaseProfileSerializer, BaseSerializer
 from api.serializers.plan import PlanSerializer
 from api.serializers.profession import ProfessionSerializer
 
 
 class ProfessionalSignupSerializer(BaseProfileSerializer, BaseSerializer):
-    address = AddressSerializer(required=False)
+    address = CreateAddressSerializer(required=False)
     plan = PlanSerializer(read_only=True)
     profession = ProfessionSerializer(read_only=True)
 
@@ -27,7 +27,7 @@ class ProfessionalSignupSerializer(BaseProfileSerializer, BaseSerializer):
         if address:
             address["city"] = address["city"].id
 
-            serializer = AddressSerializer(data=address)
+            serializer = CreateAddressSerializer(data=address)
             serializer.is_valid(raise_exception=True)
 
             validated_data["address"] = serializer.save()

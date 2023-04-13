@@ -2,30 +2,21 @@ from uuid import UUID
 
 from api.models.calendar import Calendar
 from api.models.professional import Professional
-from api.serializers.calendar import ShowCalendarSerializer
-from api.serializers.professional import ProfessionalSerializer
+from api.openapi.parameters.professional import MULTIPLE_LOOKUP_VIEWSET
+from api.serializers.customer.calendar import CustomerCalendarSerializer
+from api.serializers.customer.professional import CustomerProfessionalSerializer
 from django.shortcuts import get_object_or_404
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
-@extend_schema(
-    parameters=[
-        OpenApiParameter(
-            "multiple_lookup_field",
-            OpenApiTypes.STR,
-            OpenApiParameter.PATH,
-            description="UUID or username of the professional",
-        )
-    ]
-)
+@extend_schema(parameters=MULTIPLE_LOOKUP_VIEWSET)
 class ProfessionalViewSet(generics.RetrieveAPIView, viewsets.GenericViewSet):
     lookup_field = "multiple_lookup_field"
     queryset = Professional.objects.all()
-    serializer_class = ProfessionalSerializer
+    serializer_class = CustomerProfessionalSerializer
     permission_classes = [permissions.AllowAny]
 
     def get_object(self):
@@ -44,7 +35,7 @@ class ProfessionalViewSet(generics.RetrieveAPIView, viewsets.GenericViewSet):
 
         return obj
 
-    @extend_schema(responses=ShowCalendarSerializer)
+    @extend_schema(responses=CustomerCalendarSerializer)
     @action(methods=["GET"], detail=True, url_path="calendar")
     def get_calendar_default(self, request, *args, **kwargs):
         professional = self.get_object()
@@ -57,6 +48,6 @@ class ProfessionalViewSet(generics.RetrieveAPIView, viewsets.GenericViewSet):
 
         calendar = get_object_or_404(qs)
 
-        serializer = ShowCalendarSerializer(calendar)
+        serializer = CustomerCalendarSerializer(calendar)
 
         return Response(serializer.data)

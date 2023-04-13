@@ -1,11 +1,30 @@
-import datetime
-
+from api.models.calendar import Calendar
 from api.models.session import Session
 from api.serializers.generic import BaseSerializer
 from rest_framework import serializers
 
 
 class SessionSerializer(BaseSerializer):
+    is_scheduled = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Session
+        depth = 1
+        exclude = (
+            "deleted_at",
+            "calendar",
+        )
+
+    def save(self, **kwargs):
+        request = self.context.get("request")
+        default_calendar = Calendar.get_default(request.user.professional.id)
+
+        return super().save(calendar=default_calendar)
+
+
+class AppointmentSessionSerializer(BaseSerializer):
+    is_scheduled = serializers.ReadOnlyField()
+
     class Meta:
         model = Session
         exclude = (

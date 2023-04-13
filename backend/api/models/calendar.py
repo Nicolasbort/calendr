@@ -1,3 +1,5 @@
+import builtins
+
 from api.models.base_model import BaseModel
 from api.models.professional import Professional
 from django.db import models
@@ -18,6 +20,10 @@ class Calendar(BaseModel):
     def __str__(self) -> str:
         return self.name
 
+    @builtins.property
+    def period(self) -> int:
+        return self.duration + self.interval
+
     class Meta:
         constraints = [
             # The professional can have only one default calendar
@@ -33,3 +39,7 @@ class Calendar(BaseModel):
         cls.objects.filter(professional_id=professional_id, is_default=True).update(
             is_default=False
         )
+
+    @classmethod
+    def get_default(cls, professional_id: str):
+        cls.objects.filter(professional_id=professional_id, is_default=True).first()

@@ -5,7 +5,9 @@ from django.contrib import admin
 @admin.register(Professional)
 class ProfessionalAdmin(admin.ModelAdmin):
     list_display = (
-        "profile",
+        "full_name",
+        "username",
+        "email",
         "plan",
         "genre",
     )

@@ -2,7 +2,7 @@ import logging
 
 from api.models.calendar import Calendar
 from api.models.session import Session
-from api.serializers.generic import BaseSerializer
+from api.serializers.generic import BaseSerializer, ReadOnlySerializer
 from api.serializers.professional import ProfessionalSerializer
 from api.serializers.session import CalendarSessionSerializer, SessionSerializer
 from api.utils.serializers import get_serialized_data
@@ -10,7 +10,7 @@ from api.utils.serializers import get_serialized_data
 logger = logging.getLogger("django")
 
 
-class ShowCalendarSerializer(BaseSerializer):
+class CalendarSerializer(ReadOnlySerializer):
     professional = ProfessionalSerializer(read_only=True)
     sessions = SessionSerializer(many=True)
 
@@ -38,12 +38,12 @@ class ShowCalendarSerializer(BaseSerializer):
         return data
 
 
-class CalendarSerializer(BaseSerializer):
+class CreateCalendarSerializer(BaseSerializer):
     sessions = CalendarSessionSerializer(many=True, allow_empty=True, required=False)
 
     class Meta:
         model = Calendar
-        read_only_fields = ["professional"]
+        read_only_fields = ("professional",)
         exclude = ("deleted_at",)
 
     def create(self, validated_data):

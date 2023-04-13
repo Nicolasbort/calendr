@@ -43,7 +43,7 @@ class TestCalendarViewSet:
 
     @staticmethod
     def test_calendar_with_sessions_creation_atomic(
-        professional_api, professional, calendar_create_data
+        professional_api, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
@@ -60,7 +60,7 @@ class TestCalendarViewSet:
 
     @staticmethod
     def test_calendar_with_sessions_creation_invalid_session_time_range(
-        professional_api, professional, calendar_create_data
+        professional_api, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 

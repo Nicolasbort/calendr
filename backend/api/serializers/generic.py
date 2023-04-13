@@ -7,6 +7,26 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SkipField
 from rest_framework.relations import PKOnlyObject
 
+DEFAULT_READ_ONLY_FIELDS = (
+    "id",
+    "created_at",
+    "modified_at",
+)
+CUSTOMER_HIDDEN_FIELDS = (
+    "created_at",
+    "modified_at",
+    "deleted_at",
+)
+
+
+@extend_schema_serializer(exclude_fields=["deleted_at"])
+class ReadOnlySerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
 
 @extend_schema_serializer(exclude_fields=["deleted_at"])
 class BaseSerializer(serializers.ModelSerializer):
@@ -22,7 +42,7 @@ class BaseProfileSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField()
     email = serializers.EmailField()
     phone = serializers.CharField()
-    password = serializers.CharField(required=False)
+    password = serializers.CharField(required=False, write_only=True)
     username = serializers.CharField(required=False)
 
     def create(

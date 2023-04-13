@@ -9,6 +9,7 @@ class CalendarAdmin(admin.ModelAdmin):
         "name",
         "duration",
         "interval",
+        "period",
         "is_default",
         "is_active",
     )

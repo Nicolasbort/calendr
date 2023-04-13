@@ -2,355 +2,10 @@ openapi: 3.0.3
 info:
   title: Calendr API
   version: 0.0.0
+  contact:
+    name: Nicolas Bortoluzzi
+    email: bortoluzzinicolas@gmail.com
 paths:
-  /appointment/:
-    get:
-      operationId: appointment_list
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - appointment
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedAppointmentList'
-          description: ''
-    post:
-      operationId: appointment_create
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      tags:
-      - appointment
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Appointment'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Appointment'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Appointment'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Appointment'
-          description: ''
-  /appointment/{id}/:
-    get:
-      operationId: appointment_retrieve
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this appointment.
-        required: true
-      tags:
-      - appointment
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Appointment'
-          description: ''
-    put:
-      operationId: appointment_update
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this appointment.
-        required: true
-      tags:
-      - appointment
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Appointment'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Appointment'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Appointment'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Appointment'
-          description: ''
-    patch:
-      operationId: appointment_partial_update
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this appointment.
-        required: true
-      tags:
-      - appointment
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedAppointment'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedAppointment'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedAppointment'
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Appointment'
-          description: ''
-    delete:
-      operationId: appointment_destroy
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this appointment.
-        required: true
-      tags:
-      - appointment
-      security:
-      - jwtAuth: []
-      responses:
-        '204':
-          description: No response body
-  /calendar/:
-    get:
-      operationId: calendar_list
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - calendar
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedShowCalendarList'
-          description: ''
-    post:
-      operationId: calendar_create
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      tags:
-      - calendar
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Calendar'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Calendar'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Calendar'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Calendar'
-          description: ''
-  /calendar/{id}/:
-    get:
-      operationId: calendar_retrieve
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this calendar.
-        required: true
-      tags:
-      - calendar
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ShowCalendar'
-          description: ''
-    put:
-      operationId: calendar_update
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this calendar.
-        required: true
-      tags:
-      - calendar
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Calendar'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Calendar'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Calendar'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Calendar'
-          description: ''
-    patch:
-      operationId: calendar_partial_update
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this calendar.
-        required: true
-      tags:
-      - calendar
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedCalendar'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedCalendar'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedCalendar'
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Calendar'
-          description: ''
-    delete:
-      operationId: calendar_destroy
-      description: |-
-        This viewset allows professionals or admins to perform any model action.
-        Professionals can only manage data linked to them.
-        Admins can manage all the data of the view
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this calendar.
-        required: true
-      tags:
-      - calendar
-      security:
-      - jwtAuth: []
-      responses:
-        '204':
-          description: No response body
   /city/:
     get:
       operationId: city_list
@@ -431,13 +86,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CustomerAppointment'
+              $ref: '#/components/schemas/CustomerCreateAppointment'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CustomerAppointment'
+              $ref: '#/components/schemas/CustomerCreateAppointment'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CustomerAppointment'
+              $ref: '#/components/schemas/CustomerCreateAppointment'
         required: true
       security:
       - jwtAuth: []
@@ -446,7 +101,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerAppointment'
+                $ref: '#/components/schemas/CustomerCreateAppointment'
           description: ''
   /customer/appointment/{id}/:
     get:
@@ -486,13 +141,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CustomerAppointment'
+              $ref: '#/components/schemas/CustomerCreateAppointment'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CustomerAppointment'
+              $ref: '#/components/schemas/CustomerCreateAppointment'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CustomerAppointment'
+              $ref: '#/components/schemas/CustomerCreateAppointment'
         required: true
       security:
       - jwtAuth: []
@@ -501,7 +156,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerAppointment'
+                $ref: '#/components/schemas/CustomerCreateAppointment'
           description: ''
     patch:
       operationId: customer_appointment_partial_update
@@ -519,13 +174,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedCustomerAppointment'
+              $ref: '#/components/schemas/PatchedCustomerCreateAppointment'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedCustomerAppointment'
+              $ref: '#/components/schemas/PatchedCustomerCreateAppointment'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedCustomerAppointment'
+              $ref: '#/components/schemas/PatchedCustomerCreateAppointment'
       security:
       - jwtAuth: []
       responses:
@@ -533,7 +188,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerAppointment'
+                $ref: '#/components/schemas/CustomerCreateAppointment'
           description: ''
     delete:
       operationId: customer_appointment_destroy
@@ -564,7 +219,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Patient'
+                $ref: '#/components/schemas/CustomerPatient'
           description: ''
   /customer/professional/{multiple_lookup_field}/:
     get:
@@ -574,7 +229,7 @@ paths:
         name: multiple_lookup_field
         schema:
           type: string
-        description: UUID or username of the professional
+        description: UUID or username of the professional.
         required: true
       tags:
       - customer
@@ -586,7 +241,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Professional'
+                $ref: '#/components/schemas/CustomerProfessional'
           description: ''
   /customer/professional/{multiple_lookup_field}/calendar/:
     get:
@@ -596,7 +251,7 @@ paths:
         name: multiple_lookup_field
         schema:
           type: string
-        description: UUID or username of the professional
+        description: UUID or username of the professional.
         required: true
       tags:
       - customer
@@ -608,7 +263,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ShowCalendar'
+                $ref: '#/components/schemas/CustomerCalendar'
           description: ''
   /me/:
     get:
@@ -624,11 +279,627 @@ paths:
               schema:
                 $ref: '#/components/schemas/Profile'
           description: ''
-  /oauth/authorize/:
-    post:
-      operationId: oauth_authorize_create
+  /me/appointment/:
+    get:
+      operationId: me_appointment_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       tags:
-      - oauth
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAppointmentList'
+          description: ''
+    post:
+      operationId: me_appointment_create
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppointment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateAppointment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateAppointment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAppointment'
+          description: ''
+  /me/appointment/{id}/:
+    get:
+      operationId: me_appointment_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+    put:
+      operationId: me_appointment_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
+        required: true
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppointment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateAppointment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateAppointment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAppointment'
+          description: ''
+    patch:
+      operationId: me_appointment_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
+        required: true
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateAppointment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateAppointment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateAppointment'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAppointment'
+          description: ''
+    delete:
+      operationId: me_appointment_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /me/calendar/:
+    get:
+      operationId: me_calendar_list
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCalendarList'
+          description: ''
+    post:
+      operationId: me_calendar_create
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCalendar'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateCalendar'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateCalendar'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCalendar'
+          description: ''
+  /me/calendar/{calendar_pk}/session/:
+    get:
+      operationId: me_calendar_session_list
+      parameters:
+      - in: path
+        name: calendar_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: week_day
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+        description: |-
+          * `0` - Domingo
+          * `1` - Segunda
+          * `2` - Terça
+          * `3` - Quarta
+          * `4` - Quinta
+          * `5` - Sexta
+          * `6` - Sábado
+
+          * `0` - Domingo
+          * `1` - Segunda
+          * `2` - Terça
+          * `3` - Quarta
+          * `4` - Quinta
+          * `5` - Sexta
+          * `6` - Sábado
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSessionList'
+          description: ''
+    post:
+      operationId: me_calendar_session_create
+      parameters:
+      - in: path
+        name: calendar_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Session'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Session'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          description: ''
+  /me/calendar/{calendar_pk}/session/{id}/:
+    get:
+      operationId: me_calendar_session_retrieve
+      parameters:
+      - in: path
+        name: calendar_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this session.
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          description: ''
+    put:
+      operationId: me_calendar_session_update
+      parameters:
+      - in: path
+        name: calendar_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this session.
+        required: true
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Session'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Session'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Session'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          description: ''
+    patch:
+      operationId: me_calendar_session_partial_update
+      parameters:
+      - in: path
+        name: calendar_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this session.
+        required: true
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSession'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          description: ''
+    delete:
+      operationId: me_calendar_session_destroy
+      parameters:
+      - in: path
+        name: calendar_pk
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this session.
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /me/calendar/{id}/:
+    get:
+      operationId: me_calendar_retrieve
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this calendar.
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Calendar'
+          description: ''
+    put:
+      operationId: me_calendar_update
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this calendar.
+        required: true
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCalendar'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateCalendar'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateCalendar'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCalendar'
+          description: ''
+    patch:
+      operationId: me_calendar_partial_update
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this calendar.
+        required: true
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateCalendar'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateCalendar'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateCalendar'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCalendar'
+          description: ''
+    delete:
+      operationId: me_calendar_destroy
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this calendar.
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /me/notification/:
+    get:
+      operationId: me_notification_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNotificationList'
+          description: ''
+  /me/notification/{id}/read/:
+    post:
+      operationId: me_notification_read_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this notification.
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /me/notification/read-many/:
+    post:
+      operationId: me_notification_read_many_create
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationMany'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationMany'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationMany'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /me/oauth/authorize/:
+    post:
+      operationId: me_oauth_authorize_create
+      tags:
+      - me
       requestBody:
         content:
           application/json:
@@ -650,9 +921,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ThirdParty'
           description: ''
-  /patient/:
+  /me/patient/:
     get:
-      operationId: patient_list
+      operationId: me_patient_list
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -670,7 +941,7 @@ paths:
         schema:
           type: integer
       tags:
-      - patient
+      - me
       security:
       - jwtAuth: []
       responses:
@@ -681,13 +952,13 @@ paths:
                 $ref: '#/components/schemas/PaginatedPatientList'
           description: ''
     post:
-      operationId: patient_create
+      operationId: me_patient_create
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
         Admins can manage all the data of the view
       tags:
-      - patient
+      - me
       requestBody:
         content:
           application/json:
@@ -709,9 +980,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Patient'
           description: ''
-  /patient/{id}/:
+  /me/patient/{id}/:
     get:
-      operationId: patient_retrieve
+      operationId: me_patient_retrieve
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -725,7 +996,7 @@ paths:
         description: A UUID string identifying this patient.
         required: true
       tags:
-      - patient
+      - me
       security:
       - jwtAuth: []
       responses:
@@ -736,7 +1007,7 @@ paths:
                 $ref: '#/components/schemas/Patient'
           description: ''
     put:
-      operationId: patient_update
+      operationId: me_patient_update
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -750,7 +1021,7 @@ paths:
         description: A UUID string identifying this patient.
         required: true
       tags:
-      - patient
+      - me
       requestBody:
         content:
           application/json:
@@ -773,7 +1044,7 @@ paths:
                 $ref: '#/components/schemas/Patient'
           description: ''
     patch:
-      operationId: patient_partial_update
+      operationId: me_patient_partial_update
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -787,7 +1058,7 @@ paths:
         description: A UUID string identifying this patient.
         required: true
       tags:
-      - patient
+      - me
       requestBody:
         content:
           application/json:
@@ -809,7 +1080,7 @@ paths:
                 $ref: '#/components/schemas/Patient'
           description: ''
     delete:
-      operationId: patient_destroy
+      operationId: me_patient_destroy
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -823,7 +1094,7 @@ paths:
         description: A UUID string identifying this patient.
         required: true
       tags:
-      - patient
+      - me
       security:
       - jwtAuth: []
       responses:
@@ -1208,7 +1479,173 @@ paths:
           description: ''
 components:
   schemas:
-    Address:
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        duration:
+          type: integer
+          readOnly: true
+        session:
+          allOf:
+          - $ref: '#/components/schemas/AppointmentSession'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        date:
+          type: string
+          format: date
+        type:
+          $ref: '#/components/schemas/TypeB83Enum'
+        note:
+          type: string
+          nullable: true
+          maxLength: 128
+        link:
+          type: string
+          nullable: true
+          maxLength: 255
+        notify_appointment:
+          type: boolean
+        patient:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - date
+      - duration
+      - id
+      - modified_at
+      - patient
+      - session
+      - type
+    AppointmentSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        is_scheduled:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        week_day:
+          allOf:
+          - $ref: '#/components/schemas/WeekDayEnum'
+          minimum: 0
+          maximum: 32767
+        time_start:
+          type: string
+          format: time
+        time_end:
+          type: string
+          format: time
+      required:
+      - created_at
+      - id
+      - is_scheduled
+      - modified_at
+      - time_end
+      - time_start
+      - week_day
+    Calendar:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        professional:
+          allOf:
+          - $ref: '#/components/schemas/Professional'
+          readOnly: true
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 255
+        duration:
+          type: integer
+          maximum: 32767
+          minimum: 0
+        interval:
+          type: integer
+          maximum: 32767
+          minimum: 0
+        is_default:
+          type: boolean
+        is_active:
+          type: boolean
+      required:
+      - created_at
+      - duration
+      - id
+      - modified_at
+      - professional
+      - sessions
+    CalendarSession:
+      type: object
+      properties:
+        week_day:
+          allOf:
+          - $ref: '#/components/schemas/WeekDayEnum'
+          minimum: 0
+          maximum: 32767
+        time_start:
+          type: string
+          format: time
+        time_end:
+          type: string
+          format: time
+      required:
+      - time_end
+      - time_start
+      - week_day
+    City:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 32
+        state:
+          $ref: '#/components/schemas/StateEnum'
+      required:
+      - id
+      - name
+      - state
+    CreateAddress:
       type: object
       properties:
         id:
@@ -1251,7 +1688,7 @@ components:
       - modified_at
       - number
       - street
-    Appointment:
+    CreateAppointment:
       type: object
       properties:
         id:
@@ -1273,7 +1710,7 @@ components:
           type: string
           format: date
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          $ref: '#/components/schemas/TypeB83Enum'
         note:
           type: string
           nullable: true
@@ -1284,10 +1721,6 @@ components:
           nullable: true
         notify_appointment:
           type: boolean
-        professional:
-          type: string
-          format: uuid
-          readOnly: true
         patient:
           type: string
           format: uuid
@@ -1302,10 +1735,9 @@ components:
       - link
       - modified_at
       - patient
-      - professional
       - session
       - type
-    Calendar:
+    CreateCalendar:
       type: object
       properties:
         id:
@@ -1350,25 +1782,101 @@ components:
       - id
       - modified_at
       - professional
-    CalendarSession:
+    CustomerAddress:
       type: object
       properties:
-        week_day:
-          allOf:
-          - $ref: '#/components/schemas/WeekDayEnum'
-          minimum: 0
-          maximum: 32767
-        time_start:
+        id:
           type: string
-          format: time
-        time_end:
+          format: uuid
+          readOnly: true
+        city:
+          $ref: '#/components/schemas/CustomerCity'
+        street:
           type: string
-          format: time
+          maxLength: 64
+        number:
+          type: string
+          maxLength: 16
+        district:
+          type: string
+          nullable: true
+          maxLength: 32
+        complement:
+          type: string
+          nullable: true
+          maxLength: 32
       required:
-      - time_end
-      - time_start
-      - week_day
-    City:
+      - city
+      - id
+      - number
+      - street
+    CustomerAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        session:
+          $ref: '#/components/schemas/CustomerSession'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        date:
+          type: string
+          format: date
+        type:
+          $ref: '#/components/schemas/TypeB83Enum'
+        note:
+          type: string
+          nullable: true
+          maxLength: 128
+        link:
+          type: string
+          nullable: true
+          maxLength: 255
+        notify_appointment:
+          type: boolean
+      required:
+      - created_at
+      - date
+      - id
+      - modified_at
+      - session
+      - type
+    CustomerCalendar:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        professional:
+          allOf:
+          - $ref: '#/components/schemas/CustomerProfessional'
+          readOnly: true
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerSession'
+        period:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 255
+      required:
+      - id
+      - period
+      - professional
+      - sessions
+    CustomerCity:
       type: object
       properties:
         id:
@@ -1384,15 +1892,12 @@ components:
       - id
       - name
       - state
-    CustomerAppointment:
+    CustomerCreateAppointment:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          readOnly: true
-        duration:
-          type: integer
           readOnly: true
         created_at:
           type: string
@@ -1406,7 +1911,7 @@ components:
           type: string
           format: date
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          $ref: '#/components/schemas/TypeB83Enum'
         note:
           type: string
           nullable: true
@@ -1417,27 +1922,201 @@ components:
           nullable: true
         notify_appointment:
           type: boolean
-        professional:
-          type: string
-          format: uuid
-        patient:
-          type: string
-          format: uuid
-          readOnly: true
         session:
           type: string
           format: uuid
       required:
       - created_at
       - date
-      - duration
       - id
       - link
       - modified_at
-      - patient
-      - professional
       - session
       - type
+    CustomerPatient:
+      type: object
+      description: Base profile to abstract profile object in professional and patient
+        serializers
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+        username:
+          type: string
+        professional:
+          $ref: '#/components/schemas/CustomerShortProfessional'
+        notify_appointment:
+          type: boolean
+        notify_pending_payment:
+          type: boolean
+      required:
+      - email
+      - first_name
+      - id
+      - last_name
+      - phone
+      - professional
+    CustomerProfession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 32
+      required:
+      - id
+      - name
+    CustomerProfessional:
+      type: object
+      description: Base profile to abstract profile object in professional and patient
+        serializers
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+        username:
+          type: string
+        full_name:
+          type: string
+          readOnly: true
+        address:
+          $ref: '#/components/schemas/CustomerAddress'
+        profession:
+          $ref: '#/components/schemas/CustomerProfession'
+        picture:
+          type: string
+          nullable: true
+          maxLength: 128
+        genre:
+          $ref: '#/components/schemas/GenreEnum'
+        birthday:
+          type: string
+          format: date
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+      required:
+      - address
+      - email
+      - first_name
+      - full_name
+      - genre
+      - id
+      - last_name
+      - phone
+      - profession
+    CustomerSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        is_scheduled:
+          type: boolean
+          readOnly: true
+        week_day:
+          allOf:
+          - $ref: '#/components/schemas/WeekDayEnum'
+          minimum: 0
+          maximum: 32767
+        time_start:
+          type: string
+          format: time
+        time_end:
+          type: string
+          format: time
+      required:
+      - id
+      - is_scheduled
+      - time_end
+      - time_start
+      - week_day
+    CustomerShortProfessional:
+      type: object
+      description: Base profile to abstract profile object in professional and patient
+        serializers
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+        username:
+          type: string
+        full_name:
+          type: string
+          readOnly: true
+        picture:
+          type: string
+          nullable: true
+          maxLength: 128
+        genre:
+          $ref: '#/components/schemas/GenreEnum'
+        birthday:
+          type: string
+          format: date
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        profession:
+          type: string
+          format: uuid
+        address:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - email
+      - first_name
+      - full_name
+      - genre
+      - id
+      - last_name
+      - phone
+      - profession
     GenreEnum:
       enum:
       - M
@@ -1453,6 +2132,65 @@ components:
       - google-calendar
       type: string
       description: '* `google-calendar` - Google Calendar'
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        data:
+          $ref: '#/components/schemas/NotificationData'
+        profile_from:
+          $ref: '#/components/schemas/Profile'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        read_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - created_at
+      - data
+      - id
+      - modified_at
+      - profile_from
+      - read_at
+    NotificationData:
+      type: object
+      properties:
+        message:
+          type: string
+        type:
+          $ref: '#/components/schemas/NotificationDataTypeEnum'
+      required:
+      - message
+      - type
+    NotificationDataTypeEnum:
+      enum:
+      - a-c
+      - a-u
+      type: string
+      description: |-
+        * `a-c` - Appointmet Created
+        * `a-u` - Appointmet Updated
+    NotificationMany:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+      - ids
     Oauth:
       type: object
       properties:
@@ -1481,6 +2219,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Appointment'
+    PaginatedCalendarList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Calendar'
     PaginatedCityList:
       type: object
       properties:
@@ -1521,6 +2279,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CustomerAppointment'
+    PaginatedNotificationList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
     PaginatedPatientList:
       type: object
       properties:
@@ -1581,7 +2359,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Profession'
-    PaginatedShowCalendarList:
+    PaginatedSessionList:
       type: object
       properties:
         count:
@@ -1600,8 +2378,8 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/ShowCalendar'
-    PatchedAppointment:
+            $ref: '#/components/schemas/Session'
+    PatchedCreateAppointment:
       type: object
       properties:
         id:
@@ -1623,7 +2401,7 @@ components:
           type: string
           format: date
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          $ref: '#/components/schemas/TypeB83Enum'
         note:
           type: string
           nullable: true
@@ -1634,17 +2412,13 @@ components:
           nullable: true
         notify_appointment:
           type: boolean
-        professional:
-          type: string
-          format: uuid
-          readOnly: true
         patient:
           type: string
           format: uuid
         session:
           type: string
           format: uuid
-    PatchedCalendar:
+    PatchedCreateCalendar:
       type: object
       properties:
         id:
@@ -1683,15 +2457,12 @@ components:
           type: string
           format: uuid
           readOnly: true
-    PatchedCustomerAppointment:
+    PatchedCustomerCreateAppointment:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          readOnly: true
-        duration:
-          type: integer
           readOnly: true
         created_at:
           type: string
@@ -1705,7 +2476,7 @@ components:
           type: string
           format: date
         type:
-          $ref: '#/components/schemas/TypeEnum'
+          $ref: '#/components/schemas/TypeB83Enum'
         note:
           type: string
           nullable: true
@@ -1716,13 +2487,6 @@ components:
           nullable: true
         notify_appointment:
           type: boolean
-        professional:
-          type: string
-          format: uuid
-        patient:
-          type: string
-          format: uuid
-          readOnly: true
         session:
           type: string
           format: uuid
@@ -1746,6 +2510,7 @@ components:
           type: string
         password:
           type: string
+          writeOnly: true
         username:
           type: string
         appointments:
@@ -1769,6 +2534,35 @@ components:
           type: string
           format: uuid
           readOnly: true
+    PatchedSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        is_scheduled:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        week_day:
+          allOf:
+          - $ref: '#/components/schemas/WeekDayEnum'
+          minimum: 0
+          maximum: 32767
+        time_start:
+          type: string
+          format: time
+        time_end:
+          type: string
+          format: time
     Patient:
       type: object
       description: Base profile to abstract profile object in professional and patient
@@ -1789,6 +2583,7 @@ components:
           type: string
         password:
           type: string
+          writeOnly: true
         username:
           type: string
         appointments:
@@ -1842,6 +2637,7 @@ components:
           type: string
         password:
           type: string
+          writeOnly: true
         username:
           type: string
         created_at:
@@ -1934,8 +2730,14 @@ components:
           type: string
         password:
           type: string
+          writeOnly: true
         username:
           type: string
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -1975,6 +2777,7 @@ components:
       - id
       - last_name
       - modified_at
+      - notifications
       - phone
       - plan
       - profession
@@ -1998,10 +2801,11 @@ components:
           type: string
         password:
           type: string
+          writeOnly: true
         username:
           type: string
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: '#/components/schemas/CreateAddress'
         plan:
           allOf:
           - $ref: '#/components/schemas/Plan'
@@ -2052,25 +2856,7 @@ components:
         full_name:
           type: string
           readOnly: true
-        password:
-          type: string
-          writeOnly: true
-          maxLength: 128
-          minLength: 4
-        last_login:
-          type: string
-          format: date-time
-          nullable: true
-        is_superuser:
-          type: boolean
-          title: Superuser status
-          description: Designates that this user has all permissions without explicitly
-            assigning them.
         created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        modified_at:
           type: string
           format: date-time
           readOnly: true
@@ -2093,17 +2879,6 @@ components:
           maxLength: 32
         email_verified:
           type: boolean
-        groups:
-          type: array
-          items:
-            type: integer
-          description: The groups this user belongs to. A user will get all permissions
-            granted to each of their groups.
-        user_permissions:
-          type: array
-          items:
-            type: integer
-          description: Specific permissions for this user.
       required:
       - created_at
       - email
@@ -2111,8 +2886,6 @@ components:
       - full_name
       - id
       - last_name
-      - modified_at
-      - password
       - username
     Session:
       type: object
@@ -2120,6 +2893,9 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
+        is_scheduled:
+          type: boolean
           readOnly: true
         created_at:
           type: string
@@ -2143,56 +2919,11 @@ components:
       required:
       - created_at
       - id
+      - is_scheduled
       - modified_at
       - time_end
       - time_start
       - week_day
-    ShowCalendar:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-        professional:
-          allOf:
-          - $ref: '#/components/schemas/Professional'
-          readOnly: true
-        sessions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Session'
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        modified_at:
-          type: string
-          format: date-time
-          readOnly: true
-        name:
-          type: string
-          nullable: true
-          maxLength: 255
-        duration:
-          type: integer
-          maximum: 32767
-          minimum: 0
-        interval:
-          type: integer
-          maximum: 32767
-          minimum: 0
-        is_default:
-          type: boolean
-        is_active:
-          type: boolean
-      required:
-      - created_at
-      - duration
-      - id
-      - modified_at
-      - professional
-      - sessions
     StateEnum:
       enum:
       - AC
@@ -2321,7 +3052,7 @@ components:
       required:
       - access
       - refresh
-    TypeEnum:
+    TypeB83Enum:
       enum:
       - online
       - presential

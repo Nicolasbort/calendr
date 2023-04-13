@@ -3,6 +3,7 @@ from .api import *
 from .appointment import *
 from .calendar import *
 from .city import *
+from .notification import *
 from .patient import *
 from .plan import *
 from .profession import *
