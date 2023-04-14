@@ -10,3 +10,12 @@ class CitySerializer(ReadOnlySerializer):
             "created_at",
             "modified_at",
         )
+
+    def create(self, validated_data):
+        city, _ = City.objects.get_or_create(
+            state=validated_data["state"],
+            name=validated_data["name"],
+            defaults=validated_data,
+        )
+
+        return city

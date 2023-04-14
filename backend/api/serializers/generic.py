@@ -43,18 +43,18 @@ class BaseProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     phone = serializers.CharField()
     password = serializers.CharField(required=False, write_only=True)
-    username = serializers.CharField(required=False)
+    username = serializers.CharField(read_only=True)
 
     def create(
         self, validated_data: dict, model_class: Professional | Patient
     ) -> Professional | Patient:
         password = validated_data.pop("password", None)
+
         if password is None:
             ValidationError("password is required")
 
+        profile = Profile(is_staff=False, is_superuser=False)
         instance = model_class()
-        profile = Profile(is_staff=False)
-        profile.set_password(password)
 
         for attr, value in validated_data.items():
             if attr in Profile.WRITABLE_KEYS:
@@ -62,9 +62,11 @@ class BaseProfileSerializer(serializers.ModelSerializer):
             else:
                 setattr(instance, attr, value)
 
-        instance.profile = profile
-
+        profile.create_username()
+        profile.set_password(password)
         profile.save()
+
+        instance.profile = profile
         instance.save()
 
         return instance
@@ -82,9 +84,9 @@ class BaseProfileSerializer(serializers.ModelSerializer):
 
             setattr(curr_instance, attr, value)
 
-        instance.profile = profile
-
         profile.save()
+
+        instance.profile = profile
         instance.save()
 
         return instance

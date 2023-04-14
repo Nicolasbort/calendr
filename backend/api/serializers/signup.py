@@ -24,9 +24,7 @@ class ProfessionalSignupSerializer(BaseProfileSerializer, BaseSerializer):
     def create(self, validated_data) -> Professional:
         address = validated_data.pop("address", None)
 
-        if address:
-            address["city"] = address["city"].id
-
+        if address is not None:
             serializer = CreateAddressSerializer(data=address)
             serializer.is_valid(raise_exception=True)
 

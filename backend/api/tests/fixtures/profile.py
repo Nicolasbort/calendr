@@ -6,9 +6,9 @@ from api.models.profile import Profile
 def profile():
     profile = Profile(
         email="username@example.com",
-        username="profile",
-        first_name="First",
-        last_name="Last",
+        first_name="Profile",
+        last_name="Lastname",
+        username="profilelastname",
         is_staff=False,
         is_superuser=False,
     )
@@ -22,9 +22,9 @@ def profile():
 def other_profile():
     profile = Profile(
         email="other@example.com",
-        username="other",
         first_name="Other",
         last_name="Last",
+        username="otherlast",
         is_staff=False,
         is_superuser=False,
     )
@@ -38,9 +38,9 @@ def other_profile():
 def patient_profile():
     profile = Profile(
         email="patient@example.com",
-        username="patient",
         first_name="Patient",
         last_name="Lastname",
+        username="patientlastname",
         is_staff=False,
         is_superuser=False,
     )
@@ -54,12 +54,13 @@ def patient_profile():
 def admin_profile():
     profile = Profile(
         email="admin@example.com",
-        username="admin",
         first_name="Admin",
         last_name="Auto",
+        username="adminauto",
         is_staff=True,
         is_superuser=True,
     )
+    profile.create_username()
     profile.set_password("password")
     profile.save()
 

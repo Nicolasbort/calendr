@@ -1,7 +1,9 @@
 import json
 
 import pytest
+from api.constants.city import StateChoices
 from api.models.address import Address
+from api.models.city import City
 from api.models.patient import Patient
 from api.models.professional import Professional
 from api.models.profile import Profile
@@ -11,7 +13,7 @@ from django.urls import reverse
 @pytest.mark.django_db
 class TestSignupViewSet:
     @staticmethod
-    def test_signup_professional(no_auth_api, city, plan, profession):
+    def test_signup_professional(no_auth_api, plan, profession):
         url = reverse("api:sign-up-professional")
 
         data = {
@@ -23,14 +25,16 @@ class TestSignupViewSet:
             "last_name": "Last",
             "password": "password",
             "email": "professional@example.com",
-            "username": "professional",
             "phone": "99999999",
             "address": {
                 "street": "Rua",
                 "number": "999",
                 "district": "Bairro",
                 "complement": "Complemento",
-                "city": str(city.id),
+                "city": {
+                    "state": StateChoices.RS,
+                    "name": "Pelotas",
+                },
             },
         }
 
@@ -41,6 +45,7 @@ class TestSignupViewSet:
         assert response.status_code == 200
 
         assert Professional.objects.count() == 1
+        assert City.objects.count() == 1
 
         professional = Professional.objects.first()
         profile = professional.profile
@@ -56,7 +61,7 @@ class TestSignupViewSet:
         assert profile.first_name == "First"
         assert profile.last_name == "Last"
         assert profile.email == "professional@example.com"
-        assert profile.username == "professional"
+        assert profile.username == "firstlast"
         assert profile.phone == "99999999"
         assert profile.password is not None
 
@@ -64,7 +69,69 @@ class TestSignupViewSet:
         assert address.number == "999"
         assert address.district == "Bairro"
         assert address.complement == "Complemento"
-        assert str(address.city.id) == str(city.id)
+
+    @staticmethod
+    def test_signup_professional_city_already_exists(
+        no_auth_api, city, plan, profession
+    ):
+        url = reverse("api:sign-up-professional")
+
+        data = {
+            "picture": "picture.png",
+            "bio": "lorem ipsum",
+            "genre": "M",
+            "birthday": "1995-01-01",
+            "first_name": "First",
+            "last_name": "Last",
+            "password": "password",
+            "email": "professional@example.com",
+            "phone": "99999999",
+            "address": {
+                "street": "Rua",
+                "number": "999",
+                "district": "Bairro",
+                "complement": "Complemento",
+                "city": {
+                    "state": city.state,
+                    "name": city.name,
+                },
+            },
+        }
+
+        response = no_auth_api.post(
+            url, json.dumps(data), content_type="application/json"
+        )
+
+        assert response.status_code == 200
+
+        assert Professional.objects.count() == 1
+        assert City.objects.count() == 1
+
+        professional = Professional.objects.first()
+        profile = professional.profile
+        address = professional.address
+
+        assert professional.plan.id == plan.id
+        assert professional.profession.id == profession.id
+        assert professional.picture == "picture.png"
+        assert professional.bio == "lorem ipsum"
+        assert professional.genre == "M"
+        assert professional.birthday.strftime("%Y-%m-%d") == "1995-01-01"
+
+        assert profile.first_name == "First"
+        assert profile.last_name == "Last"
+        assert profile.email == "professional@example.com"
+        assert profile.username == "firstlast"
+        assert profile.phone == "99999999"
+        assert profile.password is not None
+
+        assert address.street == "Rua"
+        assert address.number == "999"
+        assert address.district == "Bairro"
+        assert address.complement == "Complemento"
+
+        assert address.city.state == city.state
+        assert address.city.name == city.name
 
     @staticmethod
     def test_signup_professional_no_address(no_auth_api, plan, profession):
@@ -79,7 +146,6 @@ class TestSignupViewSet:
             "last_name": "Last",
             "password": "password",
             "email": "professional@example.com",
-            "username": "professional",
             "phone": "99999999",
         }
 
@@ -90,6 +156,8 @@ class TestSignupViewSet:
         assert response.status_code == 200
 
         assert Professional.objects.count() == 1
+        assert Address.objects.count() == 0
+        assert City.objects.count() == 0
 
         professional = Professional.objects.first()
         profile = professional.profile
@@ -105,12 +173,45 @@ class TestSignupViewSet:
         assert profile.first_name == "First"
         assert profile.last_name == "Last"
         assert profile.email == "professional@example.com"
-        assert profile.username == "professional"
+        assert profile.username == "firstlast"
         assert profile.phone == "99999999"
         assert profile.password is not None
 
     @staticmethod
-    def test_signup_atomiticy(no_auth_api, city, plan, profession):
+    def test_signup_professional_same_username(no_auth_api, profile, plan, profession):
+        profile.username = "firstlast"
+        profile.save(update_fields=["username"])
+
+        url = reverse("api:sign-up-professional")
+
+        data = {
+            "picture": "picture.png",
+            "bio": "lorem ipsum",
+            "genre": "M",
+            "birthday": "1995-01-01",
+            "first_name": "First",
+            "last_name": "Last",
+            "password": "password",
+            "email": "professional@example.com",
+            "phone": "99999999",
+        }
+
+        response = no_auth_api.post(
+            url, json.dumps(data), content_type="application/json"
+        )
+
+        assert response.status_code == 200
+
+        assert Professional.objects.count() == 1
+
+        professional = Professional.objects.first()
+        profile = professional.profile
+
+        assert profile.username != "firstlast"
+        assert "firstlast" in profile.username
+
+    @staticmethod
+    def test_signup_professional_atomiticy(no_auth_api, plan, profession):
         url = reverse("api:sign-up-professional")
 
         data = {
@@ -122,14 +223,16 @@ class TestSignupViewSet:
             "last_name": "Last",
             "password": "password",
             "email": "professional@example.com",
-            "username": "professional",
             "phone": "99999999",
             "address": {
                 "street": "Rua",
                 "number": "999",
                 "district": "Bairro",
                 "complement": "Complemento",
-                "city": str(city.id),
+                "city": {
+                    "state": StateChoices.SC,
+                    "name": "Floripa",
+                },
             },
         }
 
@@ -141,6 +244,7 @@ class TestSignupViewSet:
 
         assert Professional.objects.count() == 0
         assert Address.objects.count() == 0
+        assert City.objects.count() == 0
         assert Profile.objects.count() == 0
 
     @staticmethod
@@ -154,7 +258,6 @@ class TestSignupViewSet:
             "last_name": "Last",
             "password": "password",
             "email": "patient@example.com",
-            "username": "patient",
             "phone": "99999999",
         }
 
@@ -174,12 +277,12 @@ class TestSignupViewSet:
         assert profile.first_name == "First"
         assert profile.last_name == "Last"
         assert profile.email == "patient@example.com"
-        assert profile.username == "patient"
+        assert profile.username == "firstlast"
         assert profile.phone == "99999999"
         assert profile.password is not None
 
     @staticmethod
-    def test_signup_patient_atomocity(no_auth_api, professional):
+    def test_signup_patient_atomiticy(no_auth_api, professional):
         url = reverse("api:sign-up-patient")
 
         data = {
@@ -189,7 +292,6 @@ class TestSignupViewSet:
             "last_name": "Last",
             "password": "password",
             "email": "email to throw error",
-            "username": "patient",
             "phone": "99999999",
         }
 

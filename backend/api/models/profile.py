@@ -1,10 +1,14 @@
 import builtins
+import logging
+import random
 
 from api.models.base_model import BaseModel
 from api.models.calcs import profile as profile_calcs
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.db import models
+
+logger = logging.getLogger("django")
 
 
 class Profile(AbstractBaseUser, PermissionsMixin, BaseModel):
@@ -43,3 +47,18 @@ class Profile(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     def verify_token(self, token: str) -> bool:
         return profile_calcs.verify_token(self, token)
+
+    def create_username(self):
+        attempt = 0
+        base_username = self.first_name.lower() + self.last_name.lower()
+        base_username = base_username.replace(" ", "")
+        self.username = base_username
+
+        while Profile.objects.filter(username=self.username).exists():
+            attempt += 1
+
+            logger.warn(
+                f"Profile insertion attempt {attempt} failed: Username '{self.username}' not unique. Creating another one"
+            )
+
+            self.username = base_username + str(random.randint(0, 9999))
