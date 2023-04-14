@@ -10,7 +10,7 @@ logger = logging.getLogger("django")
 
 @celery_app.task(name="create_notification")
 def create_notification(
-    profile_to_id: str, profile_from_id: str, message: str, type: TypeChoices
+    message: str, type: TypeChoices, profile_to_id: str, profile_from_id: str = None
 ):
     data: NotificationData = {"message": message, "type": type}
 

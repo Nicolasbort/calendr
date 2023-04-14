@@ -32,28 +32,24 @@ class TestPatientViewSet:
             assert str(appointment.id) == appointment_json["id"]
 
     @staticmethod
-    def test_list_patient_filter_exact_full_name(professional_api, patient):
-        full_name = patient.full_name
+    @pytest.mark.parametrize(
+        "first_name, last_name, expected",
+        [
+            ("Patient", "Lastname", True),
+            ("Patient", None, True),
+            ("Wrong", None, False),
+            ("Patinet", "Lastmnae", True),
+            ("Wrong", "Test", False),
+            ("Random", "Test", False),
+        ],
+    )
+    def test_list_patient_filter_by_name(
+        professional_api, patient, first_name, last_name, expected
+    ):
+        search_name = first_name
+        search_name += f" {last_name}" if last_name else ""
 
-        url = reverse("api:patient-list") + f"?name={full_name}"
-
-        response = professional_api.get(url)
-
-        assert response.status_code == 200
-
-        data = response.json()
-
-        results = data["results"]
-        count = data["count"]
-
-        assert count == 1
-        assert str(patient.id) == results[0]["id"]
-
-    @staticmethod
-    def test_list_patient_filter_exact_first_name(professional_api, patient):
-        first_name = patient.profile.first_name
-
-        url = reverse("api:patient-list") + f"?name={first_name}"
+        url = reverse("api:patient-list") + f"?name={search_name}"
 
         response = professional_api.get(url)
 
@@ -64,43 +60,11 @@ class TestPatientViewSet:
         results = data["results"]
         count = data["count"]
 
-        assert count == 1
-        assert str(patient.id) == results[0]["id"]
-
-    @staticmethod
-    def test_list_patient_filter_close_full_name(professional_api, patient):
-        full_name = patient.full_name
-        close_full_name = full_name[:-1] + "RR"
-
-        url = reverse("api:patient-list") + f"?name={close_full_name}"
-
-        response = professional_api.get(url)
-
-        assert response.status_code == 200
-
-        data = response.json()
-
-        results = data["results"]
-        count = data["count"]
-
-        assert count == 1
-        assert str(patient.id) == results[0]["id"]
-
-    @staticmethod
-    def test_list_patient_filter_wrong_full_name(professional_api, patient):
-        full_name = "This is a wrong name"
-
-        url = reverse("api:patient-list") + f"?name={full_name}"
-
-        response = professional_api.get(url)
-
-        assert response.status_code == 200
-
-        data = response.json()
-
-        count = data["count"]
-
-        assert count == 0
+        if expected:
+            assert count == 1
+            assert str(patient.id) == results[0]["id"]
+        else:
+            assert count == 0
 
     @staticmethod
     def test_create_patient(professional_api, professional):

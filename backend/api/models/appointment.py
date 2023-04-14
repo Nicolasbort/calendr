@@ -47,10 +47,10 @@ class Appointment(BaseModel):
             message = "Uma consulta foi alterada"
 
         create_notification.delay(
-            profile_to_id=self.professional.profile.id,
-            profile_from_id=self.patient.profile.id,
             message=message,
             type=type,
+            profile_to_id=self.professional.profile.id,
+            profile_from_id=self.patient.profile.id,
         )
 
         return super().save(*args, **kwargs)

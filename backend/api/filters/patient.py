@@ -1,7 +1,7 @@
 from api.models.functions.levenshtein import Levenshtein
 from api.models.patient import Patient
-from django.db.models import F, Value
-from django.db.models.functions import Concat, Lower
+from django.db.models import F, Q
+from django.db.models.functions import Lower
 from django_filters import CharFilter
 from django_filters import rest_framework as filters
 
@@ -14,19 +14,33 @@ class PatientFilter(filters.FilterSet):
         fields = ["name"]
 
     def filter_full_name(self, queryset, name, value):
+        splited_value = value.lower().split(" ")
+        first_name = splited_value[0]
+        last_name = splited_value[-1] if len(splited_value) > 1 else None
+
+        if last_name is not None:
+            return (
+                queryset.annotate(
+                    first_name_dist=Levenshtein(
+                        Lower(F("profile__first_name")),
+                        first_name,
+                    ),
+                    last_name_dist=Levenshtein(
+                        Lower(F("profile__last_name")),
+                        last_name,
+                    ),
+                )
+                .filter(Q(first_name_dist__lte=5) | Q(last_name_dist__lte=5))
+                .order_by("first_name_dist", "last_name_dist")
+            )
+
         return (
             queryset.annotate(
-                full_name_dist=Levenshtein(
-                    Lower(
-                        Concat(
-                            F("profile__first_name"),
-                            Value("' '"),
-                            F("profile__last_name"),
-                        )
-                    ),
-                    value.lower(),
-                )
+                first_name_dist=Levenshtein(
+                    Lower(F("profile__first_name")),
+                    first_name,
+                ),
             )
-            .filter(full_name_dist__lte=12)
-            .order_by("full_name_dist")
+            .filter(first_name_dist__lte=5)
+            .order_by("first_name_dist")
         )
