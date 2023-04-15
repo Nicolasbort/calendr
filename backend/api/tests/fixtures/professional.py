@@ -32,4 +32,5 @@ def customer_professional_fields():
         "genre",
         "birthday",
         "bio",
+        "registration_number",
     ]

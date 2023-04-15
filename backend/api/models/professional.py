@@ -34,8 +34,9 @@ class Professional(BaseModel):
         related_name="professional",
         null=True,
     )
+    registration_number = models.CharField(max_length=32)
     picture = models.CharField(max_length=128, null=True)
-    genre = models.CharField(max_length=1, choices=GenreChoices.choices)
+    genre = models.CharField(max_length=1, choices=GenreChoices.choices, null=True)
     birthday = models.DateField(null=True)
     bio = models.TextField(null=True, blank=True)
 

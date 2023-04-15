@@ -11,6 +11,7 @@ class Address(BaseModel):
         on_delete=models.CASCADE,
         related_name="addresses",
     )
+    zip_code = models.CharField(max_length=9)
     street = models.CharField(max_length=64)
     number = models.CharField(max_length=16)
     district = models.CharField(max_length=32, null=True, blank=True)
