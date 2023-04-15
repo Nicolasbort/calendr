@@ -36,10 +36,12 @@ class Calendar(BaseModel):
 
     @classmethod
     def unset_default(cls, professional_id: str):
-        cls.objects.filter(professional_id=professional_id, is_default=True).update(
-            is_default=False
-        )
+        cls.objects.filter(
+            professional_id=professional_id, is_default=True, is_active=True
+        ).update(is_default=False)
 
     @classmethod
     def get_default(cls, professional_id: str):
-        cls.objects.filter(professional_id=professional_id, is_default=True).first()
+        cls.objects.filter(
+            professional_id=professional_id, is_default=True, is_active=True
+        ).first()

@@ -4,7 +4,7 @@ from api.models.calendar import Calendar
 from api.models.session import Session
 from api.serializers.generic import BaseSerializer, ReadOnlySerializer
 from api.serializers.professional import ProfessionalSerializer
-from api.serializers.session import CalendarSessionSerializer, SessionSerializer
+from api.serializers.session import CreateSessionSerializer, SessionSerializer
 from api.utils.serializers import get_serialized_data
 
 logger = logging.getLogger("django")
@@ -39,7 +39,7 @@ class CalendarSerializer(ReadOnlySerializer):
 
 
 class CreateCalendarSerializer(BaseSerializer):
-    sessions = CalendarSessionSerializer(many=True, allow_empty=True, required=False)
+    sessions = CreateSessionSerializer(many=True, allow_empty=True, required=False)
 
     class Meta:
         model = Calendar
@@ -58,7 +58,7 @@ class CreateCalendarSerializer(BaseSerializer):
             professional=request.user.professional, **validated_data
         )
 
-        session_serializer = CalendarSessionSerializer(data=sessions, many=True)
+        session_serializer = CreateSessionSerializer(data=sessions, many=True)
         session_serializer.is_valid(raise_exception=True)
         calendar.sessions.set(session_serializer.save(calendar=calendar))
 

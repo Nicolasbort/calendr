@@ -49,6 +49,11 @@ professional_router.register(
     Professional.OauthViewSet,
     "oauth",
 )
+professional_router.register(
+    "session",
+    Professional.SessionDefaultViewSet,
+    "session",
+)
 
 # Professional Calendar routes
 calendar_router = routers.NestedSimpleRouter(

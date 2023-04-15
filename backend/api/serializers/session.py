@@ -1,10 +1,10 @@
 from api.models.calendar import Calendar
 from api.models.session import Session
-from api.serializers.generic import BaseSerializer
+from api.serializers.generic import BaseSerializer, ReadOnlySerializer
 from rest_framework import serializers
 
 
-class SessionSerializer(BaseSerializer):
+class SessionSerializer(ReadOnlySerializer):
     is_scheduled = serializers.ReadOnlyField()
 
     class Meta:
@@ -15,32 +15,14 @@ class SessionSerializer(BaseSerializer):
             "calendar",
         )
 
-    def save(self, **kwargs):
-        request = self.context.get("request")
-        default_calendar = Calendar.get_default(request.user.professional.id)
 
-        return super().save(calendar=default_calendar)
-
-
-class AppointmentSessionSerializer(BaseSerializer):
-    is_scheduled = serializers.ReadOnlyField()
-
+class CreateSessionSerializer(BaseSerializer):
     class Meta:
         model = Session
         exclude = (
             "deleted_at",
             "calendar",
         )
-
-
-class CalendarSessionSerializer(BaseSerializer):
-    class Meta:
-        model = Session
-        fields = [
-            "week_day",
-            "time_start",
-            "time_end",
-        ]
 
     def validate(self, data):
         if data["time_start"] > data["time_end"]:
@@ -62,3 +44,23 @@ class CalendarSessionSerializer(BaseSerializer):
         session, _ = Session.objects.update_or_create(**validated_data)
 
         return session
+
+    def save(self, **kwargs):
+        request = self.context.get("request")
+        calendar = kwargs.pop("calendar", None)
+
+        if calendar is None:
+            calendar = Calendar.get_default(request.user.professional.id)
+
+        return super().save(**kwargs, calendar=calendar)
+
+
+class AppointmentSessionSerializer(BaseSerializer):
+    is_scheduled = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Session
+        exclude = (
+            "deleted_at",
+            "calendar",
+        )

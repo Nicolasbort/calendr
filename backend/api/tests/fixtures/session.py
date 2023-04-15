@@ -59,3 +59,28 @@ def sessions(calendar):
         ),
     ]
     return Session.objects.bulk_create(sessions)
+
+
+@pytest.fixture()
+def sessions_not_default(calendar_not_default):
+    sessions = [
+        Session(
+            calendar=calendar_not_default,
+            week_day=1,
+            time_start=time(15, 0),
+            time_end=time(15, 30),
+        ),
+        Session(
+            calendar=calendar_not_default,
+            week_day=1,
+            time_start=time(15, 30),
+            time_end=time(16, 0),
+        ),
+        Session(
+            calendar=calendar_not_default,
+            week_day=1,
+            time_start=time(16, 0),
+            time_end=time(16, 30),
+        ),
+    ]
+    return Session.objects.bulk_create(sessions)
