@@ -565,13 +565,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Session'
+              $ref: '#/components/schemas/CreateSession'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Session'
+              $ref: '#/components/schemas/CreateSession'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Session'
+              $ref: '#/components/schemas/CreateSession'
         required: true
       security:
       - jwtAuth: []
@@ -580,7 +580,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Session'
+                $ref: '#/components/schemas/CreateSession'
           description: ''
   /me/calendar/{calendar_pk}/session/{id}/:
     get:
@@ -632,13 +632,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Session'
+              $ref: '#/components/schemas/CreateSession'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Session'
+              $ref: '#/components/schemas/CreateSession'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Session'
+              $ref: '#/components/schemas/CreateSession'
         required: true
       security:
       - jwtAuth: []
@@ -647,7 +647,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Session'
+                $ref: '#/components/schemas/CreateSession'
           description: ''
     patch:
       operationId: me_calendar_session_partial_update
@@ -671,13 +671,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedSession'
+              $ref: '#/components/schemas/PatchedCreateSession'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedSession'
+              $ref: '#/components/schemas/PatchedCreateSession'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedSession'
+              $ref: '#/components/schemas/PatchedCreateSession'
       security:
       - jwtAuth: []
       responses:
@@ -685,7 +685,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Session'
+                $ref: '#/components/schemas/CreateSession'
           description: ''
     delete:
       operationId: me_calendar_session_destroy
@@ -1092,6 +1092,196 @@ paths:
           type: string
           format: uuid
         description: A UUID string identifying this patient.
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /me/session/:
+    get:
+      operationId: me_session_list
+      description: Viewset to handle sessions of the default professional calendar
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: week_day
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+        description: |-
+          * `0` - Domingo
+          * `1` - Segunda
+          * `2` - Terça
+          * `3` - Quarta
+          * `4` - Quinta
+          * `5` - Sexta
+          * `6` - Sábado
+
+          * `0` - Domingo
+          * `1` - Segunda
+          * `2` - Terça
+          * `3` - Quarta
+          * `4` - Quinta
+          * `5` - Sexta
+          * `6` - Sábado
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSessionList'
+          description: ''
+    post:
+      operationId: me_session_create
+      description: Viewset to handle sessions of the default professional calendar
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateSession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateSession'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSession'
+          description: ''
+  /me/session/{id}/:
+    get:
+      operationId: me_session_retrieve
+      description: Viewset to handle sessions of the default professional calendar
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this session.
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          description: ''
+    put:
+      operationId: me_session_update
+      description: Viewset to handle sessions of the default professional calendar
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this session.
+        required: true
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateSession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateSession'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSession'
+          description: ''
+    patch:
+      operationId: me_session_partial_update
+      description: Viewset to handle sessions of the default professional calendar
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this session.
+        required: true
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateSession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateSession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCreateSession'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSession'
+          description: ''
+    delete:
+      operationId: me_session_destroy
+      description: Viewset to handle sessions of the default professional calendar
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this session.
         required: true
       tags:
       - me
@@ -1611,24 +1801,6 @@ components:
       - modified_at
       - professional
       - sessions
-    CalendarSession:
-      type: object
-      properties:
-        week_day:
-          allOf:
-          - $ref: '#/components/schemas/WeekDayEnum'
-          minimum: 0
-          maximum: 32767
-        time_start:
-          type: string
-          format: time
-        time_end:
-          type: string
-          format: time
-      required:
-      - time_end
-      - time_start
-      - week_day
     City:
       type: object
       properties:
@@ -1655,6 +1827,8 @@ components:
         full_address:
           type: string
           readOnly: true
+        city:
+          $ref: '#/components/schemas/City'
         created_at:
           type: string
           format: date-time
@@ -1663,6 +1837,9 @@ components:
           type: string
           format: date-time
           readOnly: true
+        zip_code:
+          type: string
+          maxLength: 9
         street:
           type: string
           maxLength: 64
@@ -1677,9 +1854,6 @@ components:
           type: string
           nullable: true
           maxLength: 32
-        city:
-          type: string
-          format: uuid
       required:
       - city
       - created_at
@@ -1688,6 +1862,7 @@ components:
       - modified_at
       - number
       - street
+      - zip_code
     CreateAppointment:
       type: object
       properties:
@@ -1747,7 +1922,7 @@ components:
         sessions:
           type: array
           items:
-            $ref: '#/components/schemas/CalendarSession'
+            $ref: '#/components/schemas/CreateSession'
         created_at:
           type: string
           format: date-time
@@ -1782,6 +1957,39 @@ components:
       - id
       - modified_at
       - professional
+    CreateSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        week_day:
+          allOf:
+          - $ref: '#/components/schemas/WeekDayEnum'
+          minimum: 0
+          maximum: 32767
+        time_start:
+          type: string
+          format: time
+        time_end:
+          type: string
+          format: time
+      required:
+      - created_at
+      - id
+      - modified_at
+      - time_end
+      - time_start
+      - week_day
     CustomerAddress:
       type: object
       properties:
@@ -1791,6 +1999,9 @@ components:
           readOnly: true
         city:
           $ref: '#/components/schemas/CustomerCity'
+        zip_code:
+          type: string
+          maxLength: 9
         street:
           type: string
           maxLength: 64
@@ -1810,6 +2021,7 @@ components:
       - id
       - number
       - street
+      - zip_code
     CustomerAppointment:
       type: object
       properties:
@@ -1956,6 +2168,7 @@ components:
           writeOnly: true
         username:
           type: string
+          readOnly: true
         professional:
           $ref: '#/components/schemas/CustomerShortProfessional'
         notify_appointment:
@@ -1969,6 +2182,7 @@ components:
       - last_name
       - phone
       - professional
+      - username
     CustomerProfession:
       type: object
       properties:
@@ -2005,6 +2219,7 @@ components:
           writeOnly: true
         username:
           type: string
+          readOnly: true
         full_name:
           type: string
           readOnly: true
@@ -2012,12 +2227,18 @@ components:
           $ref: '#/components/schemas/CustomerAddress'
         profession:
           $ref: '#/components/schemas/CustomerProfession'
+        registration_number:
+          type: string
+          maxLength: 32
         picture:
           type: string
           nullable: true
           maxLength: 128
         genre:
-          $ref: '#/components/schemas/GenreEnum'
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/GenreEnum'
+          - $ref: '#/components/schemas/NullEnum'
         birthday:
           type: string
           format: date
@@ -2030,11 +2251,12 @@ components:
       - email
       - first_name
       - full_name
-      - genre
       - id
       - last_name
       - phone
       - profession
+      - registration_number
+      - username
     CustomerSession:
       type: object
       properties:
@@ -2085,15 +2307,22 @@ components:
           writeOnly: true
         username:
           type: string
+          readOnly: true
         full_name:
           type: string
           readOnly: true
+        registration_number:
+          type: string
+          maxLength: 32
         picture:
           type: string
           nullable: true
           maxLength: 128
         genre:
-          $ref: '#/components/schemas/GenreEnum'
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/GenreEnum'
+          - $ref: '#/components/schemas/NullEnum'
         birthday:
           type: string
           format: date
@@ -2112,11 +2341,12 @@ components:
       - email
       - first_name
       - full_name
-      - genre
       - id
       - last_name
       - phone
       - profession
+      - registration_number
+      - username
     GenreEnum:
       enum:
       - M
@@ -2191,6 +2421,9 @@ components:
             format: uuid
       required:
       - ids
+    NullEnum:
+      enum:
+      - null
     Oauth:
       type: object
       properties:
@@ -2428,7 +2661,7 @@ components:
         sessions:
           type: array
           items:
-            $ref: '#/components/schemas/CalendarSession'
+            $ref: '#/components/schemas/CreateSession'
         created_at:
           type: string
           format: date-time
@@ -2457,6 +2690,32 @@ components:
           type: string
           format: uuid
           readOnly: true
+    PatchedCreateSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        week_day:
+          allOf:
+          - $ref: '#/components/schemas/WeekDayEnum'
+          minimum: 0
+          maximum: 32767
+        time_start:
+          type: string
+          format: time
+        time_end:
+          type: string
+          format: time
     PatchedCustomerCreateAppointment:
       type: object
       properties:
@@ -2513,6 +2772,7 @@ components:
           writeOnly: true
         username:
           type: string
+          readOnly: true
         appointments:
           type: array
           items:
@@ -2534,35 +2794,6 @@ components:
           type: string
           format: uuid
           readOnly: true
-    PatchedSession:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-        is_scheduled:
-          type: boolean
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        modified_at:
-          type: string
-          format: date-time
-          readOnly: true
-        week_day:
-          allOf:
-          - $ref: '#/components/schemas/WeekDayEnum'
-          minimum: 0
-          maximum: 32767
-        time_start:
-          type: string
-          format: time
-        time_end:
-          type: string
-          format: time
     Patient:
       type: object
       description: Base profile to abstract profile object in professional and patient
@@ -2586,6 +2817,7 @@ components:
           writeOnly: true
         username:
           type: string
+          readOnly: true
         appointments:
           type: array
           items:
@@ -2617,6 +2849,7 @@ components:
       - modified_at
       - phone
       - professional
+      - username
     PatientSignup:
       type: object
       description: Base profile to abstract profile object in professional and patient
@@ -2640,6 +2873,7 @@ components:
           writeOnly: true
         username:
           type: string
+          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -2664,6 +2898,7 @@ components:
       - modified_at
       - phone
       - professional
+      - username
     Plan:
       type: object
       properties:
@@ -2733,6 +2968,7 @@ components:
           writeOnly: true
         username:
           type: string
+          readOnly: true
         notifications:
           type: array
           items:
@@ -2746,12 +2982,18 @@ components:
           type: string
           format: date-time
           readOnly: true
+        registration_number:
+          type: string
+          maxLength: 32
         picture:
           type: string
           nullable: true
           maxLength: 128
         genre:
-          $ref: '#/components/schemas/GenreEnum'
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/GenreEnum'
+          - $ref: '#/components/schemas/NullEnum'
         birthday:
           type: string
           format: date
@@ -2773,7 +3015,6 @@ components:
       - created_at
       - email
       - first_name
-      - genre
       - id
       - last_name
       - modified_at
@@ -2781,6 +3022,8 @@ components:
       - phone
       - plan
       - profession
+      - registration_number
+      - username
     ProfessionalSignup:
       type: object
       description: Base profile to abstract profile object in professional and patient
@@ -2804,6 +3047,7 @@ components:
           writeOnly: true
         username:
           type: string
+          readOnly: true
         address:
           $ref: '#/components/schemas/CreateAddress'
         plan:
@@ -2822,12 +3066,18 @@ components:
           type: string
           format: date-time
           readOnly: true
+        registration_number:
+          type: string
+          maxLength: 32
         picture:
           type: string
           nullable: true
           maxLength: 128
         genre:
-          $ref: '#/components/schemas/GenreEnum'
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/GenreEnum'
+          - $ref: '#/components/schemas/NullEnum'
         birthday:
           type: string
           format: date
@@ -2839,13 +3089,14 @@ components:
       - created_at
       - email
       - first_name
-      - genre
       - id
       - last_name
       - modified_at
       - phone
       - plan
       - profession
+      - registration_number
+      - username
     Profile:
       type: object
       properties:

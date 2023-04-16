@@ -13,4 +13,9 @@ COPY ./requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+RUN mkdir -p /usr/src/app/logs
+RUN touch /usr/src/app/logs/application.logs
+
 COPY . .
+
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
