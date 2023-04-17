@@ -1105,12 +1105,32 @@ paths:
       operationId: me_session_list
       description: Viewset to handle sessions of the default professional calendar
       parameters:
-      - name: ordering
-        required: false
-        in: query
-        description: Which field to use when ordering the results.
+      - in: query
+        name: date
         schema:
           type: string
+          format: date
+        description: Date
+      - in: query
+        name: ordering
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - -time_start
+            - -week_day
+            - time_start
+            - week_day
+        description: |-
+          Ordering
+
+          * `week_day` - Week day
+          * `-week_day` - Week day (descending)
+          * `time_start` - Time start
+          * `-time_start` - Time start (descending)
+        explode: false
+        style: form
       - name: page
         required: false
         in: query
@@ -1681,7 +1701,11 @@ components:
           readOnly: true
         session:
           allOf:
-          - $ref: '#/components/schemas/AppointmentSession'
+          - $ref: '#/components/schemas/SessionAppointment'
+          readOnly: true
+        patient:
+          allOf:
+          - $ref: '#/components/schemas/PatientAppointment'
           readOnly: true
         created_at:
           type: string
@@ -1706,9 +1730,6 @@ components:
           maxLength: 255
         notify_appointment:
           type: boolean
-        patient:
-          type: string
-          format: uuid
       required:
       - created_at
       - date
@@ -1725,9 +1746,8 @@ components:
           type: string
           format: uuid
           readOnly: true
-        is_scheduled:
-          type: boolean
-          readOnly: true
+        patient:
+          $ref: '#/components/schemas/PatientAppointment'
         created_at:
           type: string
           format: date-time
@@ -1736,25 +1756,28 @@ components:
           type: string
           format: date-time
           readOnly: true
-        week_day:
-          allOf:
-          - $ref: '#/components/schemas/WeekDayEnum'
-          minimum: 0
-          maximum: 32767
-        time_start:
+        date:
           type: string
-          format: time
-        time_end:
+          format: date
+        type:
+          $ref: '#/components/schemas/TypeB83Enum'
+        note:
           type: string
-          format: time
+          nullable: true
+          maxLength: 128
+        link:
+          type: string
+          nullable: true
+          maxLength: 255
+        notify_appointment:
+          type: boolean
       required:
       - created_at
+      - date
       - id
-      - is_scheduled
       - modified_at
-      - time_end
-      - time_start
-      - week_day
+      - patient
+      - type
     Calendar:
       type: object
       properties:
@@ -2264,9 +2287,6 @@ components:
           type: string
           format: uuid
           readOnly: true
-        is_scheduled:
-          type: boolean
-          readOnly: true
         week_day:
           allOf:
           - $ref: '#/components/schemas/WeekDayEnum'
@@ -2280,7 +2300,6 @@ components:
           format: time
       required:
       - id
-      - is_scheduled
       - time_end
       - time_start
       - week_day
@@ -2850,6 +2869,55 @@ components:
       - phone
       - professional
       - username
+    PatientAppointment:
+      type: object
+      description: Base profile to abstract profile object in professional and patient
+        serializers
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+        username:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        notify_appointment:
+          type: boolean
+        notify_pending_payment:
+          type: boolean
+        professional:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - email
+      - first_name
+      - id
+      - last_name
+      - modified_at
+      - phone
+      - professional
+      - username
     PatientSignup:
       type: object
       description: Base profile to abstract profile object in professional and patient
@@ -3145,8 +3213,9 @@ components:
           type: string
           format: uuid
           readOnly: true
-        is_scheduled:
-          type: boolean
+        appointment:
+          allOf:
+          - $ref: '#/components/schemas/AppointmentSession'
           readOnly: true
         created_at:
           type: string
@@ -3168,9 +3237,46 @@ components:
           type: string
           format: time
       required:
+      - appointment
       - created_at
       - id
-      - is_scheduled
+      - modified_at
+      - time_end
+      - time_start
+      - week_day
+    SessionAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        week_day:
+          allOf:
+          - $ref: '#/components/schemas/WeekDayEnum'
+          minimum: 0
+          maximum: 32767
+        time_start:
+          type: string
+          format: time
+        time_end:
+          type: string
+          format: time
+        calendar:
+          type: string
+          format: uuid
+      required:
+      - calendar
+      - created_at
+      - id
       - modified_at
       - time_end
       - time_start

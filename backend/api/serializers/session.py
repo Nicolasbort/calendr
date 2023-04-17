@@ -1,19 +1,27 @@
 from api.models.calendar import Calendar
 from api.models.session import Session
+from api.serializers.common import AppointmentSessionSerializer
 from api.serializers.generic import BaseSerializer, ReadOnlySerializer
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 
 class SessionSerializer(ReadOnlySerializer):
-    is_scheduled = serializers.ReadOnlyField()
+    appointment = serializers.SerializerMethodField()
 
     class Meta:
         model = Session
-        depth = 1
         exclude = (
             "deleted_at",
             "calendar",
         )
+
+    @extend_schema_field(AppointmentSessionSerializer)
+    def get_appointment(self, obj):
+        if hasattr(obj, "appointment") and obj.appointment:
+            return AppointmentSessionSerializer(instance=obj.appointment).data
+
+        return None
 
 
 class CreateSessionSerializer(BaseSerializer):
@@ -53,14 +61,3 @@ class CreateSessionSerializer(BaseSerializer):
             calendar = Calendar.get_default(request.user.professional.id)
 
         return super().save(**kwargs, calendar=calendar)
-
-
-class AppointmentSessionSerializer(BaseSerializer):
-    is_scheduled = serializers.ReadOnlyField()
-
-    class Meta:
-        model = Session
-        exclude = (
-            "deleted_at",
-            "calendar",
-        )

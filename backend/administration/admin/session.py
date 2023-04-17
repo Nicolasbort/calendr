@@ -7,6 +7,4 @@ class SessionAdmin(admin.ModelAdmin):
     list_display = (
         "calendar",
         "week_day",
-        "appointment",
-        "is_scheduled",
     )

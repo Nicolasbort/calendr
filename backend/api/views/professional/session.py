@@ -1,3 +1,4 @@
+from api.filters.session import SessionFilter
 from api.models.session import Session
 from api.permissions import IsAdminOrProfessional, IsProfessional
 from api.serializers.session import CreateSessionSerializer, SessionSerializer
@@ -49,19 +50,7 @@ class SessionDefaultViewSet(viewsets.ModelViewSet):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
     permission_classes = [IsProfessional]
-    filter_backends = (
-        DjangoFilterBackend,
-        OrderingFilter,
-    )
-    filterset_fields = ("week_day",)
-    ordering_fields = (
-        "week_day",
-        "time_start",
-    )
-    ordering = (
-        "week_day",
-        "time_start",
-    )
+    filterset_class = SessionFilter
 
     def get_queryset(self):
         return Session.objects.filter(

@@ -17,10 +17,10 @@ class Appointment(BaseModel):
         related_name="appointments",
         db_index=True,
     )
-    session = models.OneToOneField(
+    session = models.ForeignKey(
         Session,
         on_delete=models.CASCADE,
-        related_name="appointment",
+        related_name="appointments",
     )
     date = models.DateField()
     type = models.CharField(max_length=16, choices=TypeChoices.choices)

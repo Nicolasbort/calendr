@@ -27,10 +27,3 @@ class Session(BaseModel):
     @builtins.property
     def duration(self) -> int:
         return self.calendar.duration
-
-    @builtins.property
-    def is_scheduled(self) -> bool:
-        try:
-            return bool(self.appointment)
-        except:
-            return False

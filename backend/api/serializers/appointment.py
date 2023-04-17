@@ -2,8 +2,11 @@ from datetime import datetime
 
 from api.constants.session import WeekDayChoices
 from api.models.appointment import Appointment
+from api.serializers.common import (
+    PatientAppointmentSerializer,
+    SessionAppointmentSerializer,
+)
 from api.serializers.generic import BaseSerializer, ReadOnlySerializer
-from api.serializers.session import AppointmentSessionSerializer
 from api.tasks.google_calendar import schedule_event
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
@@ -11,7 +14,8 @@ from rest_framework.serializers import ValidationError
 
 class AppointmentSerializer(ReadOnlySerializer):
     duration = serializers.ReadOnlyField()
-    session = AppointmentSessionSerializer(read_only=True)
+    session = SessionAppointmentSerializer(read_only=True)
+    patient = PatientAppointmentSerializer(read_only=True)
 
     class Meta:
         model = Appointment
