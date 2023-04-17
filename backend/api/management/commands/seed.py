@@ -91,6 +91,68 @@ def create_admin() -> Profile:
     return profile
 
 
+def create_custom_professional(
+    plan: Plan,
+    profession: Profession,
+) -> Professional:
+    profile = Profile(
+        email="professional@example.com",
+        username="professional",
+        first_name="Professional",
+        last_name="Lastname",
+        phone="11999999998",
+        is_staff=False,
+        is_superuser=False,
+        email_verified=True,
+    )
+    profile.set_password("password")
+    profile.save()
+
+    city = City.objects.create(name="São Paulo", state=StateChoices.SP)
+
+    address = Address.objects.create(
+        city=city,
+        zip_code="01025020",
+        street="Avenida do Estado",
+        number="2650",
+        district="Centro",
+        complement="Apto 110",
+    )
+
+    return Professional.objects.create(
+        profession=profession,
+        plan=plan,
+        address=address,
+        profile=profile,
+        picture="https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+        genre=GenreChoices.MALE,
+        birthday="1980-01-10",
+        bio="Profissional com 15 anos de experiência.",
+    )
+
+
+def create_custom_patient(professional: Professional) -> Patient:
+    profile = Profile(
+        email="patient@example.com",
+        username="patient",
+        first_name="Patient",
+        last_name="Lastname",
+        phone="11999999997",
+        is_staff=False,
+        is_superuser=False,
+        email_verified=True,
+    )
+    profile.set_password("password")
+    profile.save()
+
+    return Patient.objects.create(
+        profile=profile,
+        professional=professional,
+        notify_appointment=True,
+        notify_pending_payment=True,
+    )
+
+
 def create_cities(faker: Faker, number) -> list[City]:
     cities = []
 
@@ -305,6 +367,8 @@ def run_seed(self, mode):
     plan = create_default_plan()
     profession = create_default_profession()
     create_admin()
+    professional = create_custom_professional(plan, profession)
+    create_custom_patient(professional)
 
     TOTAL_PATIENTS = 15
     TOTAL_PROFESSIONALS = 5
