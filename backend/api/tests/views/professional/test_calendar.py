@@ -11,14 +11,12 @@ DEFAULT_TIME_FORMAT = "%H:%M:%S"
 @pytest.mark.django_db
 class TestCalendarViewSet:
     @staticmethod
-    def test_calendar_with_sessions_creation(
+    def test_create_calendar_with_sessions(
         professional_api, professional, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
-        response = professional_api.post(
-            url, json.dumps(calendar_create_data), content_type="application/json"
-        )
+        response = professional_api.post(url, calendar_create_data)
 
         assert response.status_code == 201
 
@@ -42,16 +40,32 @@ class TestCalendarViewSet:
             assert dict_session["time_end"] == time_end_string
 
     @staticmethod
-    def test_calendar_with_sessions_creation_atomic(
+    def test_create_calendar_sessions_invalid_time(
+        professional_api, calendar_create_data_invalid_sessions
+    ):
+        url = reverse("api:calendar-list")
+
+        response = professional_api.post(url, calendar_create_data_invalid_sessions)
+
+        assert response.status_code == 400
+
+        response_data = response.json()
+
+        assert "sessions" in response_data
+        assert len(response_data["sessions"]) == 3
+
+        assert Calendar.objects.count() == 0
+        assert Session.objects.count() == 0
+
+    @staticmethod
+    def test_create_calendar_with_sessions_atomic(
         professional_api, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
         calendar_create_data["sessions"][0]["week_day"] = 99
 
-        response = professional_api.post(
-            url, json.dumps(calendar_create_data), content_type="application/json"
-        )
+        response = professional_api.post(url, calendar_create_data)
 
         assert response.status_code == 400
 
@@ -59,7 +73,7 @@ class TestCalendarViewSet:
         assert Session.objects.count() == 0
 
     @staticmethod
-    def test_calendar_with_sessions_creation_invalid_session_time_range(
+    def test_create_calendar_with_sessions_invalid_session_time_range(
         professional_api, calendar_create_data
     ):
         url = reverse("api:calendar-list")
@@ -67,9 +81,7 @@ class TestCalendarViewSet:
         calendar_create_data["sessions"][0]["time_start"] = "07:31:00"
         calendar_create_data["sessions"][0]["time_end"] = "07:30:00"
 
-        response = professional_api.post(
-            url, json.dumps(calendar_create_data), content_type="application/json"
-        )
+        response = professional_api.post(url, calendar_create_data)
 
         response_data = response.json()
 
@@ -77,16 +89,14 @@ class TestCalendarViewSet:
         assert "sessions" in response_data
 
     @staticmethod
-    def test_calendar_with_empty_sessions_creation(
+    def test_create_calendar_with_empty_sessions(
         professional_api, professional, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
         calendar_create_data["sessions"] = []
 
-        response = professional_api.post(
-            url, json.dumps(calendar_create_data), content_type="application/json"
-        )
+        response = professional_api.post(url, calendar_create_data)
 
         assert response.status_code == 201
 
@@ -101,16 +111,14 @@ class TestCalendarViewSet:
         assert calendar.sessions.count() == 0
 
     @staticmethod
-    def test_calendar_without_sessions_creation(
+    def test_create_calendar_without_sessions(
         professional_api, professional, calendar_create_data
     ):
         url = reverse("api:calendar-list")
 
         calendar_create_data.pop("sessions")
 
-        response = professional_api.post(
-            url, json.dumps(calendar_create_data), content_type="application/json"
-        )
+        response = professional_api.post(url, calendar_create_data)
 
         assert response.status_code == 201
 
@@ -125,7 +133,7 @@ class TestCalendarViewSet:
         assert calendar.sessions.count() == 0
 
     @staticmethod
-    def test_calendar_with_sessions_update(
+    def test_update_calendar_with_sessions(
         professional_api,
         professional,
         session,
@@ -143,9 +151,7 @@ class TestCalendarViewSet:
             }
         )
 
-        response = professional_api.patch(
-            url_patch, json.dumps(calendar_update_data), content_type="application/json"
-        )
+        response = professional_api.patch(url_patch, calendar_update_data)
 
         assert response.status_code == 200
 
@@ -167,7 +173,7 @@ class TestCalendarViewSet:
             assert dict_session["time_end"] == time_end_string
 
     @staticmethod
-    def test_calendar_with_sessions_on_creation_empty_on_update(
+    def test_update_calendar_without_sessions(
         professional_api,
         professional,
         calendar,
@@ -179,9 +185,7 @@ class TestCalendarViewSet:
 
         del calendar_update_data["sessions"]
 
-        response = professional_api.patch(
-            url_patch, json.dumps(calendar_update_data), content_type="application/json"
-        )
+        response = professional_api.patch(url_patch, calendar_update_data)
 
         assert response.status_code == 200
 
@@ -194,7 +198,7 @@ class TestCalendarViewSet:
         assert calendar.sessions.count() == count_calendar_sessions_before
 
     @staticmethod
-    def test_calendar_update_professional_error(
+    def test_update_calendar_other_professional_ignored(
         professional_api,
         professional,
         other_professional,
@@ -205,9 +209,7 @@ class TestCalendarViewSet:
 
         calendar_update_data["professional"] = str(other_professional.id)
 
-        response = professional_api.patch(
-            url_patch, json.dumps(calendar_update_data), content_type="application/json"
-        )
+        response = professional_api.patch(url_patch, calendar_update_data)
 
         assert response.status_code == 200
 

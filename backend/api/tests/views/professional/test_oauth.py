@@ -18,9 +18,7 @@ class TestOauthViewSet:
 
         url = reverse("api:oauth-authorize")
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 400
 
@@ -42,9 +40,7 @@ class TestOauthViewSet:
 
         url = reverse("api:oauth-authorize")
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 200
 
@@ -79,9 +75,7 @@ class TestOauthViewSet:
 
         url = reverse("api:oauth-authorize")
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 200
         assert ThirdParty.objects.count() == 1
@@ -112,9 +106,7 @@ class TestOauthViewSet:
 
         url = reverse("api:oauth-authorize")
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 400
         assert ThirdParty.objects.count() == 0
@@ -129,9 +121,7 @@ class TestOauthViewSet:
 
         url = reverse("api:oauth-authorize")
 
-        response = patient_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = patient_api.post(url, data)
 
         assert response.status_code == 403
 
@@ -141,9 +131,7 @@ class TestOauthViewSet:
 
         url = reverse("api:oauth-authorize")
 
-        response = admin_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = admin_api.post(url, data)
 
         assert response.status_code == 403
 
@@ -153,8 +141,6 @@ class TestOauthViewSet:
 
         url = reverse("api:oauth-authorize")
 
-        response = no_auth_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = no_auth_api.post(url, data)
 
         assert response.status_code == 401

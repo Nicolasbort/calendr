@@ -9,5 +9,5 @@ class Plan(BaseModel):
         return self.name
 
     @staticmethod
-    def get_free_plan():
+    def get_default_plan():
         return Plan.objects.order_by("created_at").first()

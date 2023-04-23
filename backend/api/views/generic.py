@@ -22,12 +22,15 @@ class ProfessionalAPIView(viewsets.ModelViewSet):
     """
 
     permission_classes = [IsAdminOrProfessional, BelongsToProfessional]
+    profile_path: str = "professional__profile"
 
     def get_queryset(self):
         if self.request.user.is_staff:
             return self.queryset
 
-        return self.queryset.filter(professional__profile=self.request.user).all()
+        filters = {self.profile_path: self.request.user}
+
+        return self.queryset.filter(**filters).all()
 
     @atomic
     def create(self, request, *args, **kwargs):

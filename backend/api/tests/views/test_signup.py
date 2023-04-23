@@ -37,9 +37,7 @@ class TestSignupViewSet:
             },
         }
 
-        response = no_auth_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = no_auth_api.post(url, data)
 
         assert response.status_code == 200
 
@@ -54,6 +52,10 @@ class TestSignupViewSet:
         assert professional.profession.id == profession.id
         assert professional.registration_number == data["registration_number"]
         assert professional.birthday.strftime("%Y-%m-%d") == "1995-01-01"
+        assert (
+            professional.username
+            == data["first_name"].lower() + data["last_name"].lower()
+        )
         assert professional.picture is None
         assert professional.genre is None
         assert professional.bio is None
@@ -61,9 +63,6 @@ class TestSignupViewSet:
         assert profile.first_name == data["first_name"]
         assert profile.last_name == data["last_name"]
         assert profile.email == data["email"]
-        assert (
-            profile.username == data["first_name"].lower() + data["last_name"].lower()
-        )
         assert profile.phone == data["phone"]
         assert profile.password is not None
 
@@ -99,9 +98,7 @@ class TestSignupViewSet:
             },
         }
 
-        response = no_auth_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = no_auth_api.post(url, data)
 
         assert response.status_code == 200
 
@@ -116,6 +113,10 @@ class TestSignupViewSet:
         assert professional.profession.id == profession.id
         assert professional.registration_number == data["registration_number"]
         assert professional.birthday.strftime("%Y-%m-%d") == "1995-01-01"
+        assert (
+            professional.username
+            == data["first_name"].lower() + data["last_name"].lower()
+        )
         assert professional.picture is None
         assert professional.genre is None
         assert professional.bio is None
@@ -123,9 +124,6 @@ class TestSignupViewSet:
         assert profile.first_name == data["first_name"]
         assert profile.last_name == data["last_name"]
         assert profile.email == data["email"]
-        assert (
-            profile.username == data["first_name"].lower() + data["last_name"].lower()
-        )
         assert profile.phone == data["phone"]
         assert profile.password is not None
 
@@ -151,9 +149,7 @@ class TestSignupViewSet:
             "password": "password",
         }
 
-        response = no_auth_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = no_auth_api.post(url, data)
 
         assert response.status_code == 200
 
@@ -168,6 +164,10 @@ class TestSignupViewSet:
         assert professional.profession.id == profession.id
         assert professional.registration_number == data["registration_number"]
         assert professional.birthday.strftime("%Y-%m-%d") == "1995-01-01"
+        assert (
+            professional.username
+            == data["first_name"].lower() + data["last_name"].lower()
+        )
         assert professional.picture is None
         assert professional.genre is None
         assert professional.bio is None
@@ -175,16 +175,15 @@ class TestSignupViewSet:
         assert profile.first_name == data["first_name"]
         assert profile.last_name == data["last_name"]
         assert profile.email == data["email"]
-        assert (
-            profile.username == data["first_name"].lower() + data["last_name"].lower()
-        )
         assert profile.phone == data["phone"]
         assert profile.password is not None
 
     @staticmethod
-    def test_signup_professional_same_username(no_auth_api, profile, plan, profession):
-        profile.username = "firstlast"
-        profile.save(update_fields=["username"])
+    def test_signup_professional_same_username(
+        no_auth_api, other_professional, plan, profession
+    ):
+        other_professional.username = "firstlast"
+        other_professional.save(update_fields=["username"])
 
         url = reverse("api:sign-up-professional")
 
@@ -198,19 +197,18 @@ class TestSignupViewSet:
             "password": "password",
         }
 
-        response = no_auth_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = no_auth_api.post(url, data)
 
         assert response.status_code == 200
 
-        assert Professional.objects.count() == 1
+        assert Professional.objects.count() == 2
 
-        professional = Professional.objects.first()
-        profile = professional.profile
+        professional = Professional.objects.get(
+            profile__email="professional@example.com"
+        )
 
-        assert profile.username != "firstlast"
-        assert "firstlast" in profile.username
+        assert professional.username != "firstlast"
+        assert "firstlast" in professional.username
 
     @staticmethod
     def test_signup_professional_atomiticy(no_auth_api, plan, profession):
@@ -237,9 +235,7 @@ class TestSignupViewSet:
             },
         }
 
-        response = no_auth_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = no_auth_api.post(url, data)
 
         assert response.status_code == 400
 
@@ -267,9 +263,7 @@ class TestSignupViewSet:
             "phone": "99999999",
         }
 
-        response = no_auth_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = no_auth_api.post(url, data)
 
         assert response.status_code == 200
 
@@ -283,9 +277,6 @@ class TestSignupViewSet:
         assert profile.first_name == data["first_name"]
         assert profile.last_name == data["last_name"]
         assert profile.email == data["email"]
-        assert (
-            profile.username == data["first_name"].lower() + data["last_name"].lower()
-        )
         assert profile.phone == data["phone"]
         assert profile.password is not None
 
@@ -303,9 +294,7 @@ class TestSignupViewSet:
             "phone": "99999999",
         }
 
-        response = no_auth_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = no_auth_api.post(url, data)
 
         assert response.status_code == 400
 

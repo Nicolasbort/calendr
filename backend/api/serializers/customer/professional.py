@@ -3,13 +3,13 @@ from api.serializers.customer.address import CustomerAddressSerializer
 from api.serializers.customer.profession import CustomerProfessionSerializer
 from api.serializers.generic import (
     CUSTOMER_HIDDEN_FIELDS,
-    BaseProfileSerializer,
     ReadOnlySerializer,
+    WriteBaseProfileSerializer,
 )
 from rest_framework import serializers
 
 
-class CustomerProfessionalSerializer(BaseProfileSerializer, ReadOnlySerializer):
+class CustomerProfessionalSerializer(WriteBaseProfileSerializer, ReadOnlySerializer):
     full_name = serializers.ReadOnlyField()
     address = CustomerAddressSerializer()
     profession = CustomerProfessionSerializer()
@@ -23,7 +23,9 @@ class CustomerProfessionalSerializer(BaseProfileSerializer, ReadOnlySerializer):
         ) + CUSTOMER_HIDDEN_FIELDS
 
 
-class CustomerShortProfessionalSerializer(BaseProfileSerializer, ReadOnlySerializer):
+class CustomerShortProfessionalSerializer(
+    WriteBaseProfileSerializer, ReadOnlySerializer
+):
     full_name = serializers.ReadOnlyField()
 
     class Meta:

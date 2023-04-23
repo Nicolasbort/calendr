@@ -69,9 +69,9 @@ MIDDLEWARE = [
     "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
-ROOT_HOSTCONF = "calendr.hosts"
 DEFAULT_HOST = "api"
 ROOT_URLCONF = "calendr.urls"
+ROOT_HOSTCONF = "calendr.hosts"
 
 # Admin configuration
 LOGIN_REDIRECT_URL = "/"

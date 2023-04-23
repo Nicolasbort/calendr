@@ -6,7 +6,7 @@ from django.contrib import admin
 class PatientAdmin(admin.ModelAdmin):
     list_display = (
         "full_name",
-        "username",
+        "is_confirmed",
         "email",
         "notify_appointment",
         "notify_pending_payment",

@@ -63,6 +63,24 @@ def calendar_create_data():
 
 
 @pytest.fixture()
+def calendar_create_data_invalid_sessions():
+    return {
+        "duration": 30,
+        "is_active": True,
+        "is_default": True,
+        "sessions": [
+            {"week_day": 1, "time_start": "07:30:00", "time_end": "08:00:00"},
+            {"week_day": 1, "time_start": "08:00:00", "time_end": "08:30:00"},
+            {"week_day": 2, "time_start": "07:30:00", "time_end": "08:00:00"},
+            {"week_day": 1, "time_start": "07:00:00", "time_end": "07:30:00"},
+            {"week_day": 1, "time_start": "07:35:00", "time_end": "08:05:00"},
+            {"week_day": 2, "time_start": "07:00:00", "time_end": "07:30:00"},
+            {"week_day": 2, "time_start": "07:30:00", "time_end": "08:00:00"},
+        ],
+    }
+
+
+@pytest.fixture()
 def calendar_update_data():
     return {
         "duration": 30,

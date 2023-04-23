@@ -8,7 +8,7 @@ from rest_framework import permissions, viewsets
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
-    serializer_class = CustomerAppointmentSerializer
+    serializer_class: CustomerAppointmentSerializer | CustomerCreateAppointmentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):

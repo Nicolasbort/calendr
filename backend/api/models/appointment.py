@@ -1,4 +1,5 @@
 import builtins
+from functools import cached_property
 
 from api.constants.appointment import TypeChoices
 from api.constants.notification import TypeChoices as NotificationTypeChoices
@@ -28,7 +29,7 @@ class Appointment(BaseModel):
     link = models.CharField(max_length=255, null=True)
     notify_appointment = models.BooleanField(default=True)
 
-    @builtins.property
+    @cached_property
     def professional(self) -> Professional:
         return self.session.calendar.professional
 

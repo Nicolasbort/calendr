@@ -27,7 +27,7 @@ class ProfessionalViewSet(generics.RetrieveAPIView, viewsets.GenericViewSet):
 
             filter_kwargs = {"pk": value}
         except ValueError:
-            filter_kwargs = {"profile__username": value}
+            filter_kwargs = {"username": value}
 
         obj = get_object_or_404(self.queryset, **filter_kwargs)
 

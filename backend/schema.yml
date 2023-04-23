@@ -6,57 +6,6 @@ info:
     name: Nicolas Bortoluzzi
     email: bortoluzzinicolas@gmail.com
 paths:
-  /city/:
-    get:
-      operationId: city_list
-      description: |-
-        This viewset allows anyone to list and retrieve models.
-        UNSAFE actions like create, update and delete are not allowed.
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - city
-      security:
-      - jwtAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedCityList'
-          description: ''
-  /city/{id}/:
-    get:
-      operationId: city_retrieve
-      description: |-
-        This viewset allows anyone to list and retrieve models.
-        UNSAFE actions like create, update and delete are not allowed.
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this city.
-        required: true
-      tags:
-      - city
-      security:
-      - jwtAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/City'
-          description: ''
   /customer/appointment/:
     get:
       operationId: customer_appointment_list
@@ -221,6 +170,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomerPatient'
           description: ''
+    patch:
+      operationId: customer_me_partial_update
+      tags:
+      - customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomerPatient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomerPatient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomerPatient'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerPatient'
+          description: ''
   /customer/professional/{multiple_lookup_field}/:
     get:
       operationId: customer_professional_retrieve
@@ -265,23 +238,64 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomerCalendar'
           description: ''
-  /me/:
+  /plan/:
     get:
-      operationId: me_retrieve
+      operationId: plan_list
+      description: |-
+        This viewset allows anyone to list and retrieve models.
+        UNSAFE actions like create, update and delete are not allowed.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       tags:
-      - me
+      - plan
       security:
       - jwtAuth: []
+      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
+                $ref: '#/components/schemas/PaginatedPlanList'
           description: ''
-  /me/appointment/:
+  /plan/{id}/:
     get:
-      operationId: me_appointment_list
+      operationId: plan_retrieve
+      description: |-
+        This viewset allows anyone to list and retrieve models.
+        UNSAFE actions like create, update and delete are not allowed.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this plan.
+        required: true
+      tags:
+      - plan
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+          description: ''
+  /professional/appointment/:
+    get:
+      operationId: professional_appointment_list
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - name: ordering
         required: false
@@ -296,7 +310,7 @@ paths:
         schema:
           type: integer
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -307,9 +321,13 @@ paths:
                 $ref: '#/components/schemas/PaginatedAppointmentList'
           description: ''
     post:
-      operationId: me_appointment_create
+      operationId: professional_appointment_create
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -331,9 +349,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/CreateAppointment'
           description: ''
-  /me/appointment/{id}/:
+  /professional/appointment/{id}/:
     get:
-      operationId: me_appointment_retrieve
+      operationId: professional_appointment_retrieve
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -343,7 +365,7 @@ paths:
         description: A UUID string identifying this appointment.
         required: true
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -354,7 +376,11 @@ paths:
                 $ref: '#/components/schemas/Appointment'
           description: ''
     put:
-      operationId: me_appointment_update
+      operationId: professional_appointment_update
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -364,7 +390,7 @@ paths:
         description: A UUID string identifying this appointment.
         required: true
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -387,7 +413,11 @@ paths:
                 $ref: '#/components/schemas/CreateAppointment'
           description: ''
     patch:
-      operationId: me_appointment_partial_update
+      operationId: professional_appointment_partial_update
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -397,7 +427,7 @@ paths:
         description: A UUID string identifying this appointment.
         required: true
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -419,7 +449,11 @@ paths:
                 $ref: '#/components/schemas/CreateAppointment'
           description: ''
     delete:
-      operationId: me_appointment_destroy
+      operationId: professional_appointment_destroy
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
       parameters:
       - in: path
         name: id
@@ -429,15 +463,15 @@ paths:
         description: A UUID string identifying this appointment.
         required: true
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
         '204':
           description: No response body
-  /me/calendar/:
+  /professional/calendar/:
     get:
-      operationId: me_calendar_list
+      operationId: professional_calendar_list
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -450,7 +484,7 @@ paths:
         schema:
           type: integer
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -461,13 +495,13 @@ paths:
                 $ref: '#/components/schemas/PaginatedCalendarList'
           description: ''
     post:
-      operationId: me_calendar_create
+      operationId: professional_calendar_create
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
         Admins can manage all the data of the view
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -489,230 +523,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/CreateCalendar'
           description: ''
-  /me/calendar/{calendar_pk}/session/:
+  /professional/calendar/{id}/:
     get:
-      operationId: me_calendar_session_list
-      parameters:
-      - in: path
-        name: calendar_pk
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - name: ordering
-        required: false
-        in: query
-        description: Which field to use when ordering the results.
-        schema:
-          type: string
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      - in: query
-        name: week_day
-        schema:
-          type: integer
-          enum:
-          - 0
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-          - 6
-        description: |-
-          * `0` - Domingo
-          * `1` - Segunda
-          * `2` - Terça
-          * `3` - Quarta
-          * `4` - Quinta
-          * `5` - Sexta
-          * `6` - Sábado
-
-          * `0` - Domingo
-          * `1` - Segunda
-          * `2` - Terça
-          * `3` - Quarta
-          * `4` - Quinta
-          * `5` - Sexta
-          * `6` - Sábado
-      tags:
-      - me
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedSessionList'
-          description: ''
-    post:
-      operationId: me_calendar_session_create
-      parameters:
-      - in: path
-        name: calendar_pk
-        schema:
-          type: string
-          format: uuid
-        required: true
-      tags:
-      - me
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateSession'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/CreateSession'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateSession'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateSession'
-          description: ''
-  /me/calendar/{calendar_pk}/session/{id}/:
-    get:
-      operationId: me_calendar_session_retrieve
-      parameters:
-      - in: path
-        name: calendar_pk
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this session.
-        required: true
-      tags:
-      - me
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Session'
-          description: ''
-    put:
-      operationId: me_calendar_session_update
-      parameters:
-      - in: path
-        name: calendar_pk
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this session.
-        required: true
-      tags:
-      - me
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateSession'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/CreateSession'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateSession'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateSession'
-          description: ''
-    patch:
-      operationId: me_calendar_session_partial_update
-      parameters:
-      - in: path
-        name: calendar_pk
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this session.
-        required: true
-      tags:
-      - me
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedCreateSession'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedCreateSession'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedCreateSession'
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateSession'
-          description: ''
-    delete:
-      operationId: me_calendar_session_destroy
-      parameters:
-      - in: path
-        name: calendar_pk
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this session.
-        required: true
-      tags:
-      - me
-      security:
-      - jwtAuth: []
-      responses:
-        '204':
-          description: No response body
-  /me/calendar/{id}/:
-    get:
-      operationId: me_calendar_retrieve
+      operationId: professional_calendar_retrieve
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -726,7 +539,7 @@ paths:
         description: A UUID string identifying this calendar.
         required: true
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -737,7 +550,7 @@ paths:
                 $ref: '#/components/schemas/Calendar'
           description: ''
     put:
-      operationId: me_calendar_update
+      operationId: professional_calendar_update
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -751,7 +564,7 @@ paths:
         description: A UUID string identifying this calendar.
         required: true
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -774,7 +587,7 @@ paths:
                 $ref: '#/components/schemas/CreateCalendar'
           description: ''
     patch:
-      operationId: me_calendar_partial_update
+      operationId: professional_calendar_partial_update
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -788,7 +601,7 @@ paths:
         description: A UUID string identifying this calendar.
         required: true
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -810,7 +623,7 @@ paths:
                 $ref: '#/components/schemas/CreateCalendar'
           description: ''
     delete:
-      operationId: me_calendar_destroy
+      operationId: professional_calendar_destroy
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -824,15 +637,33 @@ paths:
         description: A UUID string identifying this calendar.
         required: true
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
         '204':
           description: No response body
-  /me/notification/:
+  /professional/calendar/default/:
     get:
-      operationId: me_notification_list
+      operationId: professional_calendar_default_retrieve
+      description: |-
+        This viewset allows professionals or admins to perform any model action.
+        Professionals can only manage data linked to them.
+        Admins can manage all the data of the view
+      tags:
+      - professional
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Calendar'
+          description: ''
+  /professional/notification/:
+    get:
+      operationId: professional_notification_list
       parameters:
       - name: page
         required: false
@@ -841,7 +672,7 @@ paths:
         schema:
           type: integer
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -851,9 +682,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedNotificationList'
           description: ''
-  /me/notification/{id}/read/:
+  /professional/notification/{id}/read/:
     post:
-      operationId: me_notification_read_create
+      operationId: professional_notification_read_create
       parameters:
       - in: path
         name: id
@@ -863,7 +694,7 @@ paths:
         description: A UUID string identifying this notification.
         required: true
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -873,11 +704,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Notification'
           description: ''
-  /me/notification/read-many/:
+  /professional/notification/read-many/:
     post:
-      operationId: me_notification_read_many_create
+      operationId: professional_notification_read_many_create
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -895,11 +726,11 @@ paths:
       responses:
         '204':
           description: No response body
-  /me/oauth/authorize/:
+  /professional/oauth/authorize/:
     post:
-      operationId: me_oauth_authorize_create
+      operationId: professional_oauth_authorize_create
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -921,9 +752,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ThirdParty'
           description: ''
-  /me/patient/:
+  /professional/patient/:
     get:
-      operationId: me_patient_list
+      operationId: professional_patient_list
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -941,7 +772,7 @@ paths:
         schema:
           type: integer
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -952,13 +783,13 @@ paths:
                 $ref: '#/components/schemas/PaginatedPatientList'
           description: ''
     post:
-      operationId: me_patient_create
+      operationId: professional_patient_create
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
         Admins can manage all the data of the view
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -980,9 +811,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Patient'
           description: ''
-  /me/patient/{id}/:
+  /professional/patient/{id}/:
     get:
-      operationId: me_patient_retrieve
+      operationId: professional_patient_retrieve
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -996,7 +827,7 @@ paths:
         description: A UUID string identifying this patient.
         required: true
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -1007,7 +838,7 @@ paths:
                 $ref: '#/components/schemas/Patient'
           description: ''
     put:
-      operationId: me_patient_update
+      operationId: professional_patient_update
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -1021,7 +852,7 @@ paths:
         description: A UUID string identifying this patient.
         required: true
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -1044,7 +875,7 @@ paths:
                 $ref: '#/components/schemas/Patient'
           description: ''
     patch:
-      operationId: me_patient_partial_update
+      operationId: professional_patient_partial_update
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -1058,7 +889,7 @@ paths:
         description: A UUID string identifying this patient.
         required: true
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -1080,7 +911,7 @@ paths:
                 $ref: '#/components/schemas/Patient'
           description: ''
     delete:
-      operationId: me_patient_destroy
+      operationId: professional_patient_destroy
       description: |-
         This viewset allows professionals or admins to perform any model action.
         Professionals can only manage data linked to them.
@@ -1094,15 +925,15 @@ paths:
         description: A UUID string identifying this patient.
         required: true
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
         '204':
           description: No response body
-  /me/session/:
+  /professional/session/:
     get:
-      operationId: me_session_list
+      operationId: professional_session_list
       description: Viewset to handle sessions of the default professional calendar
       parameters:
       - in: query
@@ -1166,7 +997,7 @@ paths:
           * `5` - Sexta
           * `6` - Sábado
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -1177,10 +1008,10 @@ paths:
                 $ref: '#/components/schemas/PaginatedSessionList'
           description: ''
     post:
-      operationId: me_session_create
+      operationId: professional_session_create
       description: Viewset to handle sessions of the default professional calendar
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -1202,9 +1033,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/CreateSession'
           description: ''
-  /me/session/{id}/:
+  /professional/session/{id}/:
     get:
-      operationId: me_session_retrieve
+      operationId: professional_session_retrieve
       description: Viewset to handle sessions of the default professional calendar
       parameters:
       - in: path
@@ -1215,7 +1046,7 @@ paths:
         description: A UUID string identifying this session.
         required: true
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
@@ -1226,7 +1057,7 @@ paths:
                 $ref: '#/components/schemas/Session'
           description: ''
     put:
-      operationId: me_session_update
+      operationId: professional_session_update
       description: Viewset to handle sessions of the default professional calendar
       parameters:
       - in: path
@@ -1237,7 +1068,7 @@ paths:
         description: A UUID string identifying this session.
         required: true
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -1260,7 +1091,7 @@ paths:
                 $ref: '#/components/schemas/CreateSession'
           description: ''
     patch:
-      operationId: me_session_partial_update
+      operationId: professional_session_partial_update
       description: Viewset to handle sessions of the default professional calendar
       parameters:
       - in: path
@@ -1271,7 +1102,7 @@ paths:
         description: A UUID string identifying this session.
         required: true
       tags:
-      - me
+      - professional
       requestBody:
         content:
           application/json:
@@ -1293,7 +1124,7 @@ paths:
                 $ref: '#/components/schemas/CreateSession'
           description: ''
     delete:
-      operationId: me_session_destroy
+      operationId: professional_session_destroy
       description: Viewset to handle sessions of the default professional calendar
       parameters:
       - in: path
@@ -1304,114 +1135,12 @@ paths:
         description: A UUID string identifying this session.
         required: true
       tags:
-      - me
+      - professional
       security:
       - jwtAuth: []
       responses:
         '204':
           description: No response body
-  /plan/:
-    get:
-      operationId: plan_list
-      description: |-
-        This viewset allows anyone to list and retrieve models.
-        UNSAFE actions like create, update and delete are not allowed.
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - plan
-      security:
-      - jwtAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedPlanList'
-          description: ''
-  /plan/{id}/:
-    get:
-      operationId: plan_retrieve
-      description: |-
-        This viewset allows anyone to list and retrieve models.
-        UNSAFE actions like create, update and delete are not allowed.
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this plan.
-        required: true
-      tags:
-      - plan
-      security:
-      - jwtAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Plan'
-          description: ''
-  /profession/:
-    get:
-      operationId: profession_list
-      description: |-
-        This viewset allows anyone to list and retrieve models.
-        UNSAFE actions like create, update and delete are not allowed.
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - profession
-      security:
-      - jwtAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedProfessionList'
-          description: ''
-  /profession/{id}/:
-    get:
-      operationId: profession_retrieve
-      description: |-
-        This viewset allows anyone to list and retrieve models.
-        UNSAFE actions like create, update and delete are not allowed.
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this profession.
-        required: true
-      tags:
-      - profession
-      security:
-      - jwtAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Profession'
-          description: ''
   /sign-up/patient/:
     post:
       operationId: sign_up_patient_create
@@ -1686,6 +1415,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /whoami/:
+    get:
+      operationId: whoami_retrieve
+      tags:
+      - whoami
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
           description: ''
 components:
   schemas:
@@ -2181,6 +1924,9 @@ components:
           type: string
         last_name:
           type: string
+        full_name:
+          type: string
+          readOnly: true
         email:
           type: string
           format: email
@@ -2189,23 +1935,22 @@ components:
         password:
           type: string
           writeOnly: true
-        username:
-          type: string
-          readOnly: true
         professional:
-          $ref: '#/components/schemas/CustomerShortProfessional'
+          allOf:
+          - $ref: '#/components/schemas/CustomerShortProfessional'
+          readOnly: true
         notify_appointment:
           type: boolean
-        notify_pending_payment:
-          type: boolean
+          readOnly: true
       required:
       - email
       - first_name
+      - full_name
       - id
       - last_name
+      - notify_appointment
       - phone
       - professional
-      - username
     CustomerProfession:
       type: object
       properties:
@@ -2232,6 +1977,9 @@ components:
           type: string
         last_name:
           type: string
+        full_name:
+          type: string
+          readOnly: true
         email:
           type: string
           format: email
@@ -2240,16 +1988,13 @@ components:
         password:
           type: string
           writeOnly: true
-        username:
-          type: string
-          readOnly: true
-        full_name:
-          type: string
-          readOnly: true
         address:
           $ref: '#/components/schemas/CustomerAddress'
         profession:
           $ref: '#/components/schemas/CustomerProfession'
+        username:
+          type: string
+          maxLength: 64
         registration_number:
           type: string
           maxLength: 32
@@ -2316,6 +2061,9 @@ components:
           type: string
         last_name:
           type: string
+        full_name:
+          type: string
+          readOnly: true
         email:
           type: string
           format: email
@@ -2326,10 +2074,7 @@ components:
           writeOnly: true
         username:
           type: string
-          readOnly: true
-        full_name:
-          type: string
-          readOnly: true
+          maxLength: 64
         registration_number:
           type: string
           maxLength: 32
@@ -2491,26 +2236,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Calendar'
-    PaginatedCityList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/City'
     PaginatedCustomerAppointmentList:
       type: object
       properties:
@@ -2591,26 +2316,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Plan'
-    PaginatedProfessionList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=4
-        previous:
-          type: string
-          nullable: true
-          format: uri
-          example: http://api.example.org/accounts/?page=2
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Profession'
     PaginatedSessionList:
       type: object
       properties:
@@ -2768,6 +2473,37 @@ components:
         session:
           type: string
           format: uuid
+    PatchedCustomerPatient:
+      type: object
+      description: Base profile to abstract profile object in professional and patient
+        serializers
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        full_name:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+        professional:
+          allOf:
+          - $ref: '#/components/schemas/CustomerShortProfessional'
+          readOnly: true
+        notify_appointment:
+          type: boolean
+          readOnly: true
     PatchedPatient:
       type: object
       description: Base profile to abstract profile object in professional and patient
@@ -2781,6 +2517,9 @@ components:
           type: string
         last_name:
           type: string
+        full_name:
+          type: string
+          readOnly: true
         email:
           type: string
           format: email
@@ -2789,9 +2528,6 @@ components:
         password:
           type: string
           writeOnly: true
-        username:
-          type: string
-          readOnly: true
         appointments:
           type: array
           items:
@@ -2809,6 +2545,9 @@ components:
           type: boolean
         notify_pending_payment:
           type: boolean
+        is_confirmed:
+          type: boolean
+          readOnly: true
         professional:
           type: string
           format: uuid
@@ -2826,6 +2565,9 @@ components:
           type: string
         last_name:
           type: string
+        full_name:
+          type: string
+          readOnly: true
         email:
           type: string
           format: email
@@ -2834,9 +2576,6 @@ components:
         password:
           type: string
           writeOnly: true
-        username:
-          type: string
-          readOnly: true
         appointments:
           type: array
           items:
@@ -2854,6 +2593,9 @@ components:
           type: boolean
         notify_pending_payment:
           type: boolean
+        is_confirmed:
+          type: boolean
+          readOnly: true
         professional:
           type: string
           format: uuid
@@ -2863,12 +2605,13 @@ components:
       - created_at
       - email
       - first_name
+      - full_name
       - id
+      - is_confirmed
       - last_name
       - modified_at
       - phone
       - professional
-      - username
     PatientAppointment:
       type: object
       description: Base profile to abstract profile object in professional and patient
@@ -2882,6 +2625,9 @@ components:
           type: string
         last_name:
           type: string
+        full_name:
+          type: string
+          readOnly: true
         email:
           type: string
           format: email
@@ -2890,9 +2636,6 @@ components:
         password:
           type: string
           writeOnly: true
-        username:
-          type: string
-          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -2905,6 +2648,8 @@ components:
           type: boolean
         notify_pending_payment:
           type: boolean
+        is_confirmed:
+          type: boolean
         professional:
           type: string
           format: uuid
@@ -2912,12 +2657,12 @@ components:
       - created_at
       - email
       - first_name
+      - full_name
       - id
       - last_name
       - modified_at
       - phone
       - professional
-      - username
     PatientSignup:
       type: object
       description: Base profile to abstract profile object in professional and patient
@@ -2931,6 +2676,9 @@ components:
           type: string
         last_name:
           type: string
+        full_name:
+          type: string
+          readOnly: true
         email:
           type: string
           format: email
@@ -2939,9 +2687,6 @@ components:
         password:
           type: string
           writeOnly: true
-        username:
-          type: string
-          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -2961,12 +2706,12 @@ components:
       - created_at
       - email
       - first_name
+      - full_name
       - id
       - last_name
       - modified_at
       - phone
       - professional
-      - username
     Plan:
       type: object
       properties:
@@ -3026,6 +2771,9 @@ components:
           type: string
         last_name:
           type: string
+        full_name:
+          type: string
+          readOnly: true
         email:
           type: string
           format: email
@@ -3034,9 +2782,6 @@ components:
         password:
           type: string
           writeOnly: true
-        username:
-          type: string
-          readOnly: true
         notifications:
           type: array
           items:
@@ -3049,6 +2794,9 @@ components:
         modified_at:
           type: string
           format: date-time
+          readOnly: true
+        username:
+          type: string
           readOnly: true
         registration_number:
           type: string
@@ -3083,6 +2831,7 @@ components:
       - created_at
       - email
       - first_name
+      - full_name
       - id
       - last_name
       - modified_at
@@ -3105,6 +2854,9 @@ components:
           type: string
         last_name:
           type: string
+        full_name:
+          type: string
+          readOnly: true
         email:
           type: string
           format: email
@@ -3113,9 +2865,6 @@ components:
         password:
           type: string
           writeOnly: true
-        username:
-          type: string
-          readOnly: true
         address:
           $ref: '#/components/schemas/CreateAddress'
         plan:
@@ -3133,6 +2882,9 @@ components:
         modified_at:
           type: string
           format: date-time
+          readOnly: true
+        username:
+          type: string
           readOnly: true
         registration_number:
           type: string
@@ -3157,6 +2909,7 @@ components:
       - created_at
       - email
       - first_name
+      - full_name
       - id
       - last_name
       - modified_at
@@ -3185,9 +2938,6 @@ components:
         last_name:
           type: string
           maxLength: 32
-        username:
-          type: string
-          maxLength: 64
         email:
           type: string
           format: email
@@ -3205,7 +2955,6 @@ components:
       - full_name
       - id
       - last_name
-      - username
     Session:
       type: object
       properties:
@@ -3380,7 +3129,7 @@ components:
     TokenObtainPair:
       type: object
       properties:
-        username:
+        email:
           type: string
           writeOnly: true
         password:
@@ -3394,9 +3143,9 @@ components:
           readOnly: true
       required:
       - access
+      - email
       - password
       - refresh
-      - username
     TokenRefresh:
       type: object
       properties:

@@ -32,8 +32,6 @@ class TestNotificationViewSet:
 
         data = {"ids": [str(notification.id) for notification in notifications]}
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 204

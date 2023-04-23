@@ -36,7 +36,7 @@ class GoogleCalendar:
     ) -> Event:
         attendees = [
             {
-                "email": patient.profile.email,
+                "email": patient.email,
                 "displayName": patient.full_name,
                 "responseStatus": "needsAction",
             }

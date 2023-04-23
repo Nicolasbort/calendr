@@ -1,5 +1,3 @@
-from api.models.patient import Patient
-from api.models.professional import Professional
 from api.models.profile import Profile
 from drf_spectacular.utils import extend_schema_serializer
 from rest_framework import serializers
@@ -33,43 +31,50 @@ class BaseSerializer(serializers.ModelSerializer):
     pass
 
 
-class BaseProfileSerializer(serializers.ModelSerializer):
+class WriteBaseProfileSerializer(serializers.ModelSerializer):
     """
     Base profile to abstract profile object in professional and patient serializers
     """
 
     first_name = serializers.CharField()
     last_name = serializers.CharField()
+    full_name = serializers.CharField(read_only=True)
     email = serializers.EmailField()
     phone = serializers.CharField()
     password = serializers.CharField(required=False, write_only=True)
-    username = serializers.CharField(read_only=True)
 
-    def create(
-        self, validated_data: dict, model_class: Professional | Patient
-    ) -> Professional | Patient:
+    UPDATE_PROFILE_KEYS: list[str] = ["phone", "email"]
+    CREATE_PROFILE_KEYS: list[str] = ["first_name", "last_name", "phone", "email"]
+    READ_PROFILE_KEYS: list[str] = [
+        "first_name",
+        "last_name",
+        "full_name",
+        "phone",
+        "email",
+    ]
+
+    def create_profile(self, validated_data: dict) -> Profile:
+        password = self.get_password(validated_data)
+
+        profile = Profile(is_staff=False, is_superuser=False)
+
+        for attr in self.CREATE_PROFILE_KEYS:
+            value = validated_data.pop(attr)
+
+            setattr(profile, attr, value)
+
+        profile.set_password(password)
+        profile.save()
+
+        return profile
+
+    def get_password(self, validated_data: dict) -> str:
         password = validated_data.pop("password", None)
 
         if password is None:
             ValidationError("password is required")
 
-        profile = Profile(is_staff=False, is_superuser=False)
-        instance = model_class()
-
-        for attr, value in validated_data.items():
-            if attr in Profile.WRITABLE_KEYS:
-                setattr(profile, attr, value)
-            else:
-                setattr(instance, attr, value)
-
-        profile.create_username()
-        profile.set_password(password)
-        profile.save()
-
-        instance.profile = profile
-        instance.save()
-
-        return instance
+        return password
 
     def update(self, instance, validated_data: dict):
         validated_data.pop("password", None)
@@ -79,12 +84,10 @@ class BaseProfileSerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             curr_instance = instance
 
-            if attr in Profile.WRITABLE_KEYS:
+            if attr in self.UPDATE_PROFILE_KEYS:
                 curr_instance = profile
 
             setattr(curr_instance, attr, value)
-
-        profile.save()
 
         instance.profile = profile
         instance.save()
@@ -96,7 +99,7 @@ class BaseProfileSerializer(serializers.ModelSerializer):
         readable_fields = self._readable_fields
 
         for field in readable_fields:
-            if field.field_name in Profile.WRITABLE_KEYS:
+            if field.field_name in self.READ_PROFILE_KEYS:
                 continue
 
             try:
@@ -114,7 +117,7 @@ class BaseProfileSerializer(serializers.ModelSerializer):
 
         profile = instance.profile
 
-        for writable_key in Profile.WRITABLE_KEYS:
+        for writable_key in self.READ_PROFILE_KEYS:
             data[writable_key] = getattr(profile, writable_key)
 
         return data

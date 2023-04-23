@@ -20,6 +20,7 @@ from api.models import (
     Session,
 )
 from api.models.patient import Patient
+from api.models.third_party import ThirdParty
 from api.utils.datetime import add_minutes_to_time
 from django.contrib.auth.hashers import make_password
 from django.core.management.base import BaseCommand
@@ -62,6 +63,7 @@ def clear_data():
     Patient.all_objects.all().delete()
     Calendar.all_objects.all().delete()
     Professional.all_objects.all().delete()
+    ThirdParty.objects.all().delete()
 
 
 def create_default_plan() -> Plan:
@@ -75,9 +77,8 @@ def create_default_profession() -> Profession:
 
 
 def create_admin() -> Profile:
-    profile = Profile(
+    return Profile.objects.create(
         email="admin@example.com",
-        username="admin",
         first_name="Admin",
         last_name="Auto",
         phone="11999999999",
@@ -85,19 +86,14 @@ def create_admin() -> Profile:
         is_superuser=True,
         email_verified=True,
     )
-    profile.set_password("password")
-    profile.save()
-
-    return profile
 
 
 def create_custom_professional(
     plan: Plan,
     profession: Profession,
 ) -> Professional:
-    profile = Profile(
+    profile = Profile.objects.create(
         email="professional@example.com",
-        username="professional",
         first_name="Professional",
         last_name="Lastname",
         phone="11999999998",
@@ -105,8 +101,6 @@ def create_custom_professional(
         is_superuser=False,
         email_verified=True,
     )
-    profile.set_password("password")
-    profile.save()
 
     city = City.objects.create(name="São Paulo", state=StateChoices.SP)
 
@@ -124,6 +118,7 @@ def create_custom_professional(
         plan=plan,
         address=address,
         profile=profile,
+        username="professional",
         picture="https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
         genre=GenreChoices.MALE,
         birthday="1980-01-10",
@@ -132,9 +127,8 @@ def create_custom_professional(
 
 
 def create_custom_patient(professional: Professional) -> Patient:
-    profile = Profile(
+    profile = Profile.objects.create(
         email="patient@example.com",
-        username="patient",
         first_name="Patient",
         last_name="Lastname",
         phone="11999999997",
@@ -142,8 +136,6 @@ def create_custom_patient(professional: Professional) -> Patient:
         is_superuser=False,
         email_verified=True,
     )
-    profile.set_password("password")
-    profile.save()
 
     return Patient.objects.create(
         profile=profile,
@@ -184,7 +176,7 @@ def create_addresses(faker: Faker, cities) -> list[Address]:
 def create_profiles(faker: Faker, number) -> list[Profile]:
     profiles = []
 
-    for i in range(number):
+    for _ in range(number):
         first_name = faker.first_name()
         last_name = faker.last_name()
         username = f"{first_name}_{last_name}".lower().replace(" ", "_")
@@ -194,7 +186,6 @@ def create_profiles(faker: Faker, number) -> list[Profile]:
             Profile(
                 first_name=first_name,
                 last_name=last_name,
-                username=username,
                 email=email,
                 password=make_password("password"),
                 email_verified=faker.boolean(chance_of_getting_true=40),
@@ -215,12 +206,15 @@ def create_professionals(
     professionals = []
 
     for profile, address in itertools.zip_longest(profiles, addresses):
+        username = f"{profile.first_name}_{profile.last_name}".lower().replace(" ", "_")
+
         professionals.append(
             Professional(
                 profession=profession,
                 plan=plan,
                 address=address,
                 profile=profile,
+                username=username,
                 picture=faker.file_name(category="image"),
                 genre=random.choice(GenreChoices.choices)[0],
                 birthday=faker.date_of_birth(minimum_age=18, maximum_age=80),
@@ -241,6 +235,8 @@ def create_patients(
     for profile in profiles:
         patients.append(
             Patient(
+                first_name=profile.first_name,
+                last_name=profile.last_name,
                 profile=profile,
                 professional=random.choice(professionals),
                 notify_appointment=faker.boolean(chance_of_getting_true=80),

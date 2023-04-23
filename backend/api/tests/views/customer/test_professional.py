@@ -10,7 +10,7 @@ class TestCustomerProfessionalViewSet:
     ):
         url = reverse(
             "api:customer-professional-detail",
-            kwargs={"multiple_lookup_field": professional.profile.username},
+            kwargs={"multiple_lookup_field": professional.username},
         )
 
         response = patient_api.get(url)
@@ -31,7 +31,7 @@ class TestCustomerProfessionalViewSet:
 
         url = reverse(
             "api:customer-professional-get-calendar-default",
-            kwargs={"multiple_lookup_field": calendar.professional.profile.username},
+            kwargs={"multiple_lookup_field": calendar.professional.username},
         )
 
         response = patient_api.get(url)

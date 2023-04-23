@@ -8,13 +8,37 @@ from django.urls import reverse
 @pytest.mark.django_db
 class TestPatientViewSet:
     @staticmethod
-    def test_get_patient(professional_api, patient, patient_fields):
+    def test_get_patient_fields(professional_api, patient, patient_fields):
         url = reverse("api:patient-detail", kwargs={"pk": patient.id})
 
         response = professional_api.get(url)
 
         assert response.status_code == 200
         assert set(response.json().keys()) == set(patient_fields)
+
+    @staticmethod
+    def test_get_patient(professional_api, patient):
+        url = reverse("api:patient-detail", kwargs={"pk": patient.id})
+
+        response = professional_api.get(url)
+
+        assert response.status_code == 200
+
+        response_data = response.json()
+
+        assert patient.profile.first_name != response_data["first_name"]
+        assert patient.profile.last_name != response_data["last_name"]
+        assert patient.profile.full_name != response_data["full_name"]
+
+        assert str(patient.id) == response_data["id"]
+        assert patient.first_name == response_data["first_name"]
+        assert patient.last_name == response_data["last_name"]
+        assert patient.full_name == response_data["full_name"]
+        assert patient.is_confirmed == response_data["is_confirmed"]
+        assert patient.email == response_data["email"]
+        assert patient.phone == response_data["phone"]
+        assert patient.notify_pending_payment == response_data["notify_pending_payment"]
+        assert patient.notify_appointment == response_data["notify_appointment"]
 
     @staticmethod
     def test_get_patient_has_appointments(professional_api, patient, appointment):
@@ -79,29 +103,22 @@ class TestPatientViewSet:
             "notify_appointment": True,
         }
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 201
 
         patient = Patient.objects.first()
-
-        assert patient is not None
-
-        profile = Profile.objects.filter(patient=patient).first()
-
-        assert profile is not None
+        profile = patient.profile
 
         assert profile.first_name == "First"
         assert profile.last_name == "Last"
         assert profile.email == "patient@example.com"
-        assert profile.username == "firstlast"
         assert profile.phone == "99999999"
 
         assert patient.professional.id == professional.id
         assert patient.notify_pending_payment is True
         assert patient.notify_appointment is True
+        assert patient.is_confirmed is False
 
     @staticmethod
     def test_create_patient_no_phone(professional_api):
@@ -114,9 +131,7 @@ class TestPatientViewSet:
             "notify_pending_payment": True,
         }
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 400
 
@@ -135,9 +150,7 @@ class TestPatientViewSet:
             "professional": str(other_professional.id),
         }
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 201
 
@@ -152,17 +165,19 @@ class TestPatientViewSet:
         assert profile.first_name == "First"
         assert profile.last_name == "Last"
         assert profile.email == "patient@example.com"
-        assert profile.username == "firstlast"
         assert profile.phone == "5399999999"
 
         assert patient.professional.id == professional.id
         assert patient.notify_pending_payment is True
+        assert patient.is_confirmed is False
 
     @staticmethod
     def test_update_patient(
         professional_api, patient, professional, other_professional
     ):
         url = reverse("api:patient-detail", kwargs={"pk": patient.id})
+
+        profile_before = patient.profile
 
         data = {
             "first_name": "Update First",
@@ -173,24 +188,28 @@ class TestPatientViewSet:
             "professional": str(other_professional.id),
         }
 
-        response = professional_api.patch(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.patch(url, data)
 
         assert response.status_code == 200
 
         patient.refresh_from_db()
-        profile = Profile.objects.filter(patient=patient).first()
+        profile = Profile.objects.get(pk=profile_before.id)
+
+        assert patient.first_name == "Update First"
+        assert patient.last_name == "Update Last"
 
         assert profile is not None
-        assert profile.first_name == "Update First"
-        assert profile.last_name == "Update Last"
+        assert profile.first_name == profile_before.first_name
+        assert profile.last_name == profile_before.last_name
+        assert profile.email != profile_before.email
+        assert profile.phone != profile_before.phone
+
         assert profile.email == "update-patient@example.com"
-        assert profile.username == "patientlastname"
         assert profile.phone == "8888888"
 
         assert patient.professional.id == professional.id
         assert patient.notify_pending_payment is False
+        assert patient.is_confirmed is False
 
     @staticmethod
     def test_update_patient_invalid_email(professional_api, patient):
@@ -200,9 +219,7 @@ class TestPatientViewSet:
             "email": "invalid_email",
         }
 
-        response = professional_api.patch(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.patch(url, data)
 
         assert response.status_code == 400
 

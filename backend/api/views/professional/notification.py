@@ -24,9 +24,10 @@ class NotificationViewSet(
 
         queryset = self.queryset.filter(profile_to=self.request.user)
 
-        return (
-            queryset if self.action == "list" else queryset.filter(read_at__isnull=True)
-        )
+        if self.action in ["list", "retrieve"]:
+            return queryset
+
+        return queryset.filter(read_at__isnull=True)
 
     @extend_schema(request=None)
     @action(methods=["POST"], detail=True, url_path="read")

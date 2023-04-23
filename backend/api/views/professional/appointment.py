@@ -1,16 +1,16 @@
 from api.models.appointment import Appointment
-from api.permissions import IsAdminOrProfessional
 from api.serializers.appointment import (
     AppointmentSerializer,
     CreateAppointmentSerializer,
 )
-from rest_framework import filters, viewsets
+from api.views.generic import ProfessionalAPIView
+from rest_framework import filters
 
 
-class AppointmentViewSet(viewsets.ModelViewSet):
-    serializer_class = AppointmentSerializer
+class AppointmentViewSet(ProfessionalAPIView):
     queryset = Appointment.objects.all()
-    permission_classes = [IsAdminOrProfessional]
+    serializer_class: AppointmentSerializer | CreateAppointmentSerializer
+    profile_path = "session__calendar__professional__profile"
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = (
         "session__week_day",
@@ -20,14 +20,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         "session__week_day",
         "session__time_start",
     )
-
-    def get_queryset(self):
-        if self.request.user.is_staff:
-            return self.queryset
-
-        return self.queryset.filter(
-            session__calendar__professional__profile=self.request.user.id
-        ).all()
 
     def get_serializer_class(self):
         return (

@@ -1,5 +1,3 @@
-from api.models.plan import Plan
-from api.models.profession import Profession
 from api.serializers.signup import PatientSignupSerializer, ProfessionalSignupSerializer
 from django.db.transaction import atomic
 from drf_spectacular.utils import extend_schema
@@ -10,6 +8,7 @@ from rest_framework.response import Response
 
 class SignUpViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.AllowAny]
+    serializer_class: ProfessionalSignupSerializer | PatientSignupSerializer
 
     def get_serializer_class(self):
         return (
@@ -24,11 +23,7 @@ class SignUpViewSet(viewsets.GenericViewSet):
     def professional(self, request, **kwargs):
         serializer = ProfessionalSignupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        plan = Plan.get_free_plan()
-        profession = Profession.get_default_profession()
-
-        serializer.save(plan=plan, profession=profession)
+        serializer.save()
 
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 

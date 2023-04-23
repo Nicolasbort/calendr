@@ -7,7 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 class ProfileAdmin(UserAdmin):
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        ("Personal info", {"fields": ("username", "first_name", "last_name", "phone")}),
+        ("Personal info", {"fields": ("first_name", "last_name", "phone")}),
         (
             "Permissions",
             {
@@ -38,7 +38,8 @@ class ProfileAdmin(UserAdmin):
             },
         ),
     )
-    list_filter = ("username", "email", "is_staff", "is_superuser", "groups")
+    list_display = ("email", "first_name", "last_name", "is_staff")
+    list_filter = ("email", "is_staff", "is_superuser", "groups")
     search_fields = ("email", "first_name", "last_name", "email")
     ordering = (
         "-is_staff",

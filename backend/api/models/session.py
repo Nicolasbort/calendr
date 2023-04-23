@@ -1,8 +1,10 @@
 import builtins
+from functools import cached_property
 
 from api.constants.session import WeekDayChoices
 from api.models.base_model import BaseModel
 from api.models.calendar import Calendar
+from api.models.professional import Professional
 from django.db import models
 
 
@@ -27,3 +29,7 @@ class Session(BaseModel):
     @builtins.property
     def duration(self) -> int:
         return self.calendar.duration
+
+    @cached_property
+    def professional(self) -> Professional:
+        return self.calendar.professional

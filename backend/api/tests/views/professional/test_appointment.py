@@ -18,9 +18,7 @@ class TestAppointmentViewSet:
 
         url = reverse("api:appointment-list")
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 201
 
@@ -45,9 +43,7 @@ class TestAppointmentViewSet:
 
         url = reverse("api:appointment-list")
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         response_data = response.json()
 
@@ -71,9 +67,7 @@ class TestAppointmentViewSet:
 
         url = reverse("api:appointment-list")
 
-        response = professional_api.post(
-            url, json.dumps(data), content_type="application/json"
-        )
+        response = professional_api.post(url, data)
 
         assert response.status_code == 201
 
