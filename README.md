@@ -1,6 +1,6 @@
-# App back-end
+# Calendr
 
-API and administration UI to provide and receive data from a psychology app
+PWA App, API and administration UI to provide and receive data from a psychology app
 
 This code is formatted using Black and tested with pytest
 
