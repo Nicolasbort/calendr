@@ -1,5 +1,4 @@
 backend/.env
 logs/
 .vscode
-frontend/
 .env.dev
