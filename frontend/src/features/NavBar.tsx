@@ -15,7 +15,7 @@ function NavBar() {
     <nav className="bg-white border-gray-200">
       <div className="max-w-screen-xl flex items-center justify-around xl:justify-between mx-auto py-4">
         <a
-          href="https://calendr.com"
+          href={`${window.location.protocol}//${window.location.host}`}
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <img src={CalendrLogo} className="h-8" alt="Calendr Logo" />

@@ -1,7 +1,7 @@
 import { useListSessions } from "api/session";
-import { scheduleAppointmentOpenAtom } from "atom";
+import { scheduleAppointmentOpenAtom, selectedSessionAtom } from "atom";
 import ComponentLoader from "components/ComponentLoader";
-import Session from "components/Session";
+import Session from "features/Session";
 import { useSetAtom } from "jotai";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import SessionListSkeleton from "./skeletons/SessionListSkeleton";
@@ -13,6 +13,12 @@ interface Props {
 function SessionList({ date }: Props) {
   const { data: sessions, isLoading } = useListSessions(date);
   const setScheduleAppointmentOpen = useSetAtom(scheduleAppointmentOpenAtom);
+  const setSelectedSession = useSetAtom(selectedSessionAtom);
+
+  const onScheduleAppointment = (sessionId: string) => {
+    setSelectedSession(sessionId);
+    setScheduleAppointmentOpen(true);
+  };
 
   return (
     <div className="bg-white border-none sm:border border-gray-300 shadow-none sm:shadow p-4 rounded-lg">
@@ -38,7 +44,7 @@ function SessionList({ date }: Props) {
               <Session
                 key={session.id}
                 session={session}
-                onClick={() => setScheduleAppointmentOpen(true)}
+                onClick={() => onScheduleAppointment(session.id)}
               />
             ))}
           </>

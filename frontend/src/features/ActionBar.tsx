@@ -1,13 +1,15 @@
 import Action from "components/Action";
 import React from "react";
+import toast from "react-hot-toast";
 import { FaCalendar, FaHeart, FaUserPlus } from "react-icons/fa";
 
 function ActionBar() {
-  const onScheduleAppointment = (e: React.MouseEvent) => {};
+  const onScheduleAppointment = (e: React.MouseEvent) =>
+    toast("Não implementado");
 
-  const onNewPatient = (e: React.MouseEvent) => {};
+  const onNewPatient = (e: React.MouseEvent) => toast("Não implementado");
 
-  const onShareAgenda = (e: React.MouseEvent) => {};
+  const onShareAgenda = (e: React.MouseEvent) => toast("Não implementado");
 
   return (
     <header className="bg-gray-50">

@@ -1,7 +1,10 @@
 /// <reference types="react-scripts" />
 
-interface Patient {
+interface Entity {
   id: string;
+}
+
+interface Patient extends Entity {
   fullName: string;
   email: string;
   phone: string;
@@ -9,8 +12,7 @@ interface Patient {
   lastName: string;
 }
 
-interface Session {
-  id: string;
+interface Session extends Entity {
   weekDay: number;
   timeStart: Date;
   timeEnd: Date;
@@ -18,8 +20,7 @@ interface Session {
   appointment?: Appointment;
 }
 
-interface Appointment {
-  id: string;
+interface Appointment extends Entity {
   patient: Patient;
   session?: Session;
   date: Date;

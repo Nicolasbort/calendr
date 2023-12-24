@@ -27,7 +27,7 @@ function SearchBar({ placeholder, searchDelay = 1000, onSearch }: Props) {
   }, [searchText]);
 
   return (
-    <div className="relative">
+    <div className="relative max-w-[200px] sm:max-w-full">
       <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
         <IoIosSearch className="w-5 h-5 text-gray-500" />
       </div>

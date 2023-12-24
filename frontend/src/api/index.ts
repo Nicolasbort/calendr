@@ -16,6 +16,10 @@ export async function wait(duration: number = 0): Promise<any> {
   return new Promise((resolver) => setTimeout(resolver, duration));
 }
 
+export async function promise(): Promise<any> {
+  return new Promise((resolver) => resolver);
+}
+
 export const numberFormat = Intl.NumberFormat(undefined, {
   style: "currency",
   currency: "BRL",

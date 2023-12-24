@@ -1,5 +1,5 @@
-import CalendarTime from "components/CalendarTime";
 import { format } from "date-fns";
+import CalendarTime from "features/Calendar/CalendarTime";
 
 interface Props {
   date: Date;

@@ -1,5 +1,5 @@
 import { useListAppointments } from "api/appointment";
-import Appointment from "components/Appointment";
+import Appointment from "features/Appointment";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 interface Props {

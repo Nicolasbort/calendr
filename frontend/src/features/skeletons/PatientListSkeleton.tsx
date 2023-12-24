@@ -1,4 +1,4 @@
-import PatientSkeleton from "components/skeletons/PatientSkeleton";
+import PatientSkeleton from "features/skeletons/PatientSkeleton";
 
 function PatientListSkeleton() {
   return (

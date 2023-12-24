@@ -1,4 +1,4 @@
-import SessionSkeleton from "components/skeletons/SessionSkeleton";
+import SessionSkeleton from "features/skeletons/SessionSkeleton";
 
 function SessionListSkeleton() {
   return (

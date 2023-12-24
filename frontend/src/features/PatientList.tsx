@@ -1,7 +1,7 @@
 import { useListPatients } from "api/patient";
 import { searchTextAtom } from "atom";
 import ComponentLoader from "components/ComponentLoader";
-import Patient from "components/Patient";
+import Patient from "features/Patient";
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router-dom";
 import PatientListSkeleton from "./skeletons/PatientListSkeleton";
