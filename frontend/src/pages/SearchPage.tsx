@@ -1,14 +1,12 @@
 import { scheduleAppointmentOpenAtom } from "atom";
 import Modal from "components/Modal";
-import ActionBar from "features/ActionBar";
-import CreatePatient from "features/CreatePatient";
+import NavBar from "features/NavBar";
+import PatientList from "features/PatientList";
 import ScheduleAppointment from "features/ScheduleAppointment";
-import SessionList from "features/SessionList";
 import { useAtom } from "jotai";
-import "./App.css";
-import NavBar from "./features/NavBar";
+import "./Home.css";
 
-function App() {
+function SearchPage() {
   const [scheduleAppointmentOpen, setScheduleAppointmentOpen] = useAtom(
     scheduleAppointmentOpenAtom
   );
@@ -16,12 +14,8 @@ function App() {
   return (
     <div className="App">
       <NavBar />
-      <ActionBar />
       <main className="container mx-auto my-0 sm:my-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <SessionList />
-          <CreatePatient />
-        </div>
+        <PatientList />
         <Modal
           isOpen={scheduleAppointmentOpen}
           onClose={() => setScheduleAppointmentOpen(false)}
@@ -33,4 +27,4 @@ function App() {
   );
 }
 
-export default App;
+export default SearchPage;

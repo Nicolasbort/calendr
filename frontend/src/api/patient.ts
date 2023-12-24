@@ -1,8 +1,9 @@
+import { wait } from "api";
 import { patients } from "mocks/patient";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-export const useListPatients = () => {
-  return useQuery("patients", () => patients);
+export const useListPatients = (_name?: string) => {
+  return useQuery("patients", () => wait(1000).then(() => patients));
 };
 
 export const useCreatePatient = () => {

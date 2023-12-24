@@ -2,8 +2,12 @@ import { useListAppointments } from "api/appointment";
 import Appointment from "components/Appointment";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-function AppointmentList() {
-  const { data: appointments } = useListAppointments();
+interface Props {
+  date?: Date;
+}
+
+function AppointmentList({ date }: Props) {
+  const { data: appointments } = useListAppointments(date);
 
   return (
     <div className="bg-white border-none sm:border border-gray-300 shadow-none sm:shadow p-4 rounded-lg">

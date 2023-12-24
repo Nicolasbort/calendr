@@ -1,7 +1,7 @@
 import { appointments } from "mocks/appointment";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-export const useListAppointments = () => {
+export const useListAppointments = (_date?: Date) => {
   return useQuery("appointments", () => appointments);
 };
 

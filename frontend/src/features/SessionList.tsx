@@ -1,12 +1,17 @@
 import { useListSessions } from "api/session";
 import { scheduleAppointmentOpenAtom } from "atom";
+import ComponentLoader from "components/ComponentLoader";
 import Session from "components/Session";
 import { useSetAtom } from "jotai";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import SessionListSkeleton from "./skeletons/SessionListSkeleton";
 
-function SessionList() {
-  const { data: sessions, isLoading } = useListSessions();
+interface Props {
+  date?: Date;
+}
+
+function SessionList({ date }: Props) {
+  const { data: sessions, isLoading } = useListSessions(date);
   const setScheduleAppointmentOpen = useSetAtom(scheduleAppointmentOpenAtom);
 
   return (
@@ -24,17 +29,20 @@ function SessionList() {
             <FaArrowRight />
           </button>
         </div>
-        {isLoading ? (
-          <SessionListSkeleton />
-        ) : (
-          sessions?.map((session) => (
-            <Session
-              key={session.id}
-              session={session}
-              onClick={() => setScheduleAppointmentOpen(true)}
-            />
-          ))
-        )}
+        <ComponentLoader
+          isLoading={isLoading}
+          skeleton={<SessionListSkeleton />}
+        >
+          <>
+            {sessions?.map((session) => (
+              <Session
+                key={session.id}
+                session={session}
+                onClick={() => setScheduleAppointmentOpen(true)}
+              />
+            ))}
+          </>
+        </ComponentLoader>
       </div>
     </div>
   );

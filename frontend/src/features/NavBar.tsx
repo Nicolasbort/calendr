@@ -1,7 +1,17 @@
 import CalendrLogo from "calendr.png";
+import SearchBar from "components/SearchBar";
 import { FiBell } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
+  const navigate = useNavigate();
+
+  const onSearchPatient = (name: string) => {
+    const route = !name ? "/" : "/search";
+
+    navigate(route);
+  };
+
   return (
     <nav className="bg-white border-gray-200">
       <div className="max-w-screen-xl flex items-center justify-around xl:justify-between mx-auto py-4">
@@ -11,7 +21,13 @@ function NavBar() {
         >
           <img src={CalendrLogo} className="h-8" alt="Calendr Logo" />
         </a>
-        <ul className="font-medium flex flex-col p-0 border border-gray-100 rounded-lg bg-gray-50 rtl:space-x-reverse mt-0 border-0 bg-white">
+        <ul className="font-medium flex p-0 gap-4 border border-gray-100 rounded-lg bg-gray-50 items-center rtl:space-x-reverse mt-0 border-0 bg-white">
+          <li>
+            <SearchBar
+              placeholder="Pesquisar por paciente"
+              onSearch={onSearchPatient}
+            />
+          </li>
           <li>
             <a
               href="#"
