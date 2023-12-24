@@ -6,6 +6,22 @@ export const useListPatients = (_name?: string) => {
   return useQuery("patients", () => wait(1000).then(() => patients));
 };
 
+export const useGetPatient = (patientId?: string, opts = {}) => {
+  const queryClient = useQueryClient();
+
+  console.log(queryClient.getQueryData("patients"));
+
+  return useQuery(
+    ["patients", patientId],
+    () => {
+      return queryClient
+        .getQueryData<Patient[]>("patients")
+        ?.find(({ id }) => patientId == id);
+    },
+    opts
+  );
+};
+
 export const useCreatePatient = () => {
   const queryClient = useQueryClient();
 
