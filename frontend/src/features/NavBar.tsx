@@ -7,8 +7,8 @@ function NavBar() {
   const navigate = useNavigate();
 
   const onSearchPatient = (name: string) => {
-    // const route = !name ? "/" : "/patients";
-    // navigate(route);
+    const route = !name ? "/" : "/patients";
+    navigate(route);
   };
 
   return (

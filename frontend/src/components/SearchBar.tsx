@@ -1,6 +1,6 @@
 import { searchTextAtom } from "atom";
 import { useAtom } from "jotai";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useRef } from "react";
 import { IoIosSearch } from "react-icons/io";
 
 interface Props {
@@ -11,9 +11,13 @@ interface Props {
 
 function SearchBar({ placeholder, searchDelay = 1000, onSearch }: Props) {
   const [searchText, setSearchText] = useAtom(searchTextAtom);
+  const firstMount = useRef(true);
 
   useEffect(() => {
-    if (searchText === undefined) return;
+    if (firstMount.current) {
+      firstMount.current = false;
+      return;
+    }
 
     const delayDebounceFn = setTimeout(() => {
       onSearch(searchText);
@@ -30,7 +34,7 @@ function SearchBar({ placeholder, searchDelay = 1000, onSearch }: Props) {
       <input
         type="search"
         className="block w-full px-4 py-2 ps-10 text-sm text-gray-900 border border-gray-300 outline-none rounded-full focus:ring-blue-500 focus:border-blue-500"
-        value={searchText ?? ""}
+        value={searchText}
         onChange={({ target }) => setSearchText(target.value)}
         placeholder={placeholder}
       />
