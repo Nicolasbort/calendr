@@ -16,6 +16,7 @@ export const appointments: Appointment[] = [
     },
     session: {
       id: "1",
+      label: "random label",
       timeStart: now,
       timeEnd: addHours(now, 1),
       weekDay: 3,
@@ -36,6 +37,7 @@ export const appointments: Appointment[] = [
     },
     session: {
       id: "2",
+      label: "random label 2",
       timeStart: subHours(now, 1),
       timeEnd: subHours(now, 2),
       weekDay: 3,

@@ -13,6 +13,7 @@ interface Patient extends Entity {
 }
 
 interface Session extends Entity {
+  label: string;
   weekDay: number;
   timeStart: Date;
   timeEnd: Date;

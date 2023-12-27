@@ -29,6 +29,7 @@ function updateItem<T extends Entity>(
     const index = existingItems.findIndex((item) => item.id === id);
 
     console.log("index", index);
+    console.log("ID passado na funcao", id);
 
     if (index !== -1) {
       const updatedItem = { ...existingItems[index], ...updatedValue };

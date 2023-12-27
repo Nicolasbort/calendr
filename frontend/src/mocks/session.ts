@@ -1,12 +1,17 @@
-import { addHours, subHours } from "date-fns";
+import { addHours, format, subHours } from "date-fns";
 
 const now = new Date();
+const oneHourLater = addHours(now, 1);
+const oneHourAgo = subHours(now, 1);
+const twoHourAgo = subHours(now, 2);
+const threeHourAgo = subHours(now, 3);
 
 export const sessions: Session[] = [
   {
     id: "1",
+    label: `${format(now, "HH:mm")} - ${format(oneHourLater, "HH:mm")}`,
     timeStart: now,
-    timeEnd: addHours(now, 1),
+    timeEnd: oneHourLater,
     weekDay: 3,
     duration: 60,
     appointment: {
@@ -25,22 +30,25 @@ export const sessions: Session[] = [
   },
   {
     id: "2",
-    timeStart: subHours(now, 1),
+    label: `${format(oneHourAgo, "HH:mm")} - ${format(now, "HH:mm")}`,
+    timeStart: oneHourAgo,
     timeEnd: now,
     weekDay: 3,
     duration: 60,
   },
   {
     id: "3",
-    timeStart: subHours(now, 2),
-    timeEnd: subHours(now, 1),
+    label: `${format(twoHourAgo, "HH:mm")} - ${format(oneHourAgo, "HH:mm")}`,
+    timeStart: twoHourAgo,
+    timeEnd: oneHourAgo,
     weekDay: 3,
     duration: 60,
   },
   {
     id: "4",
-    timeStart: subHours(now, 3),
-    timeEnd: subHours(now, 2),
+    label: `${format(threeHourAgo, "HH:mm")} - ${format(twoHourAgo, "HH:mm")}`,
+    timeStart: threeHourAgo,
+    timeEnd: twoHourAgo,
     weekDay: 3,
     duration: 60,
     appointment: {

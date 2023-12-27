@@ -11,7 +11,7 @@ function Accordion({ title, children }: Props) {
   const toggleExpanded = () => setExpanded(!expanded);
 
   return (
-    <div className="my-2 sm:my-4 md:my-6 shadow border border-gray-100 bg-white rounded">
+    <div className="bg-white border-none sm:border border-gray-300 shadow-none sm:shadow p-4 rounded-lg">
       <div
         className="px-6 text-left items-center h-20 select-none flex flex-row justify-between cursor-pointer rounded"
         onClick={toggleExpanded}

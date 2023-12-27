@@ -20,7 +20,7 @@ function NavBar() {
         >
           <img src={CalendrLogo} className="h-8" alt="Calendr Logo" />
         </a>
-        <ul className="font-medium flex p-0 gap-4 border border-gray-100 rounded-lg bg-gray-50 items-center rtl:space-x-reverse mt-0 border-0 bg-white">
+        <ul className="font-medium flex p-0 gap-4 border border-gray-100 rounded-lg items-center rtl:space-x-reverse mt-0 border-0">
           <li>
             <SearchBar
               placeholder="Pesquisar por paciente"

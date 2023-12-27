@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import { format } from "date-fns";
 import { FaUser, FaWifi } from "react-icons/fa";
 
 interface Props {
@@ -67,10 +66,7 @@ function Session({ session, onClick }: Props) {
           <p className="font-bold text-responsive">
             {appointment?.patient.fullName}
           </p>
-          <p className="font-semibold text-responsive">
-            {format(session.timeStart, "HH:mm")} -{" "}
-            {format(session.timeEnd, "HH:mm")}
-          </p>
+          <p className="font-semibold text-responsive">{session.label}</p>
         </div>
         {hasAppointment ? (
           <div className="flex gap-3 items-center justify-end">

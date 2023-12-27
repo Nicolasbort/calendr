@@ -1,14 +1,23 @@
+import classNames from "classnames";
+import ErrorMessage from "components/ErrorMessage";
 import React from "react";
+import { FieldError } from "react-hook-form";
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {}
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+  error?: FieldError;
+}
 
-const Input = React.forwardRef<any, Props>((props, ref) => {
+const Input = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
+  const { error, ...inputProps } = props;
+  const inputClassNames = classNames("input", {
+    "border-red-600": error !== undefined,
+  });
+
   return (
-    <input
-      {...props}
-      ref={ref}
-      className="shadow appearance-none border border-gray-300 rounded-lg w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
-    />
+    <div className="mb-4">
+      <input {...inputProps} ref={ref} className={inputClassNames} />
+      <ErrorMessage error={error} />
+    </div>
   );
 });
 

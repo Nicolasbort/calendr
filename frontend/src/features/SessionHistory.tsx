@@ -1,10 +1,13 @@
 import MailBox from "mailbox.png";
+import SessionList from "./SessionList";
 
 interface Props {
   patientId: string;
 }
 
 function SessionHistory({ patientId }: Props) {
+  return <SessionList />;
+
   return (
     <div className="p-3 flex flex-col justify-center items-center gap-5">
       <p className="text-xl font-semibold">Histórico de sessões</p>

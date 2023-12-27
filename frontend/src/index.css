@@ -20,4 +20,8 @@ code {
   .text-responsive {
     @apply text-sm sm:text-base;
   }
+
+  .input {
+    @apply shadow appearance-none border border-gray-300 rounded-lg w-full p-2 sm:p-3 text-sm sm:text-base text-gray-700 leading-tight outline-none;
+  }
 }

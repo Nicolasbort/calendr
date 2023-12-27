@@ -9,7 +9,7 @@ interface Props {
   onSearch: (search: string) => void;
 }
 
-function SearchBar({ placeholder, searchDelay = 1000, onSearch }: Props) {
+function SearchBar({ placeholder, searchDelay = 800, onSearch }: Props) {
   const [searchText, setSearchText] = useAtom(searchTextAtom);
   const firstMount = useRef(true);
 

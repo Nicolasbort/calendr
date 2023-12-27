@@ -40,17 +40,17 @@ export const useCreatePatient = () => {
 export const useUpdatePatient = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (patient: Partial<Patient>) =>
+  return useMutation<any, any, { id: string; patient: Partial<Patient> }, any>({
+    mutationFn: ({ id, patient }) =>
       wait(0).then(() => {
         const processedPatient = {
           ...patient,
           fullName: `${patient.firstName} ${patient.lastName}`,
         };
 
-        return updateItem<Patient>(KEY, patient.id as string, processedPatient);
+        return updateItem<Patient>(KEY, id, processedPatient);
       }),
-    onSuccess: (_data, patient, _context) =>
-      queryClient.invalidateQueries([KEY, patient.id]),
+    onSuccess: (_data, { id }, _context) =>
+      queryClient.invalidateQueries([KEY, id]),
   });
 };

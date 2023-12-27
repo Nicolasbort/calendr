@@ -1,15 +1,21 @@
+import { scheduleAppointmentOpenAtom } from "atom";
 import Action from "components/Action";
+import { useSetAtom } from "jotai";
 import React from "react";
 import toast from "react-hot-toast";
 import { FaCalendar, FaHeart, FaUserPlus } from "react-icons/fa";
 
 function ActionBar() {
-  const onScheduleAppointment = (e: React.MouseEvent) =>
-    toast("Não implementado");
+  const setScheduleAppointmentOpen = useSetAtom(scheduleAppointmentOpenAtom);
 
-  const onNewPatient = (e: React.MouseEvent) => toast("Não implementado");
+  const onScheduleAppointment = (e: React.MouseEvent) => {
+    setScheduleAppointmentOpen(true);
+  };
 
-  const onShareAgenda = (e: React.MouseEvent) => toast("Não implementado");
+  const onNewPatient = (e: React.MouseEvent) => toast.error("Não implementado");
+
+  const onShareAgenda = (e: React.MouseEvent) =>
+    toast.error("Não implementado");
 
   return (
     <header className="bg-gray-50">

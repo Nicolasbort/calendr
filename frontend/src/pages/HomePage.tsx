@@ -18,7 +18,7 @@ function HomePage() {
       <NavBar />
       <ActionBar />
       <main className="container mx-auto my-0 sm:my-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
           <SessionList />
           <CreatePatient />
         </div>
